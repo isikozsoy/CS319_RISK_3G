@@ -23,6 +23,7 @@ informal alliances may be formed during the course of the game.
 <p> • We plan on allowing players to be able to leave territories in their control unguarded should they choose to. </p>
 <p> • We plan on allowing players to set the goal of capturing a continent before the game starts and receive rewards should they be able to do so. </p>
 <p> • We plan on implementing a rock-paper-scissors based combat system where more skill is involved as opposed to dice rolls. </p>
+<p> • We plan on implementing an alliance mechanism where the two players allied will be allowed to go through their ally's territories to attack an opponent's territory. The allies will not be able to attack each other for the duration of their alliance. </p>
 
 In the original game, players are required to leave at least one unit in any territory that they are in control of. We
 plan on allowing players the ability to leave territories they currently control unguarded so as to move the soldiers on 
@@ -37,3 +38,5 @@ will receive some additional rewards in addition to the rewards they would have 
 We are planning on implementing a combat system whose results are determined by something more skill based such as rock-paper-scissors
 as opposed to just dice rolls. This could serve to eliminate the frustration caused by unlucky dice rolls and add another layer
 of complexity/depth to the game.
+
+We are planning on implementing a system of alliances to the game which will benefit the user in terms of reaching to territories of their allies and performing an attack on an opponent through their territory, potentially creating an environment where more strategies are supposed to be formed. The alliances will not be able to attack each other nor will they be able to stay as allies for the entire duration of the game (as this would make the game end with no winners). This new implementation could add more complexity and intrigue to the game as well as make the players condone more strategies with more possible scenarios and interact with the other players more throughout this whole process.
