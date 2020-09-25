@@ -1,5 +1,5 @@
 # CS319-03 Group G
-As a CS 319 Term Project , we will implement RISK.
+As a CS 319 Term Project , we will implement the RISK boardgame.
 
 <h3>Group Members: </h3>
 <p> • Işık Özsoy </p>
@@ -7,6 +7,15 @@ As a CS 319 Term Project , we will implement RISK.
 <p> • Defne Betül Çiftçi </p>
 <p> • Alp Üneri </p>
 <p> • Burak Yetiştiren </p>
+
+Risk is a strategy board game aimed for two to six players of diplomacy, conflict, and conquest.
+The standard version of the game consists of a board in which a map of the world is depicted. The
+map is divided into forty-two territories which are grouped into six continents. Turns rotate among
+players in control of armies with which they attempt to capture territories from other players via battles
+whose results are determined by dice rolls. The number of dice a player is able to attack or defend with is
+dependent on the number of soldiers that player controls in the applicable territories. The classic goal of
+the game is to occupy every territory on the board and achieve total global domination. Both formal and
+informal alliances may be formed during the course of the game.
 
 Risk is a strategy board game of diplomacy, conflict and conquest for two to six players.
 The standard version is played on a board depicting a political map of the world,
