@@ -2,7 +2,7 @@
 As a CS 319 Term Project , we will implement the RISK boardgame.
 
 <h3>Group Members: </h3>
-<p> • Işık Özsoy </p>
+<p> • Işık Özsoy 21703160 </p>
 <p> • Hakan Kara </p>
 <p> • Defne Betül Çiftçi </p>
 <p> • Alp Üneri </p>
