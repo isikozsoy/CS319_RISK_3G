@@ -5,7 +5,7 @@ As a CS 319 Term Project , we will implement the RISK boardgame.
 <p> • Işık Özsoy 21703160 </p>
 <p> • Hakan Kara </p>
 <p> • Defne Betül Çiftci 21802635 </p>
-<p> • Alp Üneri </p>
+<p> • Alp Üneri 21802481 </p>
 <p> • Burak Yetiştiren </p>
 
 ***************************************************************************************************************************************************
