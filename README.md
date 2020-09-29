@@ -32,14 +32,15 @@ that territory to any other connected territory that they control. This would ma
 by the player is left empty, such that any other player with a connected territory can capture the empty one without any 
 battle required.
 
-We plan on having the players be able to declare a target continent that they will aim to capture before territories
+<b> Explanations </b>
+• We plan on having the players be able to declare a target continent that they will aim to capture before territories
 are dealt and the game begins. This would make it so should that player be able to actually conquer that continent they
 will receive some additional rewards in addition to the rewards they would have received for simply conquering that continent.
 
-We are planning on implementing a combat system whose results are determined by something more skill based such as rock-paper-scissors
+• We are planning on implementing a combat system whose results are determined by something more skill based such as rock-paper-scissors
 as opposed to just dice rolls. This could serve to eliminate the frustration caused by unlucky dice rolls and add another layer
 of complexity/depth to the game.
 
-In the original game, there is no official system of alliances but the player can form alliances nonetheless. One plan of ours is to implement an official system of alliances, which will not be available when only 2 players play, which will benefit the user in terms of reaching territories of their allies and performing an attack on an opponent through their ally's territory, potentially creating an environment where more strategies are supposed to be formed. The alliances will not be able to attack each other (as they are able to in the original game) nor will they be able to stay as allies for the entire duration of the game (as this would make the game end with no winners). This new implementation could add more complexity and intrigue to the game as well as make the players compose more strategies with more possible scenarios and interact with the other players more throughout this whole process.
+• In the original game, there is no official system of alliances but the player can form alliances nonetheless. One plan of ours is to implement an official system of alliances, which will not be available when only 2 players play, which will benefit the user in terms of reaching territories of their allies and performing an attack on an opponent through their ally's territory, potentially creating an environment where more strategies are supposed to be formed. The alliances will not be able to attack each other (as they are able to in the original game) nor will they be able to stay as allies for the entire duration of the game (as this would make the game end with no winners). This new implementation could add more complexity and intrigue to the game as well as make the players compose more strategies with more possible scenarios and interact with the other players more throughout this whole process.
 
-We also plan on having the players be able to attack non-neighboring territories by building an airport on their territories by a cost of 5 soldiers (could be changed later on). By attacking through a plane, a player will be able to attack a territory which is up to 3 territories away (this detail could be changed as well).
+• We also plan on having the players be able to attack non-neighboring territories by building an airport on their territories by a cost of 5 soldiers (could be changed later on). By attacking through a plane, a player will be able to attack a territory which is up to 3 territories away (this detail could be changed as well).
