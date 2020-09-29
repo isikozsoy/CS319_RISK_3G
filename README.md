@@ -33,7 +33,7 @@ by the player is left empty, such that any other player with a connected territo
 battle required.
 
 <b> Explanations </b>
-<br>
+<br> <br>
 • We plan on having the players be able to declare a target continent that they will aim to capture before territories
 are dealt and the game begins. This would make it so should that player be able to actually conquer that continent they
 will receive some additional rewards in addition to the rewards they would have received for simply conquering that continent.
