@@ -27,6 +27,7 @@ informal alliances may be formed during the course of the game.
 <p> • We plan on implementing an airplane mechanism. A player will be able to build an airport on his territories by paying a cost. </p>
 
 <b>Explanations</b>
+
 In the original game, players are required to leave at least one unit in any territory that they are in control of. We
 plan on allowing players the ability to leave territories they currently control unguarded so as to move the soldiers on 
 that territory to any other connected territory that they control. This would make it so that the territory previously controlled
