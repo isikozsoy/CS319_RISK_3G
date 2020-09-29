@@ -32,7 +32,7 @@ that territory to any other connected territory that they control. This would ma
 by the player is left empty, such that any other player with a connected territory can capture the empty one without any 
 battle required.
 
-<b> Explanations </b>
+<b><u>Explanations</u></b>
 <br> <br>
 • We plan on having the players be able to declare a target continent that they will aim to capture before territories
 are dealt and the game begins. This would make it so should that player be able to actually conquer that continent they
