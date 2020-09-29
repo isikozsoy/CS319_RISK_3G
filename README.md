@@ -26,13 +26,13 @@ informal alliances may be formed during the course of the game.
 <p> • We plan on implementing an alliance mechanism where the two players allied will be allowed to go through their ally's territories to attack an opponent's territory. The allies will not be able to attack each other for the duration of their alliance. This implementation will not be available if only 2 players are playing. </p>
 <p> • We plan on implementing an airplane mechanism. A player will be able to build an airport on his territories by paying a cost. </p>
 
+<b>Explanations</b>
 In the original game, players are required to leave at least one unit in any territory that they are in control of. We
 plan on allowing players the ability to leave territories they currently control unguarded so as to move the soldiers on 
 that territory to any other connected territory that they control. This would make it so that the territory previously controlled
 by the player is left empty, such that any other player with a connected territory can capture the empty one without any 
 battle required.
 
-<b>Explanations</b>
 <br>
 • We plan on having the players be able to declare a target continent that they will aim to capture before territories
 are dealt and the game begins. This would make it so should that player be able to actually conquer that continent they
