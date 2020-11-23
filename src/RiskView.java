@@ -64,26 +64,24 @@ public class RiskView extends StackPane {
     }
 
     private void makeClickableMap( Stage stage) {
-        BackgroundImage bgImage = new BackgroundImage( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                new BackgroundSize(1.0, 1.0, true, true, false, false));
-        setBackground( new Background( bgImage));
-
+        ImageView bgImage = new ImageView( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
+        bindMapToPaneSize(bgImage);
+        this.getChildren().add( bgImage);
 
         for( int i = 0; i < territories.length; i++) {
             ImageView clickableTerritory = addClickableTerritory( territories[i],
                                                              DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
                                                           DIRECTORY_NAME + territories[i] + FILE_NAME_HOVERED_HELPER);
-            clickableTerritory.fitWidthProperty().bind( this.widthProperty());
-            clickableTerritory.fitHeightProperty().bind( this.heightProperty());
-            //clickableTerritory.setPreserveRatio(true);
-
-            clickableTerritory.getBoundsInLocal();
+            bindMapToPaneSize(clickableTerritory);
 
             this.getChildren().add( clickableTerritory);
         }
+    }
+
+    private void bindMapToPaneSize( ImageView imageView) {
+        imageView.fitWidthProperty().bind( this.widthProperty());
+        imageView.fitHeightProperty().bind( this.heightProperty());
+        imageView.setPreserveRatio( true);
     }
 
 }

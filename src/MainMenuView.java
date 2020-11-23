@@ -65,17 +65,25 @@ public class MainMenuView extends AnchorPane {
 
         MainMenuButton exitButton     = exitButton();
         MainMenuText   exitText       = new MainMenuText  ( 548, 654+250, "EXIT");
-
+/**
+        bindButtonsToPane( newGameButton, newGameText);
+        bindButtonsToPane( howToButton, howToText);
+        bindButtonsToPane( settingsButton, settingsText);
+        bindButtonsToPane( creditsButton, creditsText);
+        bindButtonsToPane( exitButton, exitText);
+**/
         Blend overlayBlend = new Blend();
         overlayBlend.setMode( BlendMode.OVERLAY);
         newGameButton.setEffect(overlayBlend);
 
-        getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton);
-        getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText);
+        Group g = newGameButton.perspectiveSetting( newGameText);
+
+        getChildren().addAll(g, howToButton, settingsButton, creditsButton, exitButton);
+        getChildren().addAll(howToText,   settingsText,   creditsText,   exitText);
     }
 
     private MainMenuButton newGameButton(Stage stage) {
-        MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1]);
+        MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1], 1);
         newGameButton.setOnMouseClicked( e -> {
             RiskView gameView = new RiskView( stage);
             Scene newScene = new Scene( gameView);
@@ -87,26 +95,33 @@ public class MainMenuView extends AnchorPane {
     }
 
     private MainMenuButton howToButton() {
-        MainMenuButton howToButton = new MainMenuButton(locHowTo[0], locHowTo[1]);
+        MainMenuButton howToButton = new MainMenuButton(locHowTo[0], locHowTo[1], 2);
 
         return howToButton;
     }
 
     private MainMenuButton settingsButton() {
-        MainMenuButton settingsButton = new MainMenuButton(locSettings[0], locSettings[1]);
+        MainMenuButton settingsButton = new MainMenuButton(locSettings[0], locSettings[1], 3);
 
         return settingsButton;
     }
 
     private MainMenuButton creditsButton() {
-        MainMenuButton creditsButton = new MainMenuButton(locCredits[0], locCredits[1]);
+        MainMenuButton creditsButton = new MainMenuButton(locCredits[0], locCredits[1], 4);
 
         return creditsButton;
     }
 
     private MainMenuButton exitButton() {
-        MainMenuButton exitButton = new MainMenuButton( locExit[0], locExit[1]);
+        MainMenuButton exitButton = new MainMenuButton( locExit[0], locExit[1], 5);
 
         return exitButton;
     }
+/**
+    private void bindButtonsToPane( MainMenuButton button) {
+        button.fitWidthProperty().bind( this.widthProperty());
+        button.fitHeightProperty().bind( this.heightProperty());
+        button.setPreserveRatio( true);
+    }
+ **/
 }

@@ -1,4 +1,3 @@
-import javafx.scene.text.Font;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 import java.io.*;
