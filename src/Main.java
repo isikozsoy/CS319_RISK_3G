@@ -7,13 +7,15 @@ public class Main extends Application {
     final private int WIDTH = 1280;
     final private int HEIGHT = 1024;
 
+    Scene mainScene;
+    //Stage mainStage;
+
     @Override
     public void start(Stage stage) {
         try {
             MainMenuView menuView = new MainMenuView( stage);
-            Scene newScene = new Scene(menuView, WIDTH, HEIGHT);
-            Stage mainStage = new Stage();
-            stage.setScene( newScene);
+            mainScene = new Scene(menuView, WIDTH, HEIGHT);
+            stage.setScene( mainScene);
 
             stage.show();
         }

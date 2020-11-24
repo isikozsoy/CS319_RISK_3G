@@ -5,7 +5,7 @@ import javafx.scene.effect.*;
 import javafx.scene.image.*;
 import javafx.scene.paint.*;
 
-public class MainMenuView extends AnchorPane {
+public class MainMenuView extends BeforeGameView {
     final private int MENU_WIDTH          = 800;
     final private int MENU_HEIGHT         = 600;
 
@@ -20,34 +20,13 @@ public class MainMenuView extends AnchorPane {
     final private int[] locExit           = {locXForMenu, locYNewGame + 4 * locYIncrease};
     final private int   locYText          = 304;
 
-    private String BACKGROUND_FILE_PATH   = "img/" + "background_image.png";
-
-    final private String BACKGROUND_STYLE = "-fx-background-image: url(\"BACKGROUND_FILE_PATH\");" +
-                                            "-fx-background-size: cover;";
-
-    private ImageView backgroundImageView;
-
     MainMenuView( Stage stage) {
-        backgroundImageView = new ImageView( new Image( BACKGROUND_FILE_PATH, true));
-        addBackgroundImage();
+        System.out.println("Here");
         buttonsPane( stage);
     }
 
     private void setLogo() {
-
-    }
-
-    private void addBackgroundImage() {
-        this.getChildren().add( backgroundImageView);
-/**
-        BackgroundImage bgImage = new BackgroundImage( new Image( BACKGROUND_FILE_PATH, true),
-                                                       BackgroundRepeat.NO_REPEAT,
-                                                       BackgroundRepeat.NO_REPEAT,
-                                                       BackgroundPosition.DEFAULT,
-                                                   new BackgroundSize(1.0, 1.0, true, true, false, false));
-
-        setBackground( new Background( bgImage));
- **/
+        /**TODO**/
     }
 
     private void setOverlayEffect( MainMenuButton button) {
@@ -76,26 +55,28 @@ public class MainMenuView extends AnchorPane {
         MainMenuText   creditsText    = new MainMenuText  ( 424, locYText + locYIncrease * 3, "CREDITS");
         setOverlayEffect( creditsButton);
 
-        MainMenuButton exitButton     = exitButton();
+        MainMenuButton exitButton     = exitButton( stage);
         MainMenuText   exitText       = new MainMenuText  ( 548, locYText + locYIncrease * 4, "EXIT");
         setOverlayEffect( exitButton);
 
         /**
         TODO:: BIND BUTTON SIZES TO PANE SIZE
         **/
-        //Group g = newGameButton.perspectiveSetting( newGameText);
-
-        getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton);
-        getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText);
+        Group g = new Group();
+        g.getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton,
+                 newGameText,   howToText,   settingsText,   creditsText,   exitText);
+        super.addGroup(g);
     }
 
     private MainMenuButton newGameButton(Stage stage) {
         MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1], 1);
+
         newGameButton.setOnMouseClicked( e -> {
             System.out.println("Clicked on New Game");
-            RiskView gameView = new RiskView();
-            Scene newScene = new Scene( gameView);
-            stage.setScene( newScene);
+            //RiskView gameView = new RiskView();
+            AddPlayersView addPlayersView = new AddPlayersView( stage);
+            Scene addPlayerScene = new Scene( addPlayersView);
+            stage.setScene( addPlayerScene);
             //stage.show();
         });
 
@@ -120,8 +101,12 @@ public class MainMenuView extends AnchorPane {
         return creditsButton;
     }
 
-    private MainMenuButton exitButton() {
+    private MainMenuButton exitButton( Stage stage) {
         MainMenuButton exitButton = new MainMenuButton( locExit[0], locExit[1], 5);
+
+        exitButton.setOnMousePressed( e -> {
+            stage.close();
+        });
 
         return exitButton;
     }

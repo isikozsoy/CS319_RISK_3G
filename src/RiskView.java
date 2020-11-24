@@ -30,7 +30,7 @@ public class RiskView extends StackPane {
 
     private Stage mainStage;
 
-    public RiskView() {
+    public RiskView(Stage stage) {
         makeClickableMap();
     }
 
