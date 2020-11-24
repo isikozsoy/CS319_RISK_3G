@@ -3,24 +3,32 @@ import javafx.stage.Stage;
 import javafx.scene.*;
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
+import javafx.scene.paint.*;
 
 public class MainMenuView extends AnchorPane {
+    final private int MENU_WIDTH          = 800;
+    final private int MENU_HEIGHT         = 600;
+
     final private int   locXForMenu       = 290;
     final private int   locYIncrease      = 125;
     final private int[] locLogo           = {locXForMenu, 106};
-    final private int   locYNewGame       = 391;
+    final private int   locYNewGame       = 290;
     final private int[] locNewGameButton  = {locXForMenu, locYNewGame};
     final private int[] locHowTo          = {locXForMenu, locYNewGame + locYIncrease};
     final private int[] locSettings       = {locXForMenu, locYNewGame + 2 * locYIncrease};
     final private int[] locCredits        = {locXForMenu, locYNewGame + 3 * locYIncrease};
     final private int[] locExit           = {locXForMenu, locYNewGame + 4 * locYIncrease};
+    final private int   locYText          = 304;
 
     private String BACKGROUND_FILE_PATH   = "img/" + "background_image.png";
 
     final private String BACKGROUND_STYLE = "-fx-background-image: url(\"BACKGROUND_FILE_PATH\");" +
                                             "-fx-background-size: cover;";
 
+    private ImageView backgroundImageView;
+
     MainMenuView( Stage stage) {
+        backgroundImageView = new ImageView( new Image( BACKGROUND_FILE_PATH, true));
         addBackgroundImage();
         buttonsPane( stage);
     }
@@ -30,6 +38,8 @@ public class MainMenuView extends AnchorPane {
     }
 
     private void addBackgroundImage() {
+        this.getChildren().add( backgroundImageView);
+/**
         BackgroundImage bgImage = new BackgroundImage( new Image( BACKGROUND_FILE_PATH, true),
                                                        BackgroundRepeat.NO_REPEAT,
                                                        BackgroundRepeat.NO_REPEAT,
@@ -37,55 +47,53 @@ public class MainMenuView extends AnchorPane {
                                                    new BackgroundSize(1.0, 1.0, true, true, false, false));
 
         setBackground( new Background( bgImage));
-        /**
-        Image bgImage = new Image( BACKGROUND_FILE_PATH);
-        ImageView bgView = new ImageView( bgImage);
-        bgView.fitWidthProperty().bind( this.widthProperty());
-        bgView.fitWidthProperty().bind( this.heightProperty());
-        bgView.setPreserveRatio(true);
+ **/
+    }
 
-        this.getChildren().add( bgView);
+    private void setOverlayEffect( MainMenuButton button) {
+        Blend blend = new Blend();
+        ColorInput colorInput = new ColorInput( button.getButtonLocX(), button.getButtonLocY(),
+                                                button.getButtonWidth(), button.getButtonHeight(), Color.rgb(245,0,0));
+        blend.setTopInput(colorInput);
 
-        //setStyle( BACKGROUND_STYLE);
-         **/
+        backgroundImageView.setEffect(blend);
     }
 
     private void buttonsPane(Stage stage){
         MainMenuButton newGameButton  = newGameButton(stage);
-        MainMenuText   newGameText    = new MainMenuText(382, 404, "NEW GAME");
+        MainMenuText   newGameText    = new MainMenuText(382, locYText, "NEW GAME");
+        setOverlayEffect( newGameButton);
 
         MainMenuButton howToButton    = howToButton();
-        MainMenuText   howToText      = new MainMenuText  (295, 529, "HOW TO PLAY");
+        MainMenuText   howToText      = new MainMenuText  (295, locYText + locYIncrease, "HOW TO PLAY");
+        setOverlayEffect( howToButton);
 
         MainMenuButton settingsButton = settingsButton();
-        MainMenuText   settingsText   = new MainMenuText  (424, 654, "SETTINGS");
+        MainMenuText   settingsText   = new MainMenuText  (424, locYText + locYIncrease * 2, "SETTINGS");
+        setOverlayEffect( settingsButton);
 
         MainMenuButton creditsButton  = creditsButton();
-        MainMenuText   creditsText    = new MainMenuText  ( 424, 654+125, "CREDITS");
+        MainMenuText   creditsText    = new MainMenuText  ( 424, locYText + locYIncrease * 3, "CREDITS");
+        setOverlayEffect( creditsButton);
 
         MainMenuButton exitButton     = exitButton();
-        MainMenuText   exitText       = new MainMenuText  ( 548, 654+250, "EXIT");
-/**
-        bindButtonsToPane( newGameButton, newGameText);
-        bindButtonsToPane( howToButton, howToText);
-        bindButtonsToPane( settingsButton, settingsText);
-        bindButtonsToPane( creditsButton, creditsText);
-        bindButtonsToPane( exitButton, exitText);
-**/
-        Blend overlayBlend = new Blend();
-        overlayBlend.setMode( BlendMode.OVERLAY);
-        newGameButton.setEffect(overlayBlend);
+        MainMenuText   exitText       = new MainMenuText  ( 548, locYText + locYIncrease * 4, "EXIT");
+        setOverlayEffect( exitButton);
 
-        Group g = newGameButton.perspectiveSetting( newGameText);
+        /**
+        TODO:: BIND BUTTON SIZES TO PANE SIZE
+        **/
+        //Group g = newGameButton.perspectiveSetting( newGameText);
 
-        getChildren().addAll(g, howToButton, settingsButton, creditsButton, exitButton);
-        getChildren().addAll(howToText,   settingsText,   creditsText,   exitText);
+        getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton);
+        getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText);
     }
 
     private MainMenuButton newGameButton(Stage stage) {
         MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1], 1);
         newGameButton.setOnMouseClicked( e -> {
-            RiskView gameView = new RiskView( stage);
+            System.out.println("Clicked on New Game");
+            RiskView gameView = new RiskView( MENU_WIDTH, MENU_HEIGHT);
             Scene newScene = new Scene( gameView);
             stage.setScene( newScene);
             //stage.show();

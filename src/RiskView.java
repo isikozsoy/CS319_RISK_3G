@@ -30,8 +30,13 @@ public class RiskView extends StackPane {
 
     private Stage mainStage;
 
-    public RiskView(Stage stage) {
-        makeClickableMap( stage);
+    public RiskView() {
+        makeClickableMap();
+    }
+
+    public RiskView( int width, int height) {
+        setPrefSize( width, height);
+        makeClickableMap();
     }
 
     //below works for the first round (territory allocation), probably
@@ -63,7 +68,7 @@ public class RiskView extends StackPane {
         return territoryClickable;
     }
 
-    private void makeClickableMap( Stage stage) {
+    private void makeClickableMap() {
         ImageView bgImage = new ImageView( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
         bindMapToPaneSize(bgImage);
         this.getChildren().add( bgImage);

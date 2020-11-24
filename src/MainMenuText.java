@@ -9,7 +9,7 @@ public class MainMenuText extends Text {
     final private static String FONT_PATH     = "font/EricaOne-Regular.ttf";
 
     MainMenuText( int textLocX, int textLocY, String text) {
-        super( textLocX, textLocY, text);
+        super( textLocX, textLocY + TEXT_SIZE, text);
         this.setFill( Color.WHITE);
         this.setStyle(TEXT_STYLE);
         try {
