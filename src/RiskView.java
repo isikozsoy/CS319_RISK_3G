@@ -42,30 +42,7 @@ public class RiskView extends StackPane {
 
     //below works for the first round (territory allocation), probably
     private ImageView addClickableTerritory( String countryName, String path, String hoverPath) {
-        ImageView territoryClickable = null;
-        boolean clicked = false;
-        try {
-            Image image = new Image( getClass().getResource(path).toExternalForm());
-            Image hoveredImage = new Image( hoverPath);
-
-            territoryClickable = new ImageView(image);
-            ImageView territoryHovered = new ImageView(hoveredImage);
-
-            //when clicked on territory
-            territoryClickable.setOnMouseClicked( e -> {
-                System.out.println("Clicked on " + countryName);
-            });
-
-            //when mouse hovers over the territory
-            territoryClickable.imageProperty().bind(
-                    Bindings.when(territoryClickable.hoverProperty())
-                            .then(hoveredImage)
-                            .otherwise(image)
-            );
-        }
-        catch( Exception e) {
-            e.printStackTrace();
-        }
+        ImageView territoryClickable = new ClickableTerritory(countryName, path, hoverPath);
         return territoryClickable;
     }
 
@@ -87,7 +64,7 @@ public class RiskView extends StackPane {
     private void bindMapToPaneSize( ImageView imageView) {
         imageView.fitWidthProperty().bind( this.widthProperty());
         imageView.fitHeightProperty().bind( this.heightProperty());
-        imageView.setPreserveRatio( true);
+        //imageView.setPreserveRatio( true);
     }
 
 }

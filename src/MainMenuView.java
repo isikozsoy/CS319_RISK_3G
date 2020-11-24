@@ -4,14 +4,17 @@ import javafx.scene.*;
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
 import javafx.scene.paint.*;
+import javafx.scene.control.Button;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class MainMenuView extends BeforeGameView {
     final private int MENU_WIDTH          = 800;
     final private int MENU_HEIGHT         = 600;
 
     final private int   locXForMenu       = 290;
-    final private int   locYIncrease      = 125;
-    final private int[] locLogo           = {locXForMenu, 106};
+    final private int   locYIncrease      = 100;
+    final private int[] locLogo           = {locXForMenu, 75};
     final private int   locYNewGame       = 290;
     final private int[] locNewGameButton  = {locXForMenu, locYNewGame};
     final private int[] locHowTo          = {locXForMenu, locYNewGame + locYIncrease};
@@ -20,51 +23,48 @@ public class MainMenuView extends BeforeGameView {
     final private int[] locExit           = {locXForMenu, locYNewGame + 4 * locYIncrease};
     final private int   locYText          = 304;
 
+    final private String LOGO_STYLE       = "-fx-background-color: linear-gradient(to right, yellow, tomato);" +
+                                            "-fx-opacity:0.6;";
+
+    Dimension screenSize;
+
     MainMenuView( Stage stage) {
         System.out.println("Here");
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         buttonsPane( stage);
-    }
-
-    private void setLogo() {
-        /**TODO**/
-    }
-
-    private void setOverlayEffect( MainMenuButton button) {
-        Blend blend = new Blend();
-        ColorInput colorInput = new ColorInput( button.getButtonLocX(), button.getButtonLocY(),
-                                                button.getButtonWidth(), button.getButtonHeight(), Color.rgb(245,0,0));
-        blend.setTopInput(colorInput);
-
-        backgroundImageView.setEffect(blend);
     }
 
     private void buttonsPane(Stage stage){
         MainMenuButton newGameButton  = newGameButton(stage);
-        MainMenuText   newGameText    = new MainMenuText(382, locYText, "NEW GAME");
-        setOverlayEffect( newGameButton);
+        MainMenuText   newGameText    = new MainMenuText(482, locYText, "NEW GAME");
 
         MainMenuButton howToButton    = howToButton();
-        MainMenuText   howToText      = new MainMenuText  (295, locYText + locYIncrease, "HOW TO PLAY");
-        setOverlayEffect( howToButton);
+        MainMenuText   howToText      = new MainMenuText  (395, locYText + locYIncrease, "HOW TO PLAY");
 
         MainMenuButton settingsButton = settingsButton();
-        MainMenuText   settingsText   = new MainMenuText  (424, locYText + locYIncrease * 2, "SETTINGS");
-        setOverlayEffect( settingsButton);
+        MainMenuText   settingsText   = new MainMenuText  (474, locYText + locYIncrease * 2, "SETTINGS");
 
         MainMenuButton creditsButton  = creditsButton();
-        MainMenuText   creditsText    = new MainMenuText  ( 424, locYText + locYIncrease * 3, "CREDITS");
-        setOverlayEffect( creditsButton);
+        MainMenuText   creditsText    = new MainMenuText  ( 474, locYText + locYIncrease * 3, "CREDITS");
 
         MainMenuButton exitButton     = exitButton( stage);
         MainMenuText   exitText       = new MainMenuText  ( 548, locYText + locYIncrease * 4, "EXIT");
-        setOverlayEffect( exitButton);
+
+        Button annexationLogo         = new Button();
+        annexationLogo.setLayoutX(locLogo[0]);
+        annexationLogo.setLayoutY(locLogo[1]);
+        annexationLogo.setStyle(LOGO_STYLE);
+        annexationLogo.setMinWidth(exitButton.getButtonWidth());
+        annexationLogo.setMinHeight(exitButton.getButtonHeight());
+        MainMenuText annexationText = new MainMenuText( 432, locLogo[1] + 10, "ANNEXATION");
 
         /**
         TODO:: BIND BUTTON SIZES TO PANE SIZE
         **/
         Group g = new Group();
         g.getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton,
-                 newGameText,   howToText,   settingsText,   creditsText,   exitText);
+                               newGameText,   howToText,   settingsText,   creditsText,   exitText);
+        g.getChildren().addAll( annexationLogo, annexationText);
         super.addGroup(g);
     }
 
@@ -75,7 +75,8 @@ public class MainMenuView extends BeforeGameView {
             System.out.println("Clicked on New Game");
             //RiskView gameView = new RiskView();
             AddPlayersView addPlayersView = new AddPlayersView( stage);
-            Scene addPlayerScene = new Scene( addPlayersView);
+            Scene addPlayerScene = new Scene( addPlayersView, 1280, 1024);
+
             stage.setScene( addPlayerScene);
             //stage.show();
         });

@@ -14,6 +14,8 @@ public class BeforeGameView extends StackPane {
 
     private void addBackgroundImage() {
         this.getChildren().add( backgroundImageView);
+        backgroundImageView.fitWidthProperty().bind( this.widthProperty());
+        backgroundImageView.fitHeightProperty().bind( this.heightProperty());
 /**
  BackgroundImage bgImage = new BackgroundImage( new Image( BACKGROUND_FILE_PATH, true),
  BackgroundRepeat.NO_REPEAT,

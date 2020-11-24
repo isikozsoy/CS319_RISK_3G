@@ -5,10 +5,11 @@ import javafx.scene.paint.*;
 
 public class MainMenuButton extends Button {
     //font is Erica One
-    final private String BUTTON_FREE_STYLE     = "-fx-background-color: transparent;" +
+    final private String BUTTON_FREE_STYLE     = "-fx-background-color: linear-gradient(to right, yellow, tomato);" +
+                                                "-fx-opacity:0.6;" +
             //"-fx-background-color: linear-gradient(to right, yellow, tomato);" +
                                                      "-fx-background-radius: 3px;";
-    final private String BUTTON_HOVERED_STYLE  = "-fx-background-color: tomato; -fx-opacity:0.5;" ;
+    final private String BUTTON_HOVERED_STYLE  = "-fx-background-color: tomato; -fx-opacity:0.6;" ;
     /**
     final private String BUTTON_FREE_STYLE    = "-fx-background-color: #F50000;" +
                                                 "-fx-opacity: 0.5;" +

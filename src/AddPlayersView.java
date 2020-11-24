@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import javafx.scene.transform.Rotate;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class AddPlayersView extends BeforeGameView {
     private final String ICON_BUTTON_STYLE = "-fx-background-color: transparent;";
@@ -66,7 +68,7 @@ public class AddPlayersView extends BeforeGameView {
 
         backButton.setOnMousePressed( e -> {
             MainMenuView mainMenuView = new MainMenuView( stage);
-            Scene newScene = new Scene(mainMenuView);
+            Scene newScene = new Scene(mainMenuView, 1280, 1024);
             stage.setScene( newScene);
         });
 
@@ -90,7 +92,7 @@ public class AddPlayersView extends BeforeGameView {
 
         gameButton.setOnMousePressed( e -> {
             RiskView gameView = new RiskView( stage);
-            Scene newScene = new Scene(gameView);
+            Scene newScene = new Scene(gameView, 1280, 1024);
             stage.setScene( newScene);
         });
 
