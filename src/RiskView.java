@@ -34,8 +34,9 @@ public class RiskView extends StackPane {
         makeClickableMap();
     }
 
-    public RiskView( int width, int height) {
-        setPrefSize( width, height);
+    /** come back to this **/
+    public RiskView( int minWidth, int minHeight) {
+        setMinSize( minWidth, minHeight);
         makeClickableMap();
     }
 

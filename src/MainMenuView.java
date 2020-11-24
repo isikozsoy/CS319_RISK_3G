@@ -93,7 +93,7 @@ public class MainMenuView extends AnchorPane {
         MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1], 1);
         newGameButton.setOnMouseClicked( e -> {
             System.out.println("Clicked on New Game");
-            RiskView gameView = new RiskView( MENU_WIDTH, MENU_HEIGHT);
+            RiskView gameView = new RiskView();
             Scene newScene = new Scene( gameView);
             stage.setScene( newScene);
             //stage.show();
