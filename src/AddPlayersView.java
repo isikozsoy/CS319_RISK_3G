@@ -27,30 +27,30 @@ public class AddPlayersView extends BeforeGameView {
     }
 
     private void addPlayerButtons() {
-        PlayerButtonBeforeClicking playerButtonBeforeClicking6 = new PlayerButtonBeforeClicking( false,
-                firstLocX + (new PlayerButton(0,0)).getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
-                firstLocY + (new PlayerButton(0,0)).getButtonHeight() * 2 + BETWEEN_TWO_PLAYER_BUTTONS * 2,
-                null);
-        PlayerButtonBeforeClicking playerButtonBeforeClicking5 = new PlayerButtonBeforeClicking( false,
+        PlayerButton playerButtonBeforeClicking6 = new PlayerButton( false,
+                firstLocX + (new PlayerButton()).getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
+                firstLocY + (new PlayerButton()).getButtonHeight() * 2 + BETWEEN_TWO_PLAYER_BUTTONS * 2,
+                null, 5);
+        PlayerButton playerButtonBeforeClicking5 = new PlayerButton( false,
                 firstLocX,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() * 2 + BETWEEN_TWO_PLAYER_BUTTONS * 2,
-                playerButtonBeforeClicking6);
-        PlayerButtonBeforeClicking playerButtonBeforeClicking4 = new PlayerButtonBeforeClicking( false,
+                playerButtonBeforeClicking6, 4);
+        PlayerButton playerButtonBeforeClicking4 = new PlayerButton( false,
                 firstLocX + playerButtonBeforeClicking6.getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() + BETWEEN_TWO_PLAYER_BUTTONS,
-                playerButtonBeforeClicking5);
-        PlayerButtonBeforeClicking playerButtonBeforeClicking3 = new PlayerButtonBeforeClicking( false,
+                playerButtonBeforeClicking5, 3);
+        PlayerButton playerButtonBeforeClicking3 = new PlayerButton( false,
                 firstLocX,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() + BETWEEN_TWO_PLAYER_BUTTONS,
-                playerButtonBeforeClicking4);
-        PlayerButtonBeforeClicking playerButtonBeforeClicking2 = new PlayerButtonBeforeClicking( false,
+                playerButtonBeforeClicking4, 2);
+        PlayerButton playerButtonBeforeClicking2 = new PlayerButton( false,
                 firstLocX + playerButtonBeforeClicking6.getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY,
-                playerButtonBeforeClicking3);
-        PlayerButtonBeforeClicking playerButtonBeforeClicking1 = new PlayerButtonBeforeClicking( true,
+                playerButtonBeforeClicking3, 1);
+        PlayerButton playerButtonBeforeClicking1 = new PlayerButton( true,
                 firstLocX,
                 firstLocY,
-                playerButtonBeforeClicking2);
+                playerButtonBeforeClicking2, 0);
 
         Group g = new Group();
         g.getChildren().addAll( playerButtonBeforeClicking1, playerButtonBeforeClicking2,
