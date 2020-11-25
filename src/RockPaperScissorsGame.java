@@ -4,8 +4,8 @@ public class RockPaperScissorsGame{
     private static int noOfP1SoldiersPriv;
     private static int noOfP2SoldiersPriv;
 
-    public static int play(//char p1Choice, char p2Choice,
-                    int noOfP1Soldiers, int noOfP2Soldiers)
+    public static int play(  //char p1Choice, char p2Choice,
+                           int noOfP1Soldiers, int noOfP2Soldiers)
     {
         if( noOfP1Soldiers <= 0 || noOfP2Soldiers <= 0)
             return -1; //invalid entry
