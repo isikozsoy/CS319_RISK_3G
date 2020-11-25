@@ -62,8 +62,8 @@ public class MainMenuView extends BeforeGameView {
         TODO:: BIND BUTTON SIZES TO PANE SIZE
         **/
         Group g = new Group();
-        g.getChildren().addAll(newGameButton, howToButton, settingsButton, creditsButton, exitButton,
-                               newGameText,   howToText,   settingsText,   creditsText,   exitText);
+        g.getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText,
+                newGameButton, howToButton, settingsButton, creditsButton, exitButton);
         g.getChildren().addAll( annexationLogo, annexationText);
         super.addGroup(g);
     }
