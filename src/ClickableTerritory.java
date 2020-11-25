@@ -54,7 +54,6 @@ public class ClickableTerritory extends ImageView {
         });
     }
     public void removeEventListeners() {
-        System.out.println("BAŞARDIK");
         setOnMousePressed( e -> {
         });
         setOnMouseReleased( e -> {

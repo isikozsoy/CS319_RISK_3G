@@ -9,9 +9,9 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.*;
-import java.util.ArrayList;
 
 import java.io.*; //exceptions
+import java.util.ArrayList;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -31,9 +31,8 @@ public class RiskView extends StackPane {
     };
     final String BACKGROUND_IMG_PATH = "background_image_bw.png";
 
-    ArrayList<ClickableTerritory> territoryList;
-
     private Stage mainStage;
+    private List<ClickableTerritory> territoryList;
 
     public RiskView(Stage stage) {
         territoryList = new ArrayList<ClickableTerritory>();
@@ -92,7 +91,6 @@ public class RiskView extends StackPane {
         this.setAlignment(play, Pos.TOP_RIGHT);
     }
     public void disableAllComponents() {
-        //territoryList = this.getChildren();
         for (int i = 0; i < territories.length; i++)
             (territoryList.get(i)).removeEventListeners();
     }

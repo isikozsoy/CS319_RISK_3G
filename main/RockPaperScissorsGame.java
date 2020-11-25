@@ -68,12 +68,4 @@ public class RockPaperScissorsGame{
     public void setNoOfP2SoldiersPriv(int noOfP2SoldiersPriv) {
         RockPaperScissorsGame.noOfP2SoldiersPriv = noOfP2SoldiersPriv;
     }
-
-    public static void main(String[] args)
-    {
-        play( 3, 5);
-
-        System.out.println(getNoOfP1SoldiersPriv());
-        System.out.println(getNoOfP2SoldiersPriv());
-    }
 }
