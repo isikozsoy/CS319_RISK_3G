@@ -1,14 +1,9 @@
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import javafx.beans.binding.Bindings;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.effect.*;
 
 import java.io.*; //exceptions
 import java.util.ArrayList;

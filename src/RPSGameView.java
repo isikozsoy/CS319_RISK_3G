@@ -1,15 +1,9 @@
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import javax.swing.plaf.PanelUI;
-import java.awt.*;
 
 
 public class RPSGameView extends RiskView {
@@ -34,5 +28,9 @@ public class RPSGameView extends RiskView {
             RPSIcons.getChildren().add(imageView);
         }
         this.getChildren().add(RPSIcons);
+    }
+
+    private void showPlayer1Option() {
+
     }
 }

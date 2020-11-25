@@ -76,7 +76,7 @@ public class PlayerButton extends Button {
         setStyle( currStyle);
 
         setOnMousePressed( e -> {
-            Player player = new Player();
+            Player player = new Player("isik", 0, "Asia", 3);   // temporary
             playerList.add( buttonId, player);
 
             setAsPlayerButton();

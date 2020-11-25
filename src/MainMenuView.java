@@ -1,9 +1,5 @@
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.*;
-import javafx.scene.effect.*;
-import javafx.scene.image.*;
-import javafx.scene.paint.*;
 import javafx.scene.control.Button;
 import java.awt.Dimension;
 import java.awt.Toolkit;

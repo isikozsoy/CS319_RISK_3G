@@ -1,13 +1,9 @@
-import javafx.scene.layout.*;
 import javafx.scene.control.Button;
 import javafx.scene.*;
 import javafx.scene.image.*;
 import javafx.stage.Stage;
-import javafx.scene.transform.Rotate;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 public class AddPlayersView extends BeforeGameView {
     private final String ICON_BUTTON_STYLE = "-fx-background-color: transparent;";

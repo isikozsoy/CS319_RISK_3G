@@ -1,16 +1,168 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Player {
     final Random random=new Random();
-
     private String color;
 
-    Player() {
+    // Properties
+    private String name;
+    private int id;
+    private int terCount;
+    private int contCount;
+    private String targetCont; // String will become Continent class
+    private boolean isTargetTaken;
+    private int[] cards;
+    private boolean cardDeserved;
+    private boolean[] allies;
+    private List<Integer> allianceReq;
+    private int troopCount;
+
+    // Constructor
+    Player(String name, int id, String targetCont, int playerCount) {
         int nextInt = random.nextInt(0xffffff + 1);
         color = String.format("#%06x", nextInt);
+
+        this.name = name;
+        this.id = id;
+        terCount = 0;
+        contCount = 0;
+        cards = new int[3];  // 3 is the number of card types
+        for(int i = 0; i < 3; i++)
+            cards[i] = 0;
+        cardDeserved = false;
+        this.targetCont = targetCont;
+        isTargetTaken = false;
+        troopCount = 30;  // This will be determined aaccording to the number of player.
+        allies = new boolean[playerCount];
+        allianceReq = new ArrayList<Integer>();
+        for (int i = 0; i < playerCount; i++)
+        {
+            allies[i] = false; // We will ignore his own id
+        }
     }
 
+    // Getters & Setters
     public String getColor() {
         return color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getTerCount() {
+        return terCount;
+    }
+
+    public void setTerCount(int terCount) {
+        this.terCount = terCount;
+    }
+
+    public int getContCount() {
+        return contCount;
+    }
+
+    public void setContCount(int contCount) {
+        this.contCount = contCount;
+    }
+
+    public String getTargetCont() {
+        return targetCont;
+    }
+
+    public void setTargetCont(String targetCont) {
+        this.targetCont = targetCont;
+    }
+
+    public boolean isTargetTaken() {
+        return isTargetTaken;
+    }
+
+    public void setTargetTaken(boolean targetTaken) {
+        isTargetTaken = targetTaken;
+    }
+
+    public int[] getCards() {
+        return cards;
+    }
+
+    public void setCards(int[] cards) {
+        this.cards = cards;
+    }
+
+    public boolean isCardDeserved() {
+        return cardDeserved;
+    }
+
+    public void setCardDeserved(boolean cardDeserved) {
+        this.cardDeserved = cardDeserved;
+    }
+
+    public boolean[] getAllies() {
+        return allies;
+    }
+
+    public void setAllies(boolean[] allies) {
+        this.allies = allies;
+    }
+
+    public List<Integer> getAllianceReq() {
+        return allianceReq;
+    }
+
+    public void setAllianceReq(List<Integer> allianceReq) {
+        this.allianceReq = allianceReq;
+    }
+
+    public int getTroopCount() {
+        return troopCount;
+    }
+
+    public void setTroopCount(int troopCount) {
+        this.troopCount = troopCount;
+    }
+
+    // Functional Methods
+
+    // Adds the selected card to the player's cards.
+    public void addCard (int cardType) {
+        cards[cardType]++;
+    }
+
+    // Checks whether the given player is an ally or not.
+    public boolean isAlly(int playerId) {
+        return allies[playerId];
+    }
+
+    // Makes the given player an ally.
+    public void addAlly(int playerId) {
+        allies[playerId] = true;
+    }
+
+    // Removes the given player from allies.
+    public void removeAlly(int playerId) {
+        allies[playerId] = false;
+    }
+
+    // Adds the alliance request.
+    public void addAllianceReq(int playerId) {
+        allianceReq.add(playerId);
+    }
+
+    // Calculates the troop count that player earns.
+    public void updateTroopCount() {
+        troopCount = (terCount / 3) + (contCount * 3);
+        if(isTargetTaken)
+            troopCount += 5;
     }
 }

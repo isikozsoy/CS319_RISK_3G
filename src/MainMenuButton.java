@@ -1,7 +1,4 @@
 import javafx.scene.control.Button;
-import javafx.scene.effect.*;
-import javafx.scene.*;
-import javafx.scene.paint.*;
 
 public class MainMenuButton extends Button {
     //font is Erica One
