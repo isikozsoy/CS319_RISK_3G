@@ -9,6 +9,7 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.*;
+import java.util.ArrayList;
 
 import java.io.*; //exceptions
 import java.util.List;
@@ -30,9 +31,12 @@ public class RiskView extends StackPane {
     };
     final String BACKGROUND_IMG_PATH = "background_image_bw.png";
 
+    ArrayList<ClickableTerritory> territoryList;
+
     private Stage mainStage;
 
     public RiskView(Stage stage) {
+        territoryList = new ArrayList<ClickableTerritory>();
         makeClickableMap();
         addPlayButton(stage);
     }
@@ -44,8 +48,8 @@ public class RiskView extends StackPane {
     }
 
     //below works for the first round (territory allocation), probably
-    private ImageView addClickableTerritory( String countryName, String path, String hoverPath) {
-        ImageView territoryClickable = new ClickableTerritory(countryName, path, hoverPath);
+    private ClickableTerritory addClickableTerritory( String countryName, String path, String hoverPath) {
+        ClickableTerritory territoryClickable = new ClickableTerritory(countryName, path, hoverPath);
         return territoryClickable;
     }
 
@@ -55,16 +59,22 @@ public class RiskView extends StackPane {
         this.getChildren().add( bgImage);
 
         for( int i = 0; i < territories.length; i++) {
-            ImageView clickableTerritory = addClickableTerritory( territories[i],
+            ClickableTerritory clickableTerritory = addClickableTerritory( territories[i],
                                                              DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
                                                           DIRECTORY_NAME + territories[i] + FILE_NAME_HOVERED_HELPER);
             bindMapToPaneSize(clickableTerritory);
+            territoryList.add(clickableTerritory);
 
             this.getChildren().add( clickableTerritory);
         }
     }
 
     private void bindMapToPaneSize( ImageView imageView) {
+        imageView.fitWidthProperty().bind( this.widthProperty());
+        imageView.fitHeightProperty().bind( this.heightProperty());
+        //imageView.setPreserveRatio( true);
+    }
+    private void bindMapToPaneSize( ClickableTerritory imageView) {
         imageView.fitWidthProperty().bind( this.widthProperty());
         imageView.fitHeightProperty().bind( this.heightProperty());
         //imageView.setPreserveRatio( true);
@@ -82,8 +92,8 @@ public class RiskView extends StackPane {
         this.setAlignment(play, Pos.TOP_RIGHT);
     }
     public void disableAllComponents() {
-        List<Node> territoryList = this.getChildren();
+        //territoryList = this.getChildren();
         for (int i = 0; i < territories.length; i++)
-            ((ClickableTerritory)territoryList.get(i)).removeEventListeners();
+            (territoryList.get(i)).removeEventListeners();
     }
 }
