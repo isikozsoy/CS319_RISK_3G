@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.beans.binding.Bindings;
 import javafx.scene.*;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.effect.*;
 
 import java.io.*; //exceptions
+import java.util.List;
 
 public class RiskView extends StackPane {
     final int WIDTH = 1280;
@@ -32,6 +34,7 @@ public class RiskView extends StackPane {
 
     public RiskView(Stage stage) {
         makeClickableMap();
+        addPlayButton(stage);
     }
 
     /** come back to this **/
@@ -66,5 +69,21 @@ public class RiskView extends StackPane {
         imageView.fitHeightProperty().bind( this.heightProperty());
         //imageView.setPreserveRatio( true);
     }
-
+    private void addPlayButton(Stage stage) {
+        Button play = new Button("play");
+        play.setLayoutX(500);
+        play.setLayoutY(20);
+        play.setOnMousePressed( e -> {
+            RPSGameView gameView = new RPSGameView( stage);
+            Scene newScene = new Scene(gameView, 1280, 1024);
+            stage.setScene( newScene);
+        });
+        this.getChildren().add(play);
+        this.setAlignment(play, Pos.TOP_RIGHT);
+    }
+    public void disableAllComponents() {
+        List<Node> territoryList = this.getChildren();
+        for (int i = 0; i < territories.length; i++)
+            ((ClickableTerritory)territoryList.get(i)).removeEventListeners();
+    }
 }
