@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 import java.io.*;
 
 public class MainMenuText extends Text {
-    final private String TEXT_STYLE           = "-fx-stroke: #f50000;" +
+    final private String TEXT_STYLE = "-fx-stroke: #f50000;" +
             "-fx-stroke-width: 3;";
     final private static int TEXT_SIZE = 60;
     final private static String FONT_PATH     = "font/EricaOne-Regular.ttf";
