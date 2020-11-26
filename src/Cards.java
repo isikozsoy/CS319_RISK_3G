@@ -36,6 +36,10 @@ public class Cards {
         shuffle();
     }
 
+    public Cards() {
+        new Cards(40, 12, 8, 2);
+    }
+
     public void shuffle() {
         Collections.shuffle(cards);
     }
