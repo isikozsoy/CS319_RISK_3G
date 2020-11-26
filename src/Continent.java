@@ -48,6 +48,6 @@ public class Continent {
 
     public boolean hasAnOwner() //0 for owner id means there is no such player
     {
-        return ownerId != 0;
+        return ownerId != 6;
     }
 }
