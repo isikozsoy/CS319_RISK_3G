@@ -1,4 +1,5 @@
 import javafx.geometry.Pos;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.*;
 import javafx.scene.control.Button;
@@ -10,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RiskView extends StackPane {
+    final int WIDTH = (int) Screen.getPrimary().getBounds().getWidth();
+    final int HEIGHT = (int) Screen.getPrimary().getBounds().getHeight();
+
     final String DIRECTORY_NAME = "/img/";
     final String FILE_NAME_HELPER = "_bw.png";
+    final String FILE_NAME_HOVERED_HELPER = "_bw_hovered.png";
     final String[] territories = {"Alaska", "Northwest Territory", "Greenland", "Alberta", "Ontario", "Quebec",
             "West America", "East America", "Central America", "Venezuela", "Peru", "Brazil", "Argentina",
             "North Africa", "Egypt", "East Africa", "Congo", "South Africa", "Madagascar",
@@ -26,7 +31,7 @@ public class RiskView extends StackPane {
     private List<ClickableTerritory> territoryList;
 
     public RiskView(Stage stage) {
-        territoryList = new ArrayList<>();
+        territoryList = new ArrayList<ClickableTerritory>();
         makeClickableMap();
         addPlayButton(stage);
     }
@@ -37,14 +42,21 @@ public class RiskView extends StackPane {
         makeClickableMap();
     }
 
+    //below works for the first round (territory allocation), probably
+    private ClickableTerritory addClickableTerritory( String countryName, String path, String hoverPath) {
+        ClickableTerritory territoryClickable = new ClickableTerritory(countryName, path, hoverPath);
+        return territoryClickable;
+    }
+
     private void makeClickableMap() {
         ImageView bgImage = new ImageView( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
         bindMapToPaneSize(bgImage);
         this.getChildren().add( bgImage);
 
         for( int i = 0; i < territories.length; i++) {
-            ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
-                                                        DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER);
+            ClickableTerritory clickableTerritory = addClickableTerritory( territories[i],
+                                                             DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
+                                                          DIRECTORY_NAME + territories[i] + FILE_NAME_HOVERED_HELPER);
             bindMapToPaneSize(clickableTerritory);
             territoryList.add(clickableTerritory);
 
@@ -55,19 +67,28 @@ public class RiskView extends StackPane {
     private void bindMapToPaneSize( ImageView imageView) {
         imageView.fitWidthProperty().bind( this.widthProperty());
         imageView.fitHeightProperty().bind( this.heightProperty());
+        //imageView.setPreserveRatio( true);
     }
+
+    private void bindMapToPaneSize( ClickableTerritory imageView) {
+        imageView.fitWidthProperty().bind( this.widthProperty());
+        imageView.fitHeightProperty().bind( this.heightProperty());
+        //imageView.setPreserveRatio( true);
+    }
+
     private void addPlayButton(Stage stage) {
         Button play = new Button("play");
         play.setLayoutX(500);
         play.setLayoutY(20);
         play.setOnMousePressed( e -> {
             RPSGameView gameView = new RPSGameView( stage);
-            Scene newScene = new Scene(gameView, 1280, 1024);
+            Scene newScene = new Scene(gameView, WIDTH, HEIGHT);
             stage.setScene( newScene);
         });
         this.getChildren().add(play);
         this.setAlignment(play, Pos.TOP_RIGHT);
     }
+
     public void disableAllComponents() {
         for (int i = 0; i < territories.length; i++)
             (territoryList.get(i)).removeEventListeners();
