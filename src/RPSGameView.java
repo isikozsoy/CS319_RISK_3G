@@ -19,9 +19,9 @@ import static javafx.application.Application.launch;
 
 
 public class RPSGameView extends RiskView {
-    final String DIRECTORY_NAME = "/icons/";
-    final String FILE_NAME_HELPER = "_rps.png";
-    final String[] RPSOptions = {"rock", "paper", "scissors"};
+    final private String DIRECTORY_NAME = "/icons/";
+    final private String FILE_NAME_HELPER = "_rps.png";
+    final private String[] RPSOptions = {"rock", "paper", "scissors"};
     private int noOfP1SoldiersPriv;
     private int noOfP2SoldiersPriv;
     private char p1Choice;
