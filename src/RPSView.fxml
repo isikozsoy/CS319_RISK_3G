@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane prefHeight="331.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RPSGameController">
+   <children>
+      <FlowPane layoutX="169.0" layoutY="97.0" orientation="VERTICAL" prefHeight="335.0" prefWidth="466.0" style="-fx-alignment: CENTER;">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="PLAYER 1" wrappingWidth="257.13673400878906" />
+            <HBox prefHeight="80.0" prefWidth="261.0" style="-fx-alignment: CENTER;">
+               <children>
+                  <ImageView fx:id="rock_icon" fitHeight="80.0" fitWidth="82.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/icons/rock_rps.png" />
+                     </image>
+                  </ImageView>
+
+                  <ImageView fx:id="paper_icon" fitHeight="80.0" fitWidth="92.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/icons/paper_rps.png"/>
+                     </image>
+                  </ImageView>
+
+                  <ImageView fx:id="scissors_icon" fitHeight="80.0" fitWidth="121.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/icons/scissors_rps.png"/>
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <HBox prefHeight="43.0" prefWidth="195.0">
+               <children>
+                  <Text fx:id="optRock" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="A" wrappingWidth="82.13674926757812" />
+                  <Text fx:id="optPaper" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="S" wrappingWidth="85.90625" />
+                  <Text fx:id="optScissor" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="D" wrappingWidth="75.552734375" />
+               </children>
+            </HBox>
+         </children>
+      </FlowPane>
+   </children>
+</StackPane>

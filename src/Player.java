@@ -28,8 +28,8 @@ public class Player {
         this.id = id;
         terCount = 0;
         contCount = 0;
-        cards = new int[3];  // 3 is the number of card types
-        for(int i = 0; i < 3; i++)
+        cards = new int[4];  //4 is the number of card types
+        for(int i = 0; i < 4; i++)
             cards[i] = 0;
         cardDeserved = false;
         this.targetCont = targetCont;
@@ -135,8 +135,15 @@ public class Player {
     // Functional Methods
 
     // Adds the selected card to the player's cards.
-    public void addCard (int cardType) {
-        cards[cardType]++;
+    public void addCard (Card card) {
+        if(card.getCardType() == cardType.INFANTRY)
+            cards[0]++;
+        else if(card.getCardType() == cardType.CAVALRY)
+            cards[1]++;
+        else if(card.getCardType() == cardType.CANNON)
+            cards[2]++;
+        else
+            cards[3]++;
     }
 
     // Checks whether the given player is an ally or not.
@@ -164,5 +171,10 @@ public class Player {
         troopCount = (terCount / 3) + (contCount * 3);
         if(isTargetTaken)
             troopCount += 5;
+    }
+
+    public void useCards(int[] cards) {
+        for (int i = 0; i < 4; i++)
+            this.cards[i] -= cards[i];
     }
 }

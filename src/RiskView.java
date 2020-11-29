@@ -1,3 +1,6 @@
+import com.sun.javafx.scene.SceneEventDispatcher;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -6,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
+import java.awt.event.ActionEvent;
 import java.io.*; //exceptions
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,7 @@ public class RiskView extends StackPane {
     private List<ClickableTerritory> territoryList;
 
     public RiskView(Stage stage) {
+        mainStage=stage;
         territoryList = new ArrayList<ClickableTerritory>();
         makeClickableMap();
         addPlayButton(stage);
@@ -81,16 +86,29 @@ public class RiskView extends StackPane {
         play.setLayoutX(500);
         play.setLayoutY(20);
         play.setOnMousePressed( e -> {
-            RPSGameView gameView = new RPSGameView( stage);
-            Scene newScene = new Scene(gameView, WIDTH, HEIGHT);
-            stage.setScene( newScene);
+            disableAllClickableTer();
+            try {
+                loadRPS();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         });
         this.getChildren().add(play);
         this.setAlignment(play, Pos.TOP_RIGHT);
     }
 
-    public void disableAllComponents() {
+    public void disableAllClickableTer() {
         for (int i = 0; i < territories.length; i++)
             (territoryList.get(i)).removeEventListeners();
+    }
+
+    public void enableAllClickableTer() {
+        for (int i = 0; i < territories.length; i++)
+            (territoryList.get(i)).addEventListeners();
+    }
+
+    public void loadRPS() throws IOException {
+        Parent ap = FXMLLoader.load(getClass().getResource("RPSView.fxml"));
+        this.getChildren().addAll(ap);
     }
 }
