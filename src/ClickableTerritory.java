@@ -26,7 +26,7 @@ public class ClickableTerritory extends ImageView {
         }
     }
 
-    private void addEventListeners() {
+    public void addEventListeners() {
         setOnMousePressed( e -> {
             if( clicked) {
                 return;
