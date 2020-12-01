@@ -35,12 +35,11 @@ public class PlayerButton extends Button {
         setMaxSize ( WIDTH, HEIGHT);
         setMinSize ( 100, 100);
 
-        playerList = new ArrayList<Player>();
+        playerList = new ArrayList<>();
         this.buttonId = buttonId;
         this.adderButton = adderButton;
         this.nextPlayer = nextPlayer;
-        this.player = player;
-        this.lastPlayer = null;
+        lastPlayer = null;
         this.prevPlayer = null; //this is for the first one
 
         if( nextPlayer != null) nextPlayer.prevPlayer = this;
@@ -61,13 +60,6 @@ public class PlayerButton extends Button {
         setGraphic( new ImageView( new Image( PLUS_ICON_PATH)));
     }
 
-    private PlayerButton getNext() {
-        return nextPlayer;
-    }
-    private PlayerButton getPrev() {
-        return prevPlayer;
-    }
-
     private void setAsAdderButton() {
         this.adderButton = true;
         lastPlayer = this;
@@ -76,7 +68,7 @@ public class PlayerButton extends Button {
         setStyle( currStyle);
 
         setOnMousePressed( e -> {
-            Player player = new Player("isik", 0, "Asia", 3);   // temporary
+            player = new Player("isik", 0, "Asia", 3);   // temporary
             playerList.add( buttonId, player);
 
             setAsPlayerButton();

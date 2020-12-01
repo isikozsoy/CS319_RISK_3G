@@ -1,23 +1,20 @@
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 
 public class ClickableTerritory extends ImageView {
     private String origPath;
-    private String hoveredPath;
     private String territoryName;
 
     private Image origImage;
-    private Image hoveredImage;
 
     private boolean clicked = false;
 
-    ClickableTerritory( String territoryName, String origPath, String hoveredPath) {
+    ClickableTerritory( String territoryName, String origPath) {
         this.territoryName = territoryName;
-        this.hoveredPath = hoveredPath;
         this.origPath = origPath;
 
         try {
             origImage = new Image(origPath);
-            hoveredImage = new Image( hoveredPath);
             setImage(origImage);
             addEventListeners();
         }
@@ -31,28 +28,30 @@ public class ClickableTerritory extends ImageView {
             if( clicked) {
                 return;
             }
-            setImage(hoveredImage);
+            System.out.println("Clicked on " + territoryName);
+            changeColor();
         });
         setOnMouseReleased( e -> {
             if( clicked) {
                 return;
             }
             clicked = true;
-            origImage = hoveredImage;
+            changeColor();
         });
         setOnMouseEntered( e -> {
             if( clicked) {
                 return;
             }
-            setImage(hoveredImage);
+            changeColor();
         });
         setOnMouseExited( e -> {
             if( clicked) {
                 return;
             }
-            setImage(origImage);
+            setEffect(null);
         });
     }
+
     public void removeEventListeners() {
         setOnMousePressed( e -> {
         });
@@ -62,5 +61,12 @@ public class ClickableTerritory extends ImageView {
         });
         setOnMouseExited( e -> {
         });
+    }
+
+    private void changeColor() {
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setHue(18);
+        colorAdjust.setSaturation(90);
+        this.setEffect(colorAdjust);
     }
 }
