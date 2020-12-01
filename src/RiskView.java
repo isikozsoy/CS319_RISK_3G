@@ -17,7 +17,6 @@ import java.util.List;
 public class RiskView extends StackPane {
     final int WIDTH = (int) Screen.getPrimary().getBounds().getWidth();
     final int HEIGHT = (int) Screen.getPrimary().getBounds().getHeight();
-
     final String DIRECTORY_NAME = "/img/";
     final String FILE_NAME_HELPER = "_bw.png";
     final String FILE_NAME_HOVERED_HELPER = "_bw_hovered.png";
@@ -87,11 +86,14 @@ public class RiskView extends StackPane {
         play.setLayoutY(20);
         play.setOnMousePressed( e -> {
             disableAllClickableTer();
+
+            StackPane root = null;
             try {
-                loadRPS();
+                root = (StackPane) FXMLLoader.load(Main.class.getResource("RPSView.fxml"));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+            this.getChildren().addAll(root);
         });
         this.getChildren().add(play);
         this.setAlignment(play, Pos.TOP_RIGHT);
@@ -105,10 +107,5 @@ public class RiskView extends StackPane {
     public void enableAllClickableTer() {
         for (int i = 0; i < territories.length; i++)
             (territoryList.get(i)).addEventListeners();
-    }
-
-    public void loadRPS() throws IOException {
-        Parent ap = FXMLLoader.load(getClass().getResource("RPSView.fxml"));
-        this.getChildren().addAll(ap);
     }
 }

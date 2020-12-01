@@ -8,7 +8,7 @@
    <children>
       <FlowPane layoutX="169.0" layoutY="97.0" orientation="VERTICAL" prefHeight="335.0" prefWidth="466.0" style="-fx-alignment: CENTER;">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="PLAYER 1" wrappingWidth="257.13673400878906" />
+            <Text fx:id="playerName" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 45; -fx-text-alignment: CENTER;" text="PLAYER 1" wrappingWidth="257.13673400878906" />
             <HBox prefHeight="80.0" prefWidth="261.0" style="-fx-alignment: CENTER;">
                <children>
                   <ImageView fx:id="rock_icon" fitHeight="80.0" fitWidth="82.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
