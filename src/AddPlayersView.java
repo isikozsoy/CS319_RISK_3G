@@ -15,11 +15,17 @@ public class AddPlayersView extends BeforeGameView {
     private final int firstLocX = 182;
     private final int firstLocY = 190;
 
-    AddPlayersView( Stage stage) {
+    private int width;
+    private int height;
+
+    AddPlayersView( Stage stage, int width, int height) {
         super();
         addPlayerButtons();
         addGameButton( stage);
         addBackButton( stage);
+
+        this.width = width;
+        this.height = height;
     }
 
     private void addPlayerButtons() {
@@ -63,8 +69,8 @@ public class AddPlayersView extends BeforeGameView {
         backButton.setStyle(ICON_BUTTON_STYLE);
 
         backButton.setOnMousePressed( e -> {
-            MainMenuView mainMenuView = new MainMenuView( stage);
-            Scene newScene = new Scene(mainMenuView, 1280, 1024);
+            MainMenuView mainMenuView = new MainMenuView( stage, width, height);
+            Scene newScene = new Scene(mainMenuView, width, height);
             stage.setScene( newScene);
         });
 
@@ -88,7 +94,7 @@ public class AddPlayersView extends BeforeGameView {
 
         gameButton.setOnMousePressed( e -> {
             RiskView gameView = new RiskView( stage);
-            Scene newScene = new Scene(gameView, 1280, 1024);
+            Scene newScene = new Scene(gameView, width, height);
             stage.setScene( newScene);
         });
 

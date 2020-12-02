@@ -3,8 +3,8 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 
 public class Main extends Application {
-    final private int WIDTH = 1280;
-    final private int HEIGHT = 1024;
+    final private int WIDTH = 1000;
+    final private int HEIGHT = 750;
 
     Scene mainScene;
     //Stage mainStage;
@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            MainMenuView menuView = new MainMenuView( stage);
+            MainMenuView menuView = new MainMenuView( stage, WIDTH, HEIGHT);
             mainScene = new Scene(menuView, WIDTH, HEIGHT);
             stage.setScene( mainScene);
 

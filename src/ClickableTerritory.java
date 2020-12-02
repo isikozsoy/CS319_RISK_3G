@@ -2,19 +2,17 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 
 public class ClickableTerritory extends ImageView {
-    private String origPath;
-    private String territoryName;
-
-    private Image origImage;
+    private final String territoryName;
+    private ColorAdjust colorAdjust;
 
     private boolean clicked = false;
 
     ClickableTerritory( String territoryName, String origPath) {
         this.territoryName = territoryName;
-        this.origPath = origPath;
+        colorAdjust = new ColorAdjust();
 
         try {
-            origImage = new Image(origPath);
+            Image origImage = new Image(origPath);
             setImage(origImage);
             addEventListeners();
         }
@@ -64,9 +62,9 @@ public class ClickableTerritory extends ImageView {
     }
 
     private void changeColor() {
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setHue(18);
-        colorAdjust.setSaturation(90);
+        colorAdjust.setHue(0.18);
+        colorAdjust.setSaturation(95);
+        colorAdjust.setBrightness(0.35);
         this.setEffect(colorAdjust);
     }
 }
