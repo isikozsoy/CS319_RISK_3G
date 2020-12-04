@@ -1,23 +1,32 @@
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 
-public class ClickableTerritory extends ImageView {
-    private String origPath;
-    private String hoveredPath;
-    private String territoryName;
+import java.util.HashMap;
 
-    private Image origImage;
-    private Image hoveredImage;
+public class ClickableTerritory extends ImageView {
+    private final String territoryName;
+    private ColorAdjust colorAdjust;
+    private HashMap<String, Double> colorsAndHues;
+    private String color;
 
     private boolean clicked = false;
 
-    ClickableTerritory( String territoryName, String origPath, String hoveredPath) {
+    ClickableTerritory( String territoryName, String origPath) {
         this.territoryName = territoryName;
-        this.hoveredPath = hoveredPath;
-        this.origPath = origPath;
+        colorAdjust = new ColorAdjust();
+        color = "red"; //as an initial value
+        colorsAndHues = new HashMap<>();
+        colorsAndHues.put("orange", 0.18);
+        colorsAndHues.put("red", 0.0);
+        colorsAndHues.put("cyan", 0.9);
+        colorsAndHues.put("pink", -0.1);
+        colorsAndHues.put("purple", -0.4);
+        colorsAndHues.put("blue", -0.7);
+        colorsAndHues.put("green", 0.7);
+        colorsAndHues.put("yellow", 0.3);
 
         try {
-            origImage = new Image(origPath);
-            hoveredImage = new Image( hoveredPath);
+            Image origImage = new Image(origPath);
             setImage(origImage);
             addEventListeners();
         }
@@ -26,33 +35,39 @@ public class ClickableTerritory extends ImageView {
         }
     }
 
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public void addEventListeners() {
         setOnMousePressed( e -> {
             if( clicked) {
                 return;
             }
-            setImage(hoveredImage);
+            System.out.println("Clicked on " + territoryName);
+            changeColor();
         });
         setOnMouseReleased( e -> {
             if( clicked) {
                 return;
             }
             clicked = true;
-            origImage = hoveredImage;
+            changeColor();
         });
         setOnMouseEntered( e -> {
             if( clicked) {
                 return;
             }
-            setImage(hoveredImage);
+            changeColor();
         });
         setOnMouseExited( e -> {
             if( clicked) {
                 return;
             }
-            setImage(origImage);
+            setEffect(null);
         });
     }
+
     public void removeEventListeners() {
         setOnMousePressed( e -> {
         });
@@ -62,5 +77,12 @@ public class ClickableTerritory extends ImageView {
         });
         setOnMouseExited( e -> {
         });
+    }
+
+    private void changeColor() {
+        colorAdjust.setHue(colorsAndHues.get(color));
+        colorAdjust.setSaturation(95);
+        colorAdjust.setBrightness(0.35);
+        this.setEffect(colorAdjust);
     }
 }

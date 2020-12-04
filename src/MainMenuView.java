@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 public class MainMenuView extends BeforeGameView {
-    final private int MENU_WIDTH          = 800;
-    final private int MENU_HEIGHT         = 600;
-
     final private int   locXForMenu       = 290;
     final private int   locYIncrease      = 100;
     final private int[] locLogo           = {locXForMenu, 75};
@@ -23,11 +20,15 @@ public class MainMenuView extends BeforeGameView {
                                             "-fx-opacity:0.6;";
 
     Dimension screenSize;
+    private int width;
+    private int height;
 
-    MainMenuView( Stage stage) {
+    MainMenuView( Stage stage, int width, int height) {
         System.out.println("Here");
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         buttonsPane( stage);
+        this.width = width;
+        this.height = height;
     }
 
     private void buttonsPane(Stage stage){
@@ -70,8 +71,8 @@ public class MainMenuView extends BeforeGameView {
         newGameButton.setOnMouseClicked( e -> {
             System.out.println("Clicked on New Game");
             //RiskView gameView = new RiskView();
-            AddPlayersView addPlayersView = new AddPlayersView( stage);
-            Scene addPlayerScene = new Scene( addPlayersView, 1280, 1024);
+            AddPlayersView addPlayersView = new AddPlayersView( stage, width, height);
+            Scene addPlayerScene = new Scene( addPlayersView, width, height);
 
             stage.setScene( addPlayerScene);
             //stage.show();
