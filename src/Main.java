@@ -1,6 +1,9 @@
 import javafx.application.Application;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+
+import java.util.List;
 
 public class Main extends Application {
     final private int WIDTH = 1000;

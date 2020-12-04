@@ -20,9 +20,8 @@ public class Player {
     private int troopCount;
 
     // Constructor
-    Player(String name, int id, String targetCont, int playerCount) {
-        int nextInt = random.nextInt(0xffffff + 1);
-        color = String.format("#%06x", nextInt);
+    Player(String name, int id, String targetCont, int playerCount, String color) {
+        this.color = color;
 
         this.name = name;
         this.id = id;
@@ -46,6 +45,10 @@ public class Player {
     // Getters & Setters
     public String getColor() {
         return color;
+    }
+
+    public void setColor( String color) {
+        this.color = color;
     }
 
     public String getName() {
@@ -176,5 +179,14 @@ public class Player {
     public void useCards(int[] cards) {
         for (int i = 0; i < 4; i++)
             this.cards[i] -= cards[i];
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "color='" + color + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

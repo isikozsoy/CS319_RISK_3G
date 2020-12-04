@@ -5,12 +5,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RPSGameController implements Initializable {
     @FXML
@@ -41,9 +48,21 @@ public class RPSGameController implements Initializable {
 
         file = new File("src/icons/scissors_rps.png");
         scissors_icon.setImage(new Image(file.toURI().toString()));
+        //play(5, 5);
+    }
 
-        play(5, 5);
-
+    public void execute(RiskView pane) {
+        Timer t = new java.util.Timer();
+        t.schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        pane.getChildren().remove(pane.rpsGameRoot);
+                        t.cancel();
+                    }
+                },
+                5000
+        );
     }
 
     public void play(int noOfP1Soldiers, int noOfP2Soldiers) {
