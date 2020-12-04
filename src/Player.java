@@ -134,6 +134,11 @@ public class Player {
 
     // Functional Methods
 
+    // Increases terr. count by 1
+    public void increaseTerCount() {
+        terCount++;
+    }
+
     // Adds the selected card to the player's cards.
     public void addCard (Card card) {
         if(card.getCardType() == cardType.INFANTRY)
