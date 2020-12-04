@@ -1,4 +1,5 @@
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
@@ -27,9 +28,13 @@ public class RiskView extends StackPane {
     StackPane rpsGameRoot;
     private Button playButton;
     private int clickedOnPlay = 0;
+    private ArrayList<Player> players;
 
-    public RiskView(Stage stage) {
+    public RiskView(Stage stage, ArrayList<Player> playerList) {
+        players = playerList;
         territoryList = new ArrayList<>();
+        addBackground();
+        addPlayerNameBars();
         try {
             rpsGameRoot = FXMLLoader.load(Main.class.getResource("RPSView.fxml"));
         } catch (IOException ioException) {
@@ -39,11 +44,13 @@ public class RiskView extends StackPane {
         addPlayButton(stage);
     }
 
-    private void makeClickableMap() {
+    private void addBackground() {
         ImageView bgImage = new ImageView( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
         bindMapToPaneSize(bgImage);
         this.getChildren().add( bgImage);
+    }
 
+    private void makeClickableMap() {
         for (String territory : territories) {
             ClickableTerritory clickableTerritory = new ClickableTerritory(territory,
                     DIRECTORY_NAME + territory + FILE_NAME_HELPER);
@@ -94,5 +101,22 @@ public class RiskView extends StackPane {
     public void enableAllClickableTer() {
         for (int i = 0; i < territories.length; i++)
             (territoryList.get(i)).addEventListeners();
+    }
+
+    public void addPlayerNameBars() {
+        FlowPane nameBarPane = new FlowPane();
+        nameBarPane.setHgap(10);
+        for( Player player: players) {
+            Button nameButton = new Button();
+            nameButton.setStyle("-fx-background-color:" + player.getColor() + ";");
+            nameButton.setPrefSize(200, 80);
+            nameButton.setText(player.getName());
+            nameButton.setOnMouseClicked(e -> {
+                System.out.println("Clicked");
+            });
+            nameBarPane.getChildren().add(nameButton);
+        }
+        nameBarPane.setAlignment(Pos.BOTTOM_CENTER);
+        this.getChildren().add(nameBarPane);
     }
 }

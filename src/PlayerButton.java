@@ -236,4 +236,8 @@ public class PlayerButton extends StackPane {
     public int getButtonHeight() {
         return HEIGHT;
     }
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
+    }
 }
