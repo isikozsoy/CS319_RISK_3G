@@ -14,12 +14,12 @@ public class ClickableTerritory extends ImageView {
     ClickableTerritory( String territoryName, String origPath) {
         this.territoryName = territoryName;
         colorAdjust = new ColorAdjust();
-        color = "red"; //as an initial value
+        color = "aqua"; //as an initial value
         colorsAndHues = new HashMap<>();
         colorsAndHues.put("orange", 0.18);
         colorsAndHues.put("red", 0.0);
-        colorsAndHues.put("cyan", 0.9);
-        colorsAndHues.put("pink", -0.1);
+        colorsAndHues.put("aqua", 0.9);
+        colorsAndHues.put("fuchsia", -0.1);
         colorsAndHues.put("purple", -0.4);
         colorsAndHues.put("blue", -0.7);
         colorsAndHues.put("green", 0.7);

@@ -1,6 +1,7 @@
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -29,10 +30,14 @@ public class RiskView extends StackPane {
     private Button playButton;
     private int clickedOnPlay = 0;
     private ArrayList<Player> players;
+    private int width;
+    private int height;
 
-    public RiskView(Stage stage, ArrayList<Player> playerList) {
+    public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
         territoryList = new ArrayList<>();
+        this.width = width;
+        this.height = height;
         addBackground();
         addPlayerNameBars();
         try {
@@ -106,17 +111,23 @@ public class RiskView extends StackPane {
     public void addPlayerNameBars() {
         FlowPane nameBarPane = new FlowPane();
         nameBarPane.setHgap(10);
+        nameBarPane.setVgap(10);
         for( Player player: players) {
             Button nameButton = new Button();
-            nameButton.setStyle("-fx-background-color:" + player.getColor() + ";");
-            nameButton.setPrefSize(200, 80);
+            nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
+                    "-fx-text-fill: white;-fx-background-radius:20;");
+            nameButton.setPrefSize(width / players.size() - 40, 50);
             nameButton.setText(player.getName());
+            if(players.size() <= 4)
+                nameButton.setFont(Font.font("Snap ITC", 30));
+            else
+                nameButton.setFont(Font.font("Snap ITC", 30*4/(players.size())));
             nameButton.setOnMouseClicked(e -> {
                 System.out.println("Clicked");
             });
             nameBarPane.getChildren().add(nameButton);
         }
-        nameBarPane.setAlignment(Pos.BOTTOM_CENTER);
+        nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
         this.getChildren().add(nameBarPane);
     }
 }

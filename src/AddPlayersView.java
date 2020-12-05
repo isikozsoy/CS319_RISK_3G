@@ -98,7 +98,7 @@ public class AddPlayersView extends BeforeGameView {
 
         gameButton.setOnMousePressed( e -> {
             playerList = firstButton.getPlayerList();
-            RiskView gameView = new RiskView( stage, playerList);
+            RiskView gameView = new RiskView( stage, playerList, width, height);
             Scene newScene = new Scene(gameView, width, height);
             stage.setScene( newScene);
         });
