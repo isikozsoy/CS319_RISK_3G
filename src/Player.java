@@ -20,17 +20,15 @@ public class Player {
     private int troopCount;
 
     // Constructor
-    Player() {}
-    Player(String name, int id, String targetCont, int playerCount) {
-        int nextInt = random.nextInt(0xffffff + 1);
-        color = String.format("#%06x", nextInt);
+    Player(String name, int id, String targetCont, int playerCount, String color) {
+        this.color = color;
 
         this.name = name;
         this.id = id;
         terCount = 0;
         contCount = 0;
-        cards = new int[3];  // 3 is the number of card types
-        for(int i = 0; i < 3; i++)
+        cards = new int[4];  //4 is the number of card types
+        for(int i = 0; i < 4; i++)
             cards[i] = 0;
         cardDeserved = false;
         this.targetCont = targetCont;
@@ -47,6 +45,10 @@ public class Player {
     // Getters & Setters
     public String getColor() {
         return color;
+    }
+
+    public void setColor( String color) {
+        this.color = color;
     }
 
     public String getName() {
@@ -136,8 +138,15 @@ public class Player {
     // Functional Methods
 
     // Adds the selected card to the player's cards.
-    public void addCard (int cardType) {
-        cards[cardType]++;
+    public void addCard (Card card) {
+        if(card.getCardType() == cardType.INFANTRY)
+            cards[0]++;
+        else if(card.getCardType() == cardType.CAVALRY)
+            cards[1]++;
+        else if(card.getCardType() == cardType.CANNON)
+            cards[2]++;
+        else
+            cards[3]++;
     }
 
     // Checks whether the given player is an ally or not.
@@ -165,5 +174,19 @@ public class Player {
         troopCount = (terCount / 3) + (contCount * 3);
         if(isTargetTaken)
             troopCount += 5;
+    }
+
+    public void useCards(int[] cards) {
+        for (int i = 0; i < 4; i++)
+            this.cards[i] -= cards[i];
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "color='" + color + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }
