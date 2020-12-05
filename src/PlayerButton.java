@@ -67,9 +67,10 @@ public class PlayerButton extends StackPane {
         colors.add("green");
         colors.add("blue");
         colors.add("purple");
-        colors.add("pink");
+        colors.add("fuchsia");
         colors.add("orange");
         colors.add("yellow");
+        colors.add("aqua");
 
         mainButton.setPrefSize( WIDTH, HEIGHT);
         mainButton.setMaxSize ( WIDTH, HEIGHT);
@@ -235,5 +236,9 @@ public class PlayerButton extends StackPane {
 
     public int getButtonHeight() {
         return HEIGHT;
+    }
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
     }
 }

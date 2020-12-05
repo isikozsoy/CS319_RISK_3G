@@ -5,6 +5,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 
+import java.util.ArrayList;
+
 public class AddPlayersView extends BeforeGameView {
     private final String ICON_BUTTON_STYLE = "-fx-background-color: transparent;";
     private final String ARROW_BUTTON_PATH = "/icons/" + "arrow_icon.png";
@@ -17,6 +19,8 @@ public class AddPlayersView extends BeforeGameView {
 
     private int width;
     private int height;
+    private ArrayList<Player> playerList;
+    private PlayerButton firstButton;
 
     AddPlayersView( Stage stage, int width, int height) {
         super();
@@ -49,13 +53,13 @@ public class AddPlayersView extends BeforeGameView {
                 firstLocX + playerButtonBeforeClicking6.getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY,
                 playerButtonBeforeClicking3, 1);
-        PlayerButton playerButtonBeforeClicking1 = new PlayerButton( true,
+        firstButton = new PlayerButton( true,
                 firstLocX,
                 firstLocY,
                 playerButtonBeforeClicking2, 0);
 
         Group g = new Group();
-        g.getChildren().addAll( playerButtonBeforeClicking1, playerButtonBeforeClicking2,
+        g.getChildren().addAll( firstButton, playerButtonBeforeClicking2,
                                 playerButtonBeforeClicking3, playerButtonBeforeClicking4,
                                 playerButtonBeforeClicking5, playerButtonBeforeClicking6);
         super.addGroup(g);
@@ -93,7 +97,8 @@ public class AddPlayersView extends BeforeGameView {
         gameButton.setStyle(ICON_BUTTON_STYLE);
 
         gameButton.setOnMousePressed( e -> {
-            RiskView gameView = new RiskView( stage);
+            playerList = firstButton.getPlayerList();
+            RiskView gameView = new RiskView( stage, playerList, width, height);
             Scene newScene = new Scene(gameView, width, height);
             stage.setScene( newScene);
         });
