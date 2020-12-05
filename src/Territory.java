@@ -11,10 +11,10 @@ public class Territory {
     private boolean hasAnAirport;
 
     //constructor
-    Territory(String name, int ownerId, Color color)
+    Territory(String name, Color color)
     {
         this.name = name;
-        this.ownerId = ownerId;
+        ownerId = -1;
         this.color = color;
 
         neighbors = new HashSet<>();
@@ -53,7 +53,7 @@ public class Territory {
         this.color = color;
     }
 
-    public boolean hasAnAirport() {
+    public boolean hasAirport() {
         return hasAnAirport;
     }
 
