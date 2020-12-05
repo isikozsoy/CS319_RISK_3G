@@ -33,7 +33,15 @@ public class Player {
         cardDeserved = false;
         this.targetCont = targetCont;
         isTargetTaken = false;
-        troopCount = 30;  // This will be determined aaccording to the number of player.
+        if(playerCount == 3)
+            troopCount = 35;
+        else if(playerCount == 4)
+            troopCount = 30;
+        else if(playerCount == 5)
+            troopCount = 25;
+        else if(playerCount == 6)
+            troopCount = 20;
+
         allies = new boolean[playerCount];
         allianceReq = new ArrayList<Integer>();
         for (int i = 0; i < playerCount; i++)
@@ -175,6 +183,11 @@ public class Player {
         if(isTargetTaken)
             troopCount += 5;
     }
+
+    public void decreaseTroop( int usedTroopCount) {
+        troopCount -= usedTroopCount;
+    }
+
 
     public void useCards(int[] cards) {
         for (int i = 0; i < 4; i++)
