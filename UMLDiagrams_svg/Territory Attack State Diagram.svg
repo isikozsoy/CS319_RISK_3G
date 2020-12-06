@@ -30,45 +30,51 @@
       ><path d="M0 0 L276 0 L276 183 L0 183 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath9"
-      ><path d="M0 0 L0 80 L131 80 L131 95 L0 95 L0 183 L276 183 L276 173 L169 173 L169 158 L276 158 L276 140 L211 140 L211 125 L276 125 L276 0 Z"
+      ><path d="M0 0 L0 80 L131 80 L131 95 L0 95 L0 183 L276 183 L276 173 L176 173 L176 157 L276 157 L276 140 L213 140 L213 125 L276 125 L276 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath10"
       ><path d="M0 0 L323 0 L323 104 L0 104 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath11"
-      ><path d="M267 32 L267 47 L53 47 L53 32 ZM0 0 L0 104 L323 104 L323 0 L224 0 L224 14 L95 14 L95 0 Z"
+      ><path d="M260 31 L260 47 L60 47 L60 31 ZM0 0 L0 104 L323 104 L323 0 L221 0 L221 14 L97 14 L97 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath12"
       ><path d="M0 0 L173 0 L173 197 L0 197 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath13"
-      ><path d="M0 0 L0 3 L114 3 L114 18 L0 18 L0 197 L173 197 L173 114 L87 114 L87 99 L173 99 L173 0 Z"
+      ><path d="M0 0 L0 2 L107 2 L107 18 L0 18 L0 197 L173 197 L173 114 L87 114 L87 99 L173 99 L173 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath14"
       ><path d="M0 0 L104 0 L104 190 L0 190 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath15"
-      ><path d="M0 0 L0 95 L104 95 L104 15 L69 15 L69 0 ZM0 110 L0 161 L12 161 L12 176 L0 176 L0 190 L104 190 L104 110 Z"
+      ><path d="M0 0 L0 95 L104 95 L104 15 L76 15 L76 0 ZM0 110 L0 160 L9 160 L9 176 L0 176 L0 190 L104 190 L104 110 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath16"
-      ><path d="M224 34 L224 49 L95 49 L95 34 ZM267 67 L267 82 L53 82 L53 67 ZM15 0 L15 4 L0 4 L0 104 L323 104 L323 0 Z"
+      ><path d="M221 34 L221 49 L97 49 L97 34 ZM260 66 L260 82 L60 82 L60 66 ZM15 0 L15 4 L0 4 L0 104 L323 104 L323 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath17"
       ><path d="M0 0 L265 0 L265 211 L0 211 L0 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath18"
-      ><path d="M184 170 L184 185 L55 185 L55 170 ZM0 0 L0 211 L265 211 L265 119 L121 119 L121 104 L265 104 L265 24 L241 24 L241 9 L265 9 L265 0 Z"
+      ><path d="M181 169 L181 185 L56 185 L56 169 ZM0 0 L0 211 L265 211 L265 119 L127 119 L127 104 L265 104 L265 24 L248 24 L248 8 L265 8 L265 0 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath19"
-      ><path d="M-129 -15 L258 -15 L258 30 L-129 30 L-129 -15 Z"
+      ><path d="M-125 -16 L250 -16 L250 32 L-125 32 L-125 -16 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath20"
-      ><path d="M-214 -15 L428 -15 L428 30 L-214 30 L-214 -15 Z"
+      ><path d="M-124 -15 L248 -15 L248 30 L-124 30 L-124 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath21"
-      ><path d="M-176 -15 L352 -15 L352 30 L-176 30 L-176 -15 Z"
+      ><path d="M-200 -15 L400 -15 L400 30 L-200 30 L-200 -15 Z"
       /></clipPath
       ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath22"
+      ><path d="M-176 -15 L352 -15 L352 30 L-176 30 L-176 -15 Z"
+      /></clipPath
+      ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath23"
+      ><path d="M-200 -16 L400 -16 L400 32 L-200 32 L-200 -16 Z"
+      /></clipPath
+      ><clipPath clipPathUnits="userSpaceOnUse" id="clipPath24"
       ><path d="M-233 -15 L466 -15 L466 30 L-233 30 L-233 -15 Z"
       /></clipPath
     ></defs
@@ -141,28 +147,28 @@
       /><line y2="62" fill="none" x1="50" clip-path="url(#clipPath18)" x2="44" y1="50"
       /><line y2="62" fill="none" x1="50" clip-path="url(#clipPath18)" x2="56" y1="50"
     /></g
-    ><g font-size="11px" transform="translate(87,285)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><g font-size="11px" transform="translate(88,284)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath19)" stroke="none"
-      >Has at most 2 soldiers</text
+      >Has at most 1 soldier</text
     ></g
-    ><g font-size="11px" transform="translate(315,91)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath19)" stroke="none"
-      >Has at most 2 soldiers</text
-    ></g
-    ><g font-size="11px" transform="translate(153,219)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><g font-size="11px" transform="translate(317,91)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath20)" stroke="none"
-      >Has more than 2 soldiers and an airport</text
+      >Has at most 1 soldier</text
+    ></g
+    ><g font-size="11px" transform="translate(159,219)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath21)" stroke="none"
+      >Has at least 2 soldiers and an airport</text
     ></g
     ><g font-size="11px" transform="translate(460,220)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath21)" stroke="none"
+    ><text x="10" xml:space="preserve" y="12" clip-path="url(#clipPath22)" stroke="none"
       >An airport is built on the territory</text
     ></g
-    ><g font-size="11px" transform="translate(273,124)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath20)" stroke="none"
-      >Has more than 2 soldiers and no airport</text
+    ><g font-size="11px" transform="translate(280,123)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
+    ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath23)" stroke="none"
+      >Has at least 2 soldiers and no airport</text
     ></g
     ><g font-size="11px" transform="translate(2,46)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath22)" stroke="none"
+    ><text x="9" xml:space="preserve" y="12" clip-path="url(#clipPath24)" stroke="none"
       >Territory is selected at the start of the game</text
     ></g
     ><g font-size="8px" fill-opacity="1" fill="rgb(120,120,120)" text-rendering="geometricPrecision" image-rendering="optimizeQuality" stroke="rgb(120,120,120)" stroke-opacity="1"
