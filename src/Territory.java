@@ -5,6 +5,7 @@ public class Territory {
     //properties
     private String name;
     private int ownerId;
+    private Player owner;
     private HashSet<Territory> neighbors;
     private int troopCount;
     private boolean hasAirport;
@@ -13,6 +14,7 @@ public class Territory {
     Territory(String name, HashSet<Territory> neighbours) {
         this.name = name;
         ownerId = -1;
+        owner = null;
         hasAirport = false;
         troopCount = 0;
         this.neighbors = neighbours;
@@ -35,6 +37,10 @@ public class Territory {
         this.ownerId = ownerId;
     }
 
+    public Player getOwner() { return owner; }
+
+    public void setOwner(Player owner) { this.owner = owner; }
+
     public int getTroopCount() {
         return troopCount;
     }
@@ -43,14 +49,9 @@ public class Territory {
         this.troopCount = troopCount;
     }
 
-    public boolean hasAnAirport() {
-        return hasAirport;
-    }
+    public boolean hasAirport() { return hasAirport; }
 
-    public void buildAnAirport() //to build an airport hasAnAirport is set to true
-    {
-        hasAirport = true;
-    }
+    public void setHasAirport(boolean hasAirport) { this.hasAirport = hasAirport; }
 
     public HashSet<Territory> getNeighbors() {
         return neighbors;

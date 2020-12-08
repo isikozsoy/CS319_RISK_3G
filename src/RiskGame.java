@@ -10,24 +10,30 @@ public class RiskGame {
     private int gamePhase;
     private int playerCount;
     private Cards cards;
+    private boolean isGameOver;
     // RPS
     // Continent List
 
  public RiskGame(ArrayList<Player> players, ArrayList<Territory> territories) {
-    this.players = players;
-    this.territories = territories;
-    curPlayerId = 0;
-    gamePhase = 0;
-    playerCount = players.size();
-    cards = null;   // for now
+     this.players = players;
+     this.territories = territories;
+     curPlayerId = 0;
+     gamePhase = 0;
+     playerCount = players.size();
+     cards = null;   // for now
+     // isGameOver = false;
      // Contients
      // RPS
  }
 
     public Player play() {
+
         startTerAlloc();
-        while (players.get(curPlayerId).getTroopCount() > 0) {
-            startSoldierAlloc(players.get(curPlayerId));
+        while (!isGameOver) {
+            Player curPlayer = players.get(curPlayerId);
+            startSoldierAlloc(curPlayer);
+            startAttack(curPlayer);
+            startFortify(curPlayer);
             curPlayerId = (curPlayerId + 1) % playerCount;
         }
         return null;
@@ -37,10 +43,11 @@ public class RiskGame {
         Territory tempTer = new Territory("Turkiyeeem", null);
         int tempTerCount = TER_COUNT;
         while(tempTerCount > 0) {
+            Player curPlayer = players.get(curPlayerId);
             if(tempTer.getOwnerId() == -1) {
                 tempTer.setOwnerId(curPlayerId);
-                players.get(curPlayerId).decreaseTroop(1);
-                players.get(curPlayerId).setTerCount(players.get(curPlayerId).getTerCount() + 1);
+                curPlayer.decreaseTroop(1);
+                curPlayer.setTerCount(curPlayer.getTerCount() + 1);
                 tempTerCount = tempTerCount - 1;
                 curPlayerId = (curPlayerId + 1) % playerCount;
             }
@@ -53,12 +60,10 @@ public class RiskGame {
          Territory territoryTemp = new Territory("deneme", null);
          int noOfTroopsToBeAllocatedTemp = 0;
          //number of troops to be allocated is got from the player with a listener
-         //                                                                   //
-         //                                                                   //
+         //                                                                  //
          ///////////////////////////////////////////////////////////////////////
 
          //clicked territory got from the player with a listener
-         //                                                   //
          //                                                   //
          ///////////////////////////////////////////////////////
 
@@ -67,6 +72,23 @@ public class RiskGame {
             player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
             noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
          }
+     }
+     player.setTroopCount(0);
+    }
+
+    public void startAttack(Player player) {
+     //////////////////////////////////
+     ///         TO DO              ///
+     //////////////////////////////////
+    }
+
+    public void startFortify(Player player) {
+     Territory tempSource = null;
+     Territory tempTarget = null;
+     int troopToTransfer = 5;
+     if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
+         tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
+         tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
      }
     }
 }
