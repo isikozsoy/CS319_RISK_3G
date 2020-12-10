@@ -5,6 +5,7 @@ public class Territory {
     //properties
     private String name;
     private int ownerId;
+<<<<<<< HEAD
     private HashSet<Territory> neighbors;
     private int troopCount;
     private Color color;
@@ -18,6 +19,21 @@ public class Territory {
         this.color = color;
 
         neighbors = new HashSet<>();
+=======
+    private Player owner;
+    private HashSet<Territory> neighbors;
+    private int troopCount;
+    private boolean hasAirport;
+
+    //constructor
+    Territory(String name, HashSet<Territory> neighbours) {
+        this.name = name;
+        ownerId = -1;
+        owner = null;
+        hasAirport = false;
+        troopCount = 0;
+        this.neighbors = neighbours;
+>>>>>>> origin/master
     }
 
     //getter setters
@@ -37,6 +53,13 @@ public class Territory {
         this.ownerId = ownerId;
     }
 
+<<<<<<< HEAD
+=======
+    public Player getOwner() { return owner; }
+
+    public void setOwner(Player owner) { this.owner = owner; }
+
+>>>>>>> origin/master
     public int getTroopCount() {
         return troopCount;
     }
@@ -45,6 +68,7 @@ public class Territory {
         this.troopCount = troopCount;
     }
 
+<<<<<<< HEAD
     public Color getColor() {
         return color;
     }
@@ -61,6 +85,11 @@ public class Territory {
     {
         hasAnAirport = true;
     }
+=======
+    public boolean hasAirport() { return hasAirport; }
+
+    public void setHasAirport(boolean hasAirport) { this.hasAirport = hasAirport; }
+>>>>>>> origin/master
 
     public HashSet<Territory> getNeighbors() {
         return neighbors;
@@ -72,14 +101,26 @@ public class Territory {
     //end getter setters
 
     public void addNeighbor(Territory neighbor) //adds given Territory parameter to the hashset using
+<<<<<<< HEAD
                                                 // .add(Object object) method
+=======
+    // .add(Object object) method
+>>>>>>> origin/master
     {
         neighbors.add(neighbor);
     }
 
     public boolean isNeighbor(Territory territory) //checks if a given Territory object
+<<<<<<< HEAD
                                                    // is contained in the hashset: neighbors
     {
         return neighbors.contains(territory);
     }
 }
+=======
+    // is contained in the hashset: neighbors
+    {
+        return neighbors.contains(territory);
+    }
+}
+>>>>>>> origin/master
