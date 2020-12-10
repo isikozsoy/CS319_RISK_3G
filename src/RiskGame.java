@@ -91,4 +91,11 @@ public class RiskGame {
          tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
      }
     }
+
+    public void update() {
+        //////////////////////////////////
+        ///         TO DO              ///
+        //////////////////////////////////
+
+    }
 }
