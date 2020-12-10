@@ -21,7 +21,7 @@ public class RiskGame {
      gamePhase = 0;
      playerCount = players.size();
      cards = null;   // for now
-     // isGameOver = false;
+     isGameOver = false;
      // Contients
      // RPS
  }
