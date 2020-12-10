@@ -34,6 +34,7 @@ public class RiskGame {
             startSoldierAlloc(curPlayer);
             startAttack(curPlayer);
             startFortify(curPlayer);
+            update();
             curPlayerId = (curPlayerId + 1) % playerCount;
         }
         return null;
