@@ -5,19 +5,22 @@ public class Territory {
     //properties
     private String name;
     private int ownerId;
-    private Player owner;
-    private HashSet<Territory> neighbors;
     private int troopCount;
     private boolean hasAirport;
+    protected Player owner;
+    protected HashSet<Territory> neighbors;
 
     //constructor
-    Territory(String name, HashSet<Territory> neighbours) {
+    public Territory(String name, HashSet<Territory> neighbours) {
         this.name = name;
         ownerId = -1;
         owner = null;
         hasAirport = false;
         troopCount = 0;
         this.neighbors = neighbours;
+    }
+
+    public Territory() {
     }
 
     //getter setters
@@ -72,5 +75,23 @@ public class Territory {
     // is contained in the hashset: neighbors
     {
         return neighbors.contains(territory);
+    }
+
+    //Returns all the territories that can be attacked from this territory.
+    public HashSet<Territory> searchForAttackable() {
+        HashSet<Territory> attackableTerritories = new HashSet<>();
+
+        for (Territory neighbor : neighbors) {
+            if (owner.getId() == neighbor.owner.getId()) {
+                continue;
+            }
+            if (owner.isAlly(neighbor.owner)) {
+                attackableTerritories.addAll(neighbor.searchForAttackable());
+            } else {
+                attackableTerritories.add(neighbor);
+            }
+        }
+
+        return attackableTerritories;
     }
 }

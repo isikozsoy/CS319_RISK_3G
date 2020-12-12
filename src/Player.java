@@ -157,7 +157,12 @@ public class Player {
             cards[3]++;
     }
 
-    // Checks whether the given player is an ally or not.
+    // Checks whether the given player is an ally or not using the given player object.
+    public boolean isAlly(Player player) {
+        return allies[player.id];
+    }
+
+    // Checks whether a player is an ally or not using the given player ID.
     public boolean isAlly(int playerId) {
         return allies[playerId];
     }
