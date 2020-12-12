@@ -73,4 +73,9 @@ public class Territory {
     {
         return neighbors.contains(territory);
     }
+
+    public void addTroops(int count) {
+        troopCount += count;
+    }
+
 }

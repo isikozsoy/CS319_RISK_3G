@@ -29,12 +29,17 @@ public class RiskGame {
     public Player play() {
 
         startTerAlloc();
+        for(Player p = players.get(curPlayerId); p.getTroopCount() > 0; p = players.get(curPlayerId)) {
+            startSoldierAlloc(players.get(curPlayerId));
+            nextTurn();
+        }
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
-            startSoldierAlloc(curPlayer);
+            if(curPlayer.getTroopCount() > 0)
+                startSoldierAlloc(curPlayer);
             startAttack(curPlayer);
             startFortify(curPlayer);
-            curPlayerId = (curPlayerId + 1) % playerCount;
+            nextTurn();
         }
         return null;
     }
@@ -49,7 +54,7 @@ public class RiskGame {
                 curPlayer.decreaseTroop(1);
                 curPlayer.setTerCount(curPlayer.getTerCount() + 1);
                 tempTerCount = tempTerCount - 1;
-                curPlayerId = (curPlayerId + 1) % playerCount;
+                nextTurn();
             }
         }
     }
@@ -91,4 +96,9 @@ public class RiskGame {
          tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
      }
     }
+
+    public void nextTurn() {
+        curPlayerId = (curPlayerId + 1) % playerCount;
+    }
+
 }
