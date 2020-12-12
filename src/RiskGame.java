@@ -5,7 +5,7 @@ import java.util.List;
 public class RiskGame {
     private final int TER_COUNT = 42;
     private List<Player> players;
-    private List<Territory> territories;
+    private Territory[] territories;
     private int curPlayerId;
     private int gamePhase;
     private int playerCount;
@@ -14,7 +14,7 @@ public class RiskGame {
     // RPS
     // Continent List
 
- public RiskGame(ArrayList<Player> players, ArrayList<Territory> territories) {
+ public RiskGame(ArrayList<Player> players, Territory[] territories) {
      this.players = players;
      this.territories = territories;
      curPlayerId = 0;
@@ -91,6 +91,14 @@ public class RiskGame {
          tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
          tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
      }
+    }
+
+    //Builds an airport to the territory whose id is given.
+    public void buildAirport(int territoryId) {
+        Territory territory = territories[territoryId];
+        territory.setHasAirport(true);
+        territory = new AirportDecorater(territory);
+        territories[territoryId] = territory;
     }
 
     public void update() {
