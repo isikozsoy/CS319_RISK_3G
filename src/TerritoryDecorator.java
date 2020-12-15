@@ -1,12 +1,12 @@
 import java.util.HashSet;
 
-public abstract class TerritoryDecorater extends Territory {
+public abstract class TerritoryDecorator extends Territory {
 
     //property
     protected Territory territory;
 
     //constructor
-    public TerritoryDecorater(Territory territory) {
+    public TerritoryDecorator(Territory territory) {
         this.territory = territory;
     }
 

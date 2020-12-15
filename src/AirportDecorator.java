@@ -1,10 +1,10 @@
 import java.util.HashSet;
 
-public class AirportDecorater extends TerritoryDecorater {
+public class AirportDecorator extends TerritoryDecorator {
 
 
     //constructor
-    public AirportDecorater(Territory territory) {
+    public AirportDecorator(Territory territory) {
         super(territory);
     }
 

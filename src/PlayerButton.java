@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class PlayerButton extends StackPane {
     private String currStyle;
     private Player player;
     private int buttonId;
+    private Pane mainPane;
+    private static boolean gameButtonAdded = false;
 
     private static ArrayList<Player> playerList;
     private static Queue<String> colors;
@@ -54,7 +57,7 @@ public class PlayerButton extends StackPane {
     PlayerButton() {
     }
 
-    PlayerButton( boolean adderButton, double locX, double locY, PlayerButton nextPlayer, int buttonId) {
+    PlayerButton( boolean adderButton, double locX, double locY, PlayerButton nextPlayer, int buttonId, StackPane mainPane) {
         setLayoutX( locX);
         setLayoutY( locY);
 
@@ -79,6 +82,7 @@ public class PlayerButton extends StackPane {
         this.buttonId = buttonId;
         this.adderButton = adderButton;
         this.nextPlayer = nextPlayer;
+        this.mainPane = mainPane;
         lastPlayer = null;
         this.prevPlayer = null; //this is for the first one
 
@@ -103,7 +107,6 @@ public class PlayerButton extends StackPane {
     }
 
     private void setAsAdderButton() {
-        System.out.println(playerList);
         if( minusButton != null) {
             this.getChildren().removeAll(minusButton, nameField, CONTINENTS_OPTION_BOX);
             minusButton = null;
@@ -116,7 +119,7 @@ public class PlayerButton extends StackPane {
         mainButton.setStyle( currStyle);
 
         mainButton.setOnMousePressed( e -> {
-            player = new Player("Player" + (buttonId + 1), buttonId, "Asia", 3, colors.remove());   // temporary
+            player = new Player("Player" + (buttonId + 1), buttonId, "Asia", colors.remove());   // temporary
             playerList.add( buttonId, player);
 
             setAsPlayerButton();
@@ -133,6 +136,11 @@ public class PlayerButton extends StackPane {
         mainButton.setOnMouseExited( e -> {
             mainButton.setStyle( currStyle);
         });
+
+        if(!gameButtonAdded && playerList.size() >= 2) {
+            ((AddPlayersView)mainPane).addGameButton();
+            gameButtonAdded = true;
+        }
     }
 
     private void setAsPlayerButton() {
@@ -192,6 +200,12 @@ public class PlayerButton extends StackPane {
                 curr.currStyle = BUTTON_STYLE_PLAYER + newPlayer.getColor() + ";";
                 curr.mainButton.setStyle( curr.currStyle);
                 curr = curr.nextPlayer;
+            }
+
+            //check for the final playerCount
+            if(gameButtonAdded && playerList.size() < 2) {
+                ((AddPlayersView)mainPane).removeGameButton();
+                gameButtonAdded = false;
             }
         });
 

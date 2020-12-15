@@ -10,6 +10,7 @@ import javafx.scene.image.*;
 
 import java.io.*; //exceptions
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -26,24 +27,107 @@ public class RiskView extends StackPane {
     final String BACKGROUND_IMG_PATH = "background_image_bw.png";
 
     private List<ClickableTerritory> territoryList;
+    private ArrayList<ClickableTerritory> territoriesAlreadyClicked = new ArrayList<>();
     private Button playButton;
     private int clickedOnPlay = 0;
     private ArrayList<Player> players;
     private int width;
     private int height;
     private GridPane rockPaperScissorPane;
+    private Stage stage;
+    private VBox troopCountSelectionPane;
+    private Button lessButton;
+    private Button moreButton;
+    private Text countSelectionText;
+
+    private RiskGame riskGame;
+    private Territory[] territoriesAsClass;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
         territoryList = new ArrayList<>();
+        territoriesAsClass = new Territory[42];
         this.width = width;
         this.height = height;
+        this.stage = stage;
 
         setRockPaperScissorPane();
+        setTroopCountSelector();
         addBackground();
         addPlayerNameBars();
         makeClickableMap();
-        addPlayButton(stage);
+
+        addPlayButton();
+
+        initiateRiskGame();
+    }
+
+    public Territory getClickedTerritory() {
+        Territory territoryClicked = null;
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
+                territoryClicked = clickableTerritory.getAssociatedTerritory();
+                territoriesAlreadyClicked.add(clickableTerritory);
+                break;
+            }
+        }
+        return territoryClicked;
+    }
+
+    public void initiateRiskGame() {
+        riskGame = new RiskGame(players, territoriesAsClass, this);
+        riskGame.play();
+    }
+
+    public void setTerritoryMode(RiskGame.GameMode mode) {
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            clickableTerritory.setMode(mode);
+        }
+    }
+
+    public void setTerritoryClicked( boolean clicked) {
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            clickableTerritory.setClicked(clicked);
+        }
+    }
+
+    public void setTerritoryColor( String color) {
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            clickableTerritory.setColor(color);
+        }
+    }
+
+    public void addTroopCountSelector( int troopCount) {
+        this.getChildren().add(troopCountSelectionPane);
+
+        lessButton.setOnMouseClicked(e -> {
+
+        });
+
+        moreButton.setOnMouseClicked(e -> {
+
+        });
+    }
+
+    public void removeTroopCountSelector() {
+        this.getChildren().remove(troopCountSelectionPane);
+    }
+
+    private void setTroopCountSelector() {
+        troopCountSelectionPane = new VBox();
+        lessButton = new Button();
+        moreButton = new Button();
+        countSelectionText = new Text("1");
+
+        lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
+        moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
+        HBox hbox = new HBox();
+        hbox.getChildren().add(lessButton);
+        hbox.getChildren().add(countSelectionText);
+        hbox.getChildren().add(moreButton);
+
+        troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox);
+        troopCountSelectionPane.setAlignment(Pos.CENTER);
     }
 
     private void setRockPaperScissorPane() {
@@ -73,11 +157,16 @@ public class RiskView extends StackPane {
     }
 
     private void makeClickableMap() {
-        for (String territory : territories) {
-            ClickableTerritory clickableTerritory = new ClickableTerritory(territory,
-                    DIRECTORY_NAME + territory + FILE_NAME_HELPER);
+        for (int i = 0; i < territories.length; i++) {
+            Territory territory = new Territory(territories[i]);
+
+            ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
+                    DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
+                    territory);
             bindMapToPaneSize(clickableTerritory);
             territoryList.add(clickableTerritory);
+
+            territoriesAsClass[i] = territory;
 
             this.getChildren().add(clickableTerritory);
         }
@@ -88,7 +177,7 @@ public class RiskView extends StackPane {
         imageView.fitHeightProperty().bind( this.heightProperty());
     }
 
-    private void addPlayButton(Stage stage) {
+    private void addPlayButton() {
         playButton = new Button("play");
         playButton.setLayoutX(500);
         playButton.setLayoutY(20);

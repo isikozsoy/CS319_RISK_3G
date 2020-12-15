@@ -21,12 +21,16 @@ public class AddPlayersView extends BeforeGameView {
     private int height;
     private ArrayList<Player> playerList;
     private PlayerButton firstButton;
+    private Stage stage;
+
+    private Button gameButton;
 
     AddPlayersView( Stage stage, int width, int height) {
         super();
         addPlayerButtons();
-        addGameButton( stage);
-        addBackButton( stage);
+        this.stage = stage;
+        setGameButton();
+        addBackButton();
 
         this.width = width;
         this.height = height;
@@ -36,27 +40,27 @@ public class AddPlayersView extends BeforeGameView {
         PlayerButton playerButtonBeforeClicking6 = new PlayerButton( false,
                 firstLocX + (new PlayerButton()).getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY + (new PlayerButton()).getButtonHeight() * 2 + BETWEEN_TWO_PLAYER_BUTTONS * 2,
-                null, 5);
+                null, 5, this);
         PlayerButton playerButtonBeforeClicking5 = new PlayerButton( false,
                 firstLocX,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() * 2 + BETWEEN_TWO_PLAYER_BUTTONS * 2,
-                playerButtonBeforeClicking6, 4);
+                playerButtonBeforeClicking6, 4, this);
         PlayerButton playerButtonBeforeClicking4 = new PlayerButton( false,
                 firstLocX + playerButtonBeforeClicking6.getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() + BETWEEN_TWO_PLAYER_BUTTONS,
-                playerButtonBeforeClicking5, 3);
+                playerButtonBeforeClicking5, 3, this);
         PlayerButton playerButtonBeforeClicking3 = new PlayerButton( false,
                 firstLocX,
                 firstLocY + playerButtonBeforeClicking6.getButtonHeight() + BETWEEN_TWO_PLAYER_BUTTONS,
-                playerButtonBeforeClicking4, 2);
+                playerButtonBeforeClicking4, 2, this);
         PlayerButton playerButtonBeforeClicking2 = new PlayerButton( false,
                 firstLocX + playerButtonBeforeClicking6.getButtonWidth() + BETWEEN_TWO_PLAYER_BUTTONS,
                 firstLocY,
-                playerButtonBeforeClicking3, 1);
+                playerButtonBeforeClicking3, 1, this);
         firstButton = new PlayerButton( true,
                 firstLocX,
                 firstLocY,
-                playerButtonBeforeClicking2, 0);
+                playerButtonBeforeClicking2, 0, this);
 
         Group g = new Group();
         g.getChildren().addAll( firstButton, playerButtonBeforeClicking2,
@@ -65,7 +69,7 @@ public class AddPlayersView extends BeforeGameView {
         super.addGroup(g);
     }
 
-    private void addBackButton( Stage stage) {
+    private void addBackButton() {
         Button backButton = new Button();
         ImageView backButtonView = new ImageView( new Image(ARROW_BUTTON_PATH));
         backButtonView.setRotate( backButtonView.getRotate() - 90);
@@ -89,8 +93,8 @@ public class AddPlayersView extends BeforeGameView {
         this.setAlignment(backButton, Pos.TOP_LEFT);
     }
 
-    private void addGameButton( Stage stage) {
-        Button gameButton = new Button();
+    private void setGameButton() {
+        gameButton = new Button();
         ImageView gameButtonView = new ImageView( new Image(ARROW_BUTTON_PATH));
         gameButtonView.setRotate( gameButtonView.getRotate() + 90);
         gameButton.setGraphic( gameButtonView);
@@ -109,9 +113,14 @@ public class AddPlayersView extends BeforeGameView {
         gameButton.setOnMouseExited( e -> {
             gameButton.setEffect( null);
         });
-
-        this.getChildren().add(gameButton);
         this.setAlignment(gameButton, Pos.BOTTOM_RIGHT);
     }
 
+    public void addGameButton() {
+        this.getChildren().add(gameButton);
+    }
+
+    public void removeGameButton() {
+        this.getChildren().remove(gameButton);
+    }
 }

@@ -18,9 +18,10 @@ public class Player {
     private boolean[] allies;
     private List<Integer> allianceReq;
     private int troopCount;
+    private int playerCount;
 
     // Constructor
-    Player(String name, int id, String targetCont, int playerCount, String color) {
+    Player(String name, int id, String targetCont, String color) {
         this.color = color;
 
         this.name = name;
@@ -33,6 +34,11 @@ public class Player {
         cardDeserved = false;
         this.targetCont = targetCont;
         isTargetTaken = false;
+    }
+
+    public void setPlayerCount(int playerCount) {
+        this.playerCount = playerCount;
+
         if(playerCount == 3)
             troopCount = 35;
         else if(playerCount == 4)
@@ -161,12 +167,12 @@ public class Player {
     public boolean isAlly(Player player) {
         return allies[player.id];
     }
-
+/**
     // Checks whether a player is an ally or not using the given player ID.
     public boolean isAlly(int playerId) {
         return allies[playerId];
     }
-
+**/
     // Makes the given player an ally.
     public void addAlly(int playerId) {
         allies[playerId] = true;

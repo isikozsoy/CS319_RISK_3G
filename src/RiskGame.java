@@ -11,24 +11,32 @@ public class RiskGame {
     private int playerCount;
     private Cards cards;
     private boolean isGameOver;
+    private RiskView riskView;
+    private int tempTerCount = TER_COUNT;
     // RPS
     // Continent List
+    enum GameMode {
+        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
+    }
+    private GameMode mode = GameMode.TroopAllocationMode;
 
- public RiskGame(ArrayList<Player> players, Territory[] territories) {
-     this.players = players;
-     this.territories = territories;
-     curPlayerId = 0;
-     gamePhase = 0;
-     playerCount = players.size();
-     cards = null;   // for now
-     isGameOver = false;
-     // Contients
-     // RPS
- }
+    public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
+         this.players = players;
+         this.territories = territories;
+         this.riskView = riskView;
+
+         curPlayerId = 0;
+         gamePhase = 0;
+         playerCount = players.size();
+         cards = null;   // for now
+         isGameOver = false;
+         // Continents
+         // RPS
+    }
 
     public Player play() {
-
         startTerAlloc();
+        /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
             startSoldierAlloc(curPlayer);
@@ -37,67 +45,97 @@ public class RiskGame {
             update();
             curPlayerId = (curPlayerId + 1) % playerCount;
         }
+         **/
         return null;
     }
 
     public void startTerAlloc() {
-        Territory tempTer = new Territory("Turkiyeeem", null);
-        int tempTerCount = TER_COUNT;
-        while(tempTerCount > 0) {
-            Player curPlayer = players.get(curPlayerId);
-            if(tempTer.getOwnerId() == -1) {
-                tempTer.setOwnerId(curPlayerId);
-                curPlayer.decreaseTroop(1);
-                curPlayer.setTerCount(curPlayer.getTerCount() + 1);
-                tempTerCount = tempTerCount - 1;
-                curPlayerId = (curPlayerId + 1) % playerCount;
-            }
+        if( mode == GameMode.TroopAllocationMode) {
+            riskView.setTerritoryColor(players.get(0).getColor());
+
+            riskView.setOnMouseClicked(e -> {
+                //check which territory was clicked for
+                Territory territoryClicked = riskView.getClickedTerritory();
+                if(territoryClicked != null && territoryClicked.getOwnerId() == -1) {
+                    System.out.println(territoryClicked.getName());
+                    Player curPlayer = players.get(curPlayerId);
+
+                    System.out.println(curPlayerId);
+                    territoryClicked.setOwnerId(curPlayerId);
+
+                    curPlayer.decreaseTroop(1);
+                    curPlayer.setTerCount(curPlayer.getTerCount() + 1);
+                    curPlayerId = (curPlayerId + 1) % playerCount;
+
+                    riskView.setTerritoryColor(players.get(curPlayerId).getColor());
+                    tempTerCount--;
+                }
+
+                if(tempTerCount <= 0) {
+                    mode = GameMode.AttackMode;
+                    riskView.setTerritoryClicked(false);
+                    riskView.setTerritoryMode(mode);
+                }
+            });
         }
     }
 
+    public void setMode(GameMode mode) {
+        this.mode = mode;
+    }
+
     public void startSoldierAlloc(Player player) {
-     int noOfTroops = player.getTroopCount();
-     while(noOfTroops > 0) {
-         Territory territoryTemp = new Territory("deneme", null);
-         int noOfTroopsToBeAllocatedTemp = 0;
-         //number of troops to be allocated is got from the player with a listener
-         //                                                                  //
-         ///////////////////////////////////////////////////////////////////////
+        riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
+        if(mode == GameMode.SoldierAllocationMode) {
+            riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
 
-         //clicked territory got from the player with a listener
-         //                                                   //
-         ///////////////////////////////////////////////////////
+            riskView.setOnMouseClicked(e -> {
+                int noOfTroops = player.getTroopCount();
+                Territory territoryClicked = riskView.getClickedTerritory();
+                if( territoryClicked != null) {
+                    Territory territoryTemp = new Territory("deneme");
+                    int noOfTroopsToBeAllocatedTemp = 0;
+                    //number of troops to be allocated is got from the player with a listener
+                    //                                                                  //
+                    ///////////////////////////////////////////////////////////////////////
 
-         if( territoryTemp.getOwnerId() == player.getId()) {
-            territoryTemp.setTroopCount(noOfTroopsToBeAllocatedTemp);
-            player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
-            noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
-         }
-     }
-     player.setTroopCount(0);
+                    if( territoryTemp.getOwnerId() == player.getId()) {
+                        territoryTemp.setTroopCount(noOfTroopsToBeAllocatedTemp);
+                        player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
+                        noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
+                    }
+                }
+
+                if(noOfTroops == 0) {
+                    setMode(GameMode.AttackMode);
+                }
+            });
+
+            player.setTroopCount(0);
+        }
     }
 
     public void startAttack(Player player) {
-     //////////////////////////////////
-     ///         TO DO              ///
-     //////////////////////////////////
+         //////////////////////////////////
+         ///         TO DO              ///
+         //////////////////////////////////
     }
 
     public void startFortify(Player player) {
-     Territory tempSource = null;
-     Territory tempTarget = null;
-     int troopToTransfer = 5;
-     if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
-         tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
-         tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
-     }
+         Territory tempSource = null;
+         Territory tempTarget = null;
+         int troopToTransfer = 5;
+         if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
+             tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
+             tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
+         }
     }
 
     //Builds an airport to the territory whose id is given.
     public void buildAirport(int territoryId) {
         Territory territory = territories[territoryId];
         territory.setHasAirport(true);
-        territory = new AirportDecorater(territory);
+        territory = new AirportDecorator(territory);
         territories[territoryId] = territory;
     }
 
@@ -105,6 +143,5 @@ public class RiskGame {
         //////////////////////////////////
         ///         TO DO              ///
         //////////////////////////////////
-
     }
 }

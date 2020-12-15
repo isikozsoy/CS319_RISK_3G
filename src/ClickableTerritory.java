@@ -1,4 +1,6 @@
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.*;
 
 import java.util.HashMap;
@@ -8,11 +10,14 @@ public class ClickableTerritory extends ImageView {
     private ColorAdjust colorAdjust;
     private HashMap<String, Double> colorsAndHues;
     private String color;
+    private Territory associatedTerritory;
+    private RiskGame.GameMode mode = RiskGame.GameMode.TroopAllocationMode;
 
     private boolean clicked = false;
 
-    ClickableTerritory( String territoryName, String origPath) {
+    ClickableTerritory( String territoryName, String origPath, Territory associatedTerritory) {
         this.territoryName = territoryName;
+        this.associatedTerritory = associatedTerritory;
         colorAdjust = new ColorAdjust();
         color = "aqua"; //as an initial value
         colorsAndHues = new HashMap<>();
@@ -39,33 +44,76 @@ public class ClickableTerritory extends ImageView {
         this.color = color;
     }
 
+    public boolean getClicked() {
+        return clicked;
+    }
+
+    public void setMode(RiskGame.GameMode mode) {
+        this.mode = mode;
+        addEventListeners();
+    }
+
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
+    public Territory getAssociatedTerritory() {
+        return associatedTerritory;
+    }
+
     public void addEventListeners() {
-        setOnMousePressed( e -> {
-            if( clicked) {
-                return;
+        switch( mode) {
+            case TroopAllocationMode: {
+                setOnMousePressed(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                    System.out.println("Clicked on " + territoryName);
+                    changeColor();
+                });
+                setOnMouseReleased(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                    clicked = true;
+                    changeColor();
+                });
+                setOnMouseEntered(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                    changeColor();
+                });
+                setOnMouseExited(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                    setEffect(null);
+                });
+                break;
             }
-            System.out.println("Clicked on " + territoryName);
-            changeColor();
-        });
-        setOnMouseReleased( e -> {
-            if( clicked) {
-                return;
+            default: {
+                setOnMousePressed( e -> {
+                    if(clicked) {
+                        changeColor();
+                        clicked = false;
+                    }
+                    else {
+                        setEffect(new DropShadow());
+                        clicked = true;
+                    }
+                });
+                setOnMouseReleased(e -> {
+                    setEffect(new DropShadow());
+                });
+                setOnMouseEntered(e -> {
+                    setEffect(new DropShadow());
+                });
+                setOnMouseExited(e -> {
+                    changeColor();
+                });
             }
-            clicked = true;
-            changeColor();
-        });
-        setOnMouseEntered( e -> {
-            if( clicked) {
-                return;
-            }
-            changeColor();
-        });
-        setOnMouseExited( e -> {
-            if( clicked) {
-                return;
-            }
-            setEffect(null);
-        });
+        }
     }
 
     public void removeEventListeners() {

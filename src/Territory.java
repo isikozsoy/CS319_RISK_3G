@@ -11,13 +11,12 @@ public class Territory {
     protected HashSet<Territory> neighbors;
 
     //constructor
-    public Territory(String name, HashSet<Territory> neighbours) {
+    public Territory(String name) {
         this.name = name;
         ownerId = -1;
         owner = null;
         hasAirport = false;
         troopCount = 0;
-        this.neighbors = neighbours;
     }
 
     public Territory() {
