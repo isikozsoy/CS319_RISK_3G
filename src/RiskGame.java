@@ -20,15 +20,16 @@ public class RiskGame {
     // RPS
     // Continent List
     enum GameMode {
-        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode1, FortifyMode2
+        TerAllocationMode, TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode1, FortifyMode2
     }
-    private GameMode mode = GameMode.FortifyMode1;
+    private GameMode mode = GameMode.TerAllocationMode;
 
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
          this.players = players;
          this.territories = territories;
          this.riskView = riskView;
-
+         for (Player p : players)
+            p.setPlayerCount(players.size());
          curPlayerId = 0;
          gamePhase = 0;
          playerCount = players.size();
@@ -40,7 +41,7 @@ public class RiskGame {
 
     public Player play() {
         //startTerAlloc();
-        startTerAlloc();
+        startInitialization();
 
         //riskView.addTroopCountSelector(1);
         /**
@@ -56,8 +57,12 @@ public class RiskGame {
         return null;
     }
 
+    public void startInitialization() {
+        startTerAlloc();
+    }
+
     public void startTerAlloc() {
-        if( mode == GameMode.TroopAllocationMode) {
+        if( mode == GameMode.TerAllocationMode) {
             riskView.setTerritoryColor(players.get(0).getColor());
 
             riskView.setOnMouseClicked(e -> {
@@ -72,7 +77,7 @@ public class RiskGame {
 
                     curPlayer.decreaseTroop(1);
                     curPlayer.setTerCount(curPlayer.getTerCount() + 1);
-                    curPlayerId = (curPlayerId + 1) % playerCount;
+                    nextTurn();
 
                     riskView.setTerritoryColor(players.get(curPlayerId).getColor());
                     tempTerCount--;
@@ -80,9 +85,10 @@ public class RiskGame {
 
                 if(tempTerCount <= 0) {
                     System.out.println("aa");
-                    mode = GameMode.AttackMode;
+                    mode = GameMode.SoldierAllocationMode;
                     riskView.setTerritoryClicked(false);
                     riskView.setTerritoryMode(mode);
+                    startSoldierAlloc();
                 }
             });
         }
@@ -92,34 +98,32 @@ public class RiskGame {
         this.mode = mode;
     }
 
-    public void startSoldierAlloc(Player player) {
-        riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
+    public void startSoldierAlloc() {
         if(mode == GameMode.SoldierAllocationMode) {
+            System.out.println("içerdeyiz");
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
-
+            Player curPlayer = players.get(curPlayerId);
             riskView.setOnMouseClicked(e -> {
-                int noOfTroops = player.getTroopCount();
+                System.out.println("içerdeyiz evet");
                 Territory territoryClicked = riskView.getClickedTerritory();
-                if( territoryClicked != null) {
-                    Territory territoryTemp = new Territory("deneme");
+                int noOfTroops = curPlayer.getTroopCount();
+                if( territoryClicked != null && territoryClicked.getOwnerId() == curPlayer.getId()) {
+                    System.out.println("benim mekan");
+                    riskView.addTroopCountSelector(noOfTroops);
                     int noOfTroopsToBeAllocatedTemp = 0;
+                    //////////////////////////////////////////////////////////////////////
                     //number of troops to be allocated is got from the player with a listener
                     //                                                                  //
-                    ///////////////////////////////////////////////////////////////////////
-
-                    if( territoryTemp.getOwnerId() == player.getId()) {
-                        territoryTemp.setTroopCount(noOfTroopsToBeAllocatedTemp);
-                        player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
-                        noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
-                    }
+                    //////////////////////////////////////////////////////////////////////
+                    territoryClicked.setTroopCount(noOfTroopsToBeAllocatedTemp);
+                    curPlayer.decreaseTroop(noOfTroopsToBeAllocatedTemp);
+                    noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
+                    curPlayer.setTroopCount(noOfTroops);
                 }
-
                 if(noOfTroops == 0) {
                     setMode(GameMode.AttackMode);
                 }
             });
-
-            player.setTroopCount(0);
         }
     }
 
@@ -177,8 +181,8 @@ public class RiskGame {
                             setMode(mode);
                             nextTurn(); //next player is found
                             ctr++;
-                            if(ctr == 1) //to terminate the listener
-                                startSoldierAlloc(players.get(curPlayerId)); //soldier allocation is initiated for
+                            if(ctr == 1){} //to terminate the listener
+                                //startSoldierAlloc(players.get(curPlayerId)); //soldier allocation is initiated for
                                                                              //next player
                         }
                     }
