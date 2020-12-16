@@ -123,11 +123,11 @@ public class RiskView extends StackPane {
         });
     }
 
-    public void removeTroopCountSelector() {
+    private void removeTroopCountSelector() {
         this.getChildren().remove(troopCountSelectionPane);
     }
 
-    private void setTroopCountSelector() {
+    public void setTroopCountSelector() {
         troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
@@ -262,5 +262,14 @@ public class RiskView extends StackPane {
         }
         nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
         this.getChildren().add(nameBarPane);
+    }
+
+    public void removeListeners(){
+        setOnMousePressed(e->{
+
+        });
+        setOnMouseReleased(e->{
+
+        });
     }
 }
