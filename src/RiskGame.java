@@ -72,6 +72,7 @@ public class RiskGame {
                 }
 
                 if(tempTerCount <= 0) {
+                    System.out.println("aa");
                     mode = GameMode.AttackMode;
                     riskView.setTerritoryClicked(false);
                     riskView.setTerritoryMode(mode);

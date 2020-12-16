@@ -1,3 +1,5 @@
+import javafx.beans.binding.ListBinding;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -10,6 +12,7 @@ import javafx.scene.image.*;
 
 import java.io.*; //exceptions
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -39,6 +42,9 @@ public class RiskView extends StackPane {
     private Button lessButton;
     private Button moreButton;
     private Text countSelectionText;
+    private HashMap<ClickableTerritory, StackPane> paneForEachTer;
+
+    private Text territoryText;
 
     private RiskGame riskGame;
     private Territory[] territoriesAsClass;
@@ -46,6 +52,7 @@ public class RiskView extends StackPane {
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
         territoryList = new ArrayList<>();
+        paneForEachTer = new HashMap<>();
         territoriesAsClass = new Territory[42];
         this.width = width;
         this.height = height;
@@ -62,12 +69,19 @@ public class RiskView extends StackPane {
         initiateRiskGame();
     }
 
+    //below is for the first mode
     public Territory getClickedTerritory() {
         Territory territoryClicked = null;
         for( ClickableTerritory clickableTerritory: territoryList) {
             if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
                 territoryClicked = clickableTerritory.getAssociatedTerritory();
                 territoriesAlreadyClicked.add(clickableTerritory);
+
+                //add troop count
+                Text troopText = new Text("1");
+                troopText.setFont(Font.font("Snap ITC", 30));
+                paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
+
                 break;
             }
         }
@@ -158,12 +172,18 @@ public class RiskView extends StackPane {
 
     private void makeClickableMap() {
         for (int i = 0; i < territories.length; i++) {
+            StackPane territoryPane = new StackPane();
+
             Territory territory = new Territory(territories[i]);
 
             ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
                     DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
                     territory);
             bindMapToPaneSize(clickableTerritory);
+
+            territoryPane.getChildren().add(clickableTerritory);
+            paneForEachTer.put(clickableTerritory, territoryPane);
+
             territoryList.add(clickableTerritory);
 
             territoriesAsClass[i] = territory;
