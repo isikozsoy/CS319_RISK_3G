@@ -37,13 +37,17 @@ public class RiskGame {
     public Player play() {
         startTerAlloc();
         /**
+        for(Player p = players.get(curPlayerId); p.getTroopCount() > 0; p = players.get(curPlayerId)) {
+            startSoldierAlloc(players.get(curPlayerId));
+            nextTurn();
+        }
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
-            startSoldierAlloc(curPlayer);
+            if(curPlayer.getTroopCount() > 0)
+                startSoldierAlloc(curPlayer);
             startAttack(curPlayer);
             startFortify(curPlayer);
-            update();
-            curPlayerId = (curPlayerId + 1) % playerCount;
+            nextTurn();
         }
          **/
         return null;
@@ -146,4 +150,9 @@ public class RiskGame {
         ///         TO DO              ///
         //////////////////////////////////
     }
+
+    public void nextTurn() {
+        curPlayerId = (curPlayerId + 1) % playerCount;
+    }
+
 }
