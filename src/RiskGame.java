@@ -15,10 +15,11 @@ public class RiskGame {
     private int tempTerCount = TER_COUNT;
     private Territory sourceTer;
     private int ctr = 0;
+    private int playerCounterForEachTurn = 0;
     // RPS
     // Continent List
     enum GameMode {
-        TerAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
+        TerAllocationMode, SoldierAllocationMode, SoldierAllocationModeContinued, AttackMode, FortifyMode
     }
     private GameMode mode;
 
@@ -101,30 +102,54 @@ public class RiskGame {
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
             int noOfTroops = curPlayer.getTroopCount();
+
+            //below takes the selected territory from the original map source
+            //if the selected territory is not null and is one of the current player's territories, RiskView adds
+            //troop selection screen and from here on we will be taken to another GameMode method of the game
             riskView.setOnMouseClicked(e -> {
-                if(ctr == 0) {
-                    sourceTer = riskView.getClickedTerritory();
-                    if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
-                        System.out.println("meekan bizim");
-                        riskView.addTroopCountSelector(noOfTroops);
-                        ctr = -1;
-                    }
+                sourceTer = riskView.getClickedTerritoryAfterAllocation();
+                if( sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
+                    riskView.addTroopCountSelector(noOfTroops);
+                    mode = GameMode.SoldierAllocationModeContinued;
+                    continueSoldierAllocation();
                 }
-                else if(riskView.getSelectedTroop() != 0) {
-                    System.out.println("zero");
-                    ctr = 1;
-                }
-                else if (ctr == 1){
-                    int selectedTroop = riskView.getSelectedTroop();
-                    sourceTer.addTroop(selectedTroop);
-                    System.out.println(" selected troop " + selectedTroop);
-                    curPlayer.decreaseTroop(selectedTroop);
-                    System.out.println(" player troop " + curPlayer.getTroopCount());
-                    System.out.println(" ter troop" + sourceTer.getTroopCount());
-                    ctr = 0;
-                    if (noOfTroops == 0) {
-                        //setMode(GameMode.AttackMode);
-                    }
+            });
+        }
+    }
+
+    //resumes the main soldier allocation method, basically this phase goes back and forth between these two
+    public void continueSoldierAllocation() {
+        if( mode == GameMode.SoldierAllocationModeContinued) {
+            Player curPlayer = players.get(curPlayerId);
+            //the methods below each call specific buttons of RiskView instead of assigning mouse listeners to
+            // riskView itself, like we have been doing. This is because RiskView and each button listener take inputs
+            // separately, so if I were to click on "place" then I would need to click on another space in the window
+            // for functions defined below to take place, in a scenario where riskView is assigned listeners.
+            // That is why, here we are assigning mouse listeners to each button
+            riskView.getBackButton().setOnMouseClicked(e -> {
+                //goes back to the original Soldier Allocation function to take a territory as input again
+                riskView.removeTroopCountSelector();
+                mode = GameMode.SoldierAllocationMode;
+                startSoldierAlloc();
+            });
+            riskView.getPlaceButton().setOnMouseClicked(e -> {
+                //sets selected troop integer, and places it in the territory specified itself
+                int selectedTroop = riskView.getSelectedTroop();
+                sourceTer.addTroop(selectedTroop);
+                curPlayer.decreaseTroop(selectedTroop);
+                riskView.setMaxCountSelection(curPlayer.getTroopCount());
+                if (curPlayer.getTroopCount() <= 0) {
+                    riskView.removeTroopCountSelector();
+                    playerCounterForEachTurn++;
+                    curPlayerId = (++curPlayerId) % playerCount;
+                    riskView.setSelectedTroop(0); //resets back to the original state
+
+                    setMode(GameMode.SoldierAllocationMode);
+                    startSoldierAlloc();
+
+                    if( playerCounterForEachTurn >= playerCount) setMode(GameMode.AttackMode);
+
+                    //setMode(GameMode.AttackMode);
                 }
             });
         }

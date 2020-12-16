@@ -38,6 +38,7 @@ public class RiskView extends StackPane {
     private Button backButton;
     private Button placeButton;
     private Text countSelectionText;
+    private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<ClickableTerritory, StackPane> paneForEachTer;
 
@@ -95,6 +96,23 @@ public class RiskView extends StackPane {
         return null;
     }
 
+    public Territory getClickedTerritoryAfterAllocation() {
+        Territory territoryClicked = null;
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            if( clickableTerritory.getClicked()) {
+                territoryClicked = clickableTerritory.getAssociatedTerritory();
+                clickableTerritory.setClicked(false);
+                break;
+            }
+        }
+
+        return territoryClicked;
+    }
+
+    public boolean backButtonIsClicked() {
+        return backButtonIsClicked;
+    }
+
     public void initiateRiskGame() {
         riskGame = new RiskGame(players, territoriesAsClass, this);
         riskGame.play();
@@ -129,25 +147,52 @@ public class RiskView extends StackPane {
             int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
             if(selectedTroopCount > 1)
                 countSelectionText.setText(String.valueOf(selectedTroopCount - 1));
+            else if( selectedTroopCount == 1) {
+                countSelectionText.setText(String.valueOf(troopCount));
+            }
         });
 
         moreButton.setOnMouseClicked(e -> {
             int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
             if(selectedTroopCount < troopCount)
                 countSelectionText.setText(String.valueOf(selectedTroopCount + 1));
+            else if( selectedTroopCount == troopCount)
+                countSelectionText.setText(String.valueOf(1));
         });
 
+        /**
         backButton.setOnMouseClicked(e -> {
+            backButtonIsClicked = true;
             removeTroopCountSelector();
         });
 
         placeButton.setOnMouseClicked(e -> {
             selectedTroop = Integer.valueOf(countSelectionText.getText());
         });
+         **/
+    }
+
+    public void setMaxCountSelection( int troopCount) {
+        countSelectionText.setText(Integer.toString(troopCount));
+        this.getChildren().remove(troopCountSelectionPane);
+        addTroopCountSelector( troopCount);
+    }
+
+    public Button getBackButton() {
+        return backButton;
+    }
+
+    public Button getPlaceButton() {
+        return placeButton;
     }
 
     public int getSelectedTroop() {
+        selectedTroop = Integer.valueOf(countSelectionText.getText());
         return selectedTroop;
+    }
+
+    public void setSelectedTroop( int selectedTroop) {
+        this.selectedTroop = selectedTroop;
     }
 
     public void removeTroopCountSelector() {
