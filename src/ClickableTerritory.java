@@ -1,5 +1,6 @@
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 
@@ -9,7 +10,7 @@ public class ClickableTerritory extends ImageView {
     private HashMap<String, Double> colorsAndHues;
     private String color;
     private Territory associatedTerritory;
-    private RiskGame.GameMode mode = RiskGame.GameMode.TroopAllocationMode;
+    private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
 
     private boolean clicked = false;
 
@@ -63,19 +64,17 @@ public class ClickableTerritory extends ImageView {
 
     public void addEventListeners() {
         switch( mode) {
-            case TroopAllocationMode: {
+            case TerAllocationMode: {
                 setOnMousePressed(e -> {
                     if (clicked) {
                         return;
                     }
-                    changeColor();
                 });
                 setOnMouseReleased(e -> {
                     if (clicked) {
                         return;
                     }
                     clicked = true;
-                    changeColor();
                 });
                 setOnMouseEntered(e -> {
                     if (clicked) {
@@ -91,6 +90,25 @@ public class ClickableTerritory extends ImageView {
                 });
                 break;
             }
+
+            case SoldierAllocationMode: {
+                setOnMousePressed(e -> {
+                    changeColor();
+                });
+                setOnMouseReleased(e -> {
+                    clicked = true;
+                    changeColor();
+                });
+                setOnMouseEntered(e -> {
+                    changeColor();
+                });
+                setOnMouseExited(e -> {
+                    colorAdjust.setBrightness(0.35);
+                    setEffect(colorAdjust);
+                });
+                break;
+            }
+
             default: {
                 setOnMousePressed( e -> {
                     System.out.println(clicked);
@@ -125,7 +143,6 @@ public class ClickableTerritory extends ImageView {
                     setEffect(shadowAndColorBlend);
                 });
                 setOnMouseExited(e -> {
-                    setEffect(colorAdjust);
                 });
             }
         }
@@ -143,9 +160,18 @@ public class ClickableTerritory extends ImageView {
     }
 
     private void changeColor() {
-        colorAdjust.setHue(colorsAndHues.get(color));
-        colorAdjust.setSaturation(95);
-        colorAdjust.setBrightness(0.35);
-        this.setEffect(colorAdjust);
+        switch (mode) {
+            case TerAllocationMode: {
+                colorAdjust.setHue(colorsAndHues.get(color));
+                colorAdjust.setSaturation(95);
+                colorAdjust.setBrightness(0.35);
+                this.setEffect(colorAdjust);
+                break;
+            }
+            case SoldierAllocationMode: {
+                colorAdjust.setBrightness(1);
+            }
+        }
     }
+
 }
