@@ -137,12 +137,12 @@ public class RiskGame {
                 int selectedTroop = riskView.getSelectedTroop();
                 sourceTer.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
+                //sets the number to appear between more and less buttons
                 riskView.setMaxCountSelection(curPlayer.getTroopCount());
                 if (curPlayer.getTroopCount() <= 0) {
                     riskView.removeTroopCountSelector();
                     playerCounterForEachTurn++;
                     curPlayerId = (++curPlayerId) % playerCount;
-                    riskView.setSelectedTroop(0); //resets back to the original state
 
                     setMode(GameMode.SoldierAllocationMode);
                     startSoldierAlloc();

@@ -143,8 +143,10 @@ public class RiskView extends StackPane {
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
+        countSelectionText.setText("1");
         lessButton.setOnMouseClicked(e -> {
             int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            //circles around 1-troopcount
             if(selectedTroopCount > 1)
                 countSelectionText.setText(String.valueOf(selectedTroopCount - 1));
             else if( selectedTroopCount == 1) {
