@@ -18,7 +18,7 @@ public class RiskGame {
     enum GameMode {
         TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
     }
-    private GameMode mode = GameMode.TroopAllocationMode;
+    private GameMode mode;
 
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
          this.players = players;
@@ -30,6 +30,7 @@ public class RiskGame {
          playerCount = players.size();
          cards = null;   // for now
          isGameOver = false;
+         mode = GameMode.TroopAllocationMode;
          // Continents
          // RPS
     }
