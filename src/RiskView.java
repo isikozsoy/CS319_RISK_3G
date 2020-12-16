@@ -48,6 +48,7 @@ public class RiskView extends StackPane {
 
     private RiskGame riskGame;
     private Territory[] territoriesAsClass;
+    private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
@@ -69,23 +70,32 @@ public class RiskView extends StackPane {
         initiateRiskGame();
     }
 
-    //below is for the first mode
     public Territory getClickedTerritory() {
         Territory territoryClicked = null;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                territoryClicked = clickableTerritory.getAssociatedTerritory();
-                territoriesAlreadyClicked.add(clickableTerritory);
+        switch (mode) {
+            case TerAllocationMode: {
+                for( ClickableTerritory clickableTerritory: territoryList) {
+                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
+                        territoryClicked = clickableTerritory.getAssociatedTerritory();
+                        territoriesAlreadyClicked.add(clickableTerritory);
 
-                //add troop count
-                Text troopText = new Text("1");
-                troopText.setFont(Font.font("Snap ITC", 30));
-                paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
-
-                break;
+                        //add troop count
+                        Text troopText = new Text("1");
+                        troopText.setFont(Font.font("Snap ITC", 30));
+                        paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
+                        break;
+                    }
+                }
+                return territoryClicked;
+            }
+            case SoldierAllocationMode: {
+                for( ClickableTerritory clickableTerritory: territoryList) {
+                    if (clickableTerritory.getClicked())
+                        return clickableTerritory.getAssociatedTerritory();
+                }
             }
         }
-        return territoryClicked;
+        return null;
     }
 
     public void initiateRiskGame() {
@@ -94,6 +104,11 @@ public class RiskView extends StackPane {
     }
 
     public void setTerritoryMode(RiskGame.GameMode mode) {
+        if(mode == RiskGame.GameMode.SoldierAllocationMode) {
+            for( ClickableTerritory clickableTerritory: territoryList)
+                clickableTerritory.setClicked(false);
+        }
+        this.mode = mode;
         for( ClickableTerritory clickableTerritory: territoryList) {
             clickableTerritory.setMode(mode);
         }
@@ -113,13 +128,16 @@ public class RiskView extends StackPane {
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
-
         lessButton.setOnMouseClicked(e -> {
-
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            if(selectedTroopCount > 1)
+                countSelectionText.setText(String.valueOf(selectedTroopCount - 1));
         });
 
         moreButton.setOnMouseClicked(e -> {
-
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            if(selectedTroopCount < troopCount)
+                countSelectionText.setText(String.valueOf(selectedTroopCount + 1));
         });
     }
 

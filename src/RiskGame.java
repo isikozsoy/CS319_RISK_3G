@@ -16,7 +16,7 @@ public class RiskGame {
     // RPS
     // Continent List
     enum GameMode {
-        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
+        TerAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
     }
     private GameMode mode;
 
@@ -30,7 +30,7 @@ public class RiskGame {
          playerCount = players.size();
          cards = null;   // for now
          isGameOver = false;
-         mode = GameMode.TroopAllocationMode;
+         mode = GameMode.TerAllocationMode;
          // Continents
          // RPS
     }
@@ -55,7 +55,7 @@ public class RiskGame {
     }
 
     public void startTerAlloc() {
-        if( mode == GameMode.TroopAllocationMode) {
+        if( mode == GameMode.TerAllocationMode) {
             riskView.setTerritoryColor(players.get(0).getColor());
 
             riskView.setOnMouseClicked(e -> {
@@ -78,9 +78,10 @@ public class RiskGame {
 
                 if(tempTerCount <= 0) {
                     System.out.println("aa");
-                    mode = GameMode.AttackMode;
+                    mode = GameMode.SoldierAllocationMode;
                     riskView.setTerritoryClicked(false);
                     riskView.setTerritoryMode(mode);
+                    startSoldierAlloc();
                 }
             });
         }
@@ -90,34 +91,32 @@ public class RiskGame {
         this.mode = mode;
     }
 
-    public void startSoldierAlloc(Player player) {
-        riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
+    public void startSoldierAlloc() {
         if(mode == GameMode.SoldierAllocationMode) {
+            System.out.println("içerdeyiz");
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
-
+            Player curPlayer = players.get(curPlayerId);
             riskView.setOnMouseClicked(e -> {
-                int noOfTroops = player.getTroopCount();
+                System.out.println("içerdeyiz evet");
                 Territory territoryClicked = riskView.getClickedTerritory();
-                if( territoryClicked != null) {
-                    Territory territoryTemp = new Territory("deneme");
+                int noOfTroops = curPlayer.getTroopCount();
+                if( territoryClicked != null && territoryClicked.getOwnerId() == curPlayer.getId()) {
+                    System.out.println("benim mekan");
+                    riskView.addTroopCountSelector(noOfTroops);
                     int noOfTroopsToBeAllocatedTemp = 0;
+                    //////////////////////////////////////////////////////////////////////
                     //number of troops to be allocated is got from the player with a listener
                     //                                                                  //
-                    ///////////////////////////////////////////////////////////////////////
-
-                    if( territoryTemp.getOwnerId() == player.getId()) {
-                        territoryTemp.setTroopCount(noOfTroopsToBeAllocatedTemp);
-                        player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
-                        noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
-                    }
+                    //////////////////////////////////////////////////////////////////////
+                    territoryClicked.setTroopCount(noOfTroopsToBeAllocatedTemp);
+                    curPlayer.decreaseTroop(noOfTroopsToBeAllocatedTemp);
+                    noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
+                    curPlayer.setTroopCount(noOfTroops);
                 }
-
                 if(noOfTroops == 0) {
                     setMode(GameMode.AttackMode);
                 }
             });
-
-            player.setTroopCount(0);
         }
     }
 
