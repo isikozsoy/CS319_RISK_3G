@@ -13,10 +13,11 @@ public class RiskGame {
     private boolean isGameOver;
     private RiskView riskView;
     private int tempTerCount = TER_COUNT;
+    private boolean nextPhaseClicked = false;
     // RPS
     // Continent List
     enum GameMode {
-        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
+        TroopAllocationMode, InitialSoldierAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
     }
     private GameMode mode = GameMode.TroopAllocationMode;
 
@@ -36,11 +37,13 @@ public class RiskGame {
 
     public Player play() {
         startTerAlloc();
-        /**
         for(Player p = players.get(curPlayerId); p.getTroopCount() > 0; p = players.get(curPlayerId)) {
             startSoldierAlloc(players.get(curPlayerId));
+            System.out.println(players.get(curPlayerId));
             nextTurn();
         }
+        mode = GameMode.TroopAllocationMode;
+        /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
             if(curPlayer.getTroopCount() > 0)
@@ -52,7 +55,36 @@ public class RiskGame {
          **/
         return null;
     }
-
+/**
+    public void executePhases() {
+        switch (mode) {
+            case TroopAllocationMode: {
+                startTerAlloc();
+                break;
+            }
+            case InitialSoldierAllocationMode: {
+                for(Player p = players.get(curPlayerId); p.getTroopCount() > 0; p = players.get(curPlayerId)) {
+                    startSoldierAlloc(players.get(curPlayerId));
+                    nextTurn();
+                }
+                break;
+            }
+            case SoldierAllocationMode: {
+                startSoldierAlloc( players.get(curPlayerId));
+                break;
+            }
+            case AttackMode: {
+                startAttack( players.get( curPlayerId));
+                if( isGameOver) {
+                    endGame();
+                }
+            }
+            case FortifyMode: {
+                startFortify( players.get(curPlayerId));
+            }
+        }
+    }
+**/
     public void startTerAlloc() {
         if( mode == GameMode.TroopAllocationMode) {
             riskView.setTerritoryColor(players.get(0).getColor());
@@ -125,16 +157,47 @@ public class RiskGame {
          //////////////////////////////////
          ///         TO DO              ///
          //////////////////////////////////
+        //her saldırı sonrası isGameOver'ı kontrol etmeli
+        //next phase tıklandıysa mode = GameMode.FortifyMode
+        //sonra executePhases() çağırır tekrar
     }
 
     public void startFortify(Player player) {
-         Territory tempSource = null;
-         Territory tempTarget = null;
-         int troopToTransfer = 5;
-         if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
-             tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
-             tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
-         }
+        if( mode == GameMode.FortifyMode) {
+            riskView.setOnMouseClicked(e -> {
+                Territory sourceTerritory = riskView.getClickedTerritoryAfterAllocation();
+                //territory will both have to be non-null and match with the current player id
+                if (sourceTerritory != null && sourceTerritory.getOwnerId() == player.getId()) {
+                    //check for the second territory clicked
+                    //if it is the first one, territory will be unclicked
+                    //if it is another territory that is not null, troop count screen will show up
+                    //territory will both have to be non-null and match with the current player id
+                    Territory targetTerritory = riskView.getClickedTerritoryAfterAllocation();
+                    if (targetTerritory.equals(sourceTerritory)) {
+                        //call function to reset the effects to the territory
+                        return;
+                    } else if (targetTerritory != null && targetTerritory.getOwnerId() == player.getId()) {
+                        //troop count selection screen will show up here
+                        //troopToTransfer will also be got from the troop count selection screen
+                        int troopToTransfer = 5; // for now, a temp value
+                        //now the backend
+                        //new troop counts will be set to each territory
+                        sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - troopToTransfer);
+                        targetTerritory.setTroopCount(targetTerritory.getTroopCount() - troopToTransfer);
+                    }
+                }
+
+                if( nextPhaseClicked) {
+                    nextTurn();
+                    mode = GameMode.SoldierAllocationMode;
+                    startTerAlloc();
+                }
+            });
+        }
+    }
+
+    public void setNextPhaseClicked( boolean clicked) {
+        nextPhaseClicked = clicked;
     }
 
     //Builds an airport to the territory whose id is given.

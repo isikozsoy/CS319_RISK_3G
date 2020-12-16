@@ -177,6 +177,27 @@ public class RiskView extends StackPane {
         return territoryClicked;
     }
 
+    public Territory getClickedTerritoryAfterAllocation() {
+        Territory territoryClicked = null;
+        for( ClickableTerritory clickableTerritory: territoryList) {
+            if( clickableTerritory.getClicked()) {
+                territoryClicked = clickableTerritory.getAssociatedTerritory();
+                clickableTerritory.setClicked(false);
+                break;
+            }
+        }
+
+        return territoryClicked;
+    }
+
+    public void nextPhaseClicked() {
+        //next phase button will be clicked on the first and the second phases
+        //i.e. troop allocation and attack phase
+        nextPhaseButton.setOnMouseClicked(e -> {
+            riskGame.setNextPhaseClicked(true);
+        });
+    }
+
     public void initiateRiskGame() {
         riskGame = new RiskGame(players, territoriesAsClass, this);
         riskGame.play();

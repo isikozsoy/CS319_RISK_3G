@@ -5,12 +5,12 @@ public class Territory {
     //properties
     private String name;
     private int ownerId;
-    private Player owner;
-    private HashSet<Territory> neighbors;
+    //private Player owner;
+    //private HashSet<Territory> neighbors;
     private int troopCount;
     private boolean hasAirport;
-    //protected Player owner;
-    //protected HashSet<Territory> neighbors;
+    protected Player owner;
+    protected HashSet<Territory> neighbors;
 
     //constructor
     public Territory(String name) {
@@ -19,6 +19,9 @@ public class Territory {
         owner = null;
         hasAirport = false;
         troopCount = 0;
+    }
+
+    public Territory() {
     }
 
     //getter setters
