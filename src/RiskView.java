@@ -1,7 +1,3 @@
-import javafx.beans.binding.ListBinding;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -10,10 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
-import java.io.*; //exceptions
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -41,7 +35,10 @@ public class RiskView extends StackPane {
     private VBox troopCountSelectionPane;
     private Button lessButton;
     private Button moreButton;
+    private Button backButton;
+    private Button placeButton;
     private Text countSelectionText;
+    private int selectedTroop = 0;
     private HashMap<ClickableTerritory, StackPane> paneForEachTer;
 
     private Text territoryText;
@@ -139,6 +136,18 @@ public class RiskView extends StackPane {
             if(selectedTroopCount < troopCount)
                 countSelectionText.setText(String.valueOf(selectedTroopCount + 1));
         });
+
+        backButton.setOnMouseClicked(e -> {
+            removeTroopCountSelector();
+        });
+
+        placeButton.setOnMouseClicked(e -> {
+            selectedTroop = Integer.valueOf(countSelectionText.getText());
+        });
+    }
+
+    public int getSelectedTroop() {
+        return selectedTroop;
     }
 
     public void removeTroopCountSelector() {
@@ -149,6 +158,8 @@ public class RiskView extends StackPane {
         troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
+        placeButton = new Button("place");
+        backButton = new Button("new");
         countSelectionText = new Text("1");
 
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
@@ -157,6 +168,8 @@ public class RiskView extends StackPane {
         hbox.getChildren().add(lessButton);
         hbox.getChildren().add(countSelectionText);
         hbox.getChildren().add(moreButton);
+        hbox.getChildren().add(backButton);
+        hbox.getChildren().add(placeButton);
 
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox);
         troopCountSelectionPane.setAlignment(Pos.CENTER);
