@@ -52,20 +52,21 @@ public class RiskGame {
     public void startTerAlloc() {
         if( mode == GameMode.TroopAllocationMode) {
             riskView.setTerritoryColor(players.get(0).getColor());
+            riskView.addTroopsLeft(players.get(0));
 
             riskView.setOnMouseClicked(e -> {
                 //check which territory was clicked for
                 Territory territoryClicked = riskView.getClickedTerritory();
                 if(territoryClicked != null && territoryClicked.getOwnerId() == -1) {
-                    System.out.println(territoryClicked.getName());
                     Player curPlayer = players.get(curPlayerId);
 
-                    System.out.println(curPlayerId);
                     territoryClicked.setOwnerId(curPlayerId);
 
                     curPlayer.decreaseTroop(1);
                     curPlayer.setTerCount(curPlayer.getTerCount() + 1);
                     curPlayerId = (curPlayerId + 1) % playerCount;
+
+                    riskView.addTroopsLeft(players.get(curPlayerId));
 
                     riskView.setTerritoryColor(players.get(curPlayerId).getColor());
                     tempTerCount--;
