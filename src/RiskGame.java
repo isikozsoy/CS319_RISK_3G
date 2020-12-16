@@ -36,7 +36,7 @@ public class RiskGame {
     }
 
     public Player play() {
-        startTerAlloc();
+        startInitialization();
         /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
@@ -48,6 +48,10 @@ public class RiskGame {
         }
          **/
         return null;
+    }
+
+    public void startInitialization() {
+        startTerAlloc();
     }
 
     public void startTerAlloc() {
@@ -66,7 +70,7 @@ public class RiskGame {
 
                     curPlayer.decreaseTroop(1);
                     curPlayer.setTerCount(curPlayer.getTerCount() + 1);
-                    curPlayerId = (curPlayerId + 1) % playerCount;
+                    nextTurn();
 
                     riskView.setTerritoryColor(players.get(curPlayerId).getColor());
                     tempTerCount--;
@@ -145,5 +149,9 @@ public class RiskGame {
         //////////////////////////////////
         ///         TO DO              ///
         //////////////////////////////////
+    }
+
+    public void nextTurn() {
+        curPlayerId = (curPlayerId + 1) % playerCount;
     }
 }
