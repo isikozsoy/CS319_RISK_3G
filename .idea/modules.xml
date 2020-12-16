@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CS319_RISK_3G.iml" filepath="$PROJECT_DIR$/CS319_RISK_3G.iml" />
-      <module fileurl="file://E:/openjfx-15.0.1_windows-x64_bin-sdk/openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/lib.iml" filepath="E:/openjfx-15.0.1_windows-x64_bin-sdk/openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../javafx-sdk-11.0.2/lib/untitled.iml" filepath="$PROJECT_DIR$/../javafx-sdk-11.0.2/lib/untitled.iml" />
     </modules>
   </component>
 </project>
