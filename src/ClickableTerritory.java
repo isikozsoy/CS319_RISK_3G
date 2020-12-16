@@ -1,6 +1,4 @@
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
+import javafx.scene.effect.*;
 import javafx.scene.image.*;
 
 import java.util.HashMap;
@@ -14,6 +12,8 @@ public class ClickableTerritory extends ImageView {
     private RiskGame.GameMode mode = RiskGame.GameMode.TroopAllocationMode;
 
     private boolean clicked = false;
+
+    private Blend shadowAndColorBlend;
 
     ClickableTerritory( String territoryName, String origPath, Territory associatedTerritory) {
         this.territoryName = territoryName;
@@ -68,7 +68,6 @@ public class ClickableTerritory extends ImageView {
                     if (clicked) {
                         return;
                     }
-                    System.out.println("Clicked on " + territoryName);
                     changeColor();
                 });
                 setOnMouseReleased(e -> {
@@ -94,23 +93,39 @@ public class ClickableTerritory extends ImageView {
             }
             default: {
                 setOnMousePressed( e -> {
+                    System.out.println(clicked);
                     if(clicked) {
-                        changeColor();
+                        setEffect(colorAdjust);
                         clicked = false;
                     }
                     else {
-                        setEffect(new DropShadow());
+                        shadowAndColorBlend = new Blend();
+                        shadowAndColorBlend.setMode(BlendMode.ADD);
+                        //Setting both the shadow effects to the blend
+                        shadowAndColorBlend.setBottomInput(new DropShadow());
+                        shadowAndColorBlend.setBottomInput(colorAdjust);
+                        setEffect(shadowAndColorBlend);
                         clicked = true;
                     }
                 });
                 setOnMouseReleased(e -> {
-                    setEffect(new DropShadow());
+                    shadowAndColorBlend = new Blend();
+                    shadowAndColorBlend.setMode(BlendMode.ADD);
+                    //Setting both the shadow effects to the blend
+                    shadowAndColorBlend.setBottomInput(new DropShadow());
+                    shadowAndColorBlend.setBottomInput(colorAdjust);
+                    setEffect(shadowAndColorBlend);
                 });
                 setOnMouseEntered(e -> {
-                    setEffect(new DropShadow());
+                    shadowAndColorBlend = new Blend();
+                    shadowAndColorBlend.setMode(BlendMode.ADD);
+                    //Setting both the shadow effects to the blend
+                    shadowAndColorBlend.setBottomInput(colorAdjust);
+                    shadowAndColorBlend.setBottomInput(new DropShadow());
+                    setEffect(shadowAndColorBlend);
                 });
                 setOnMouseExited(e -> {
-                    changeColor();
+                    setEffect(colorAdjust);
                 });
             }
         }
