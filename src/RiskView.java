@@ -41,6 +41,8 @@ public class RiskView extends StackPane {
     private VBox troopCountSelectionPane;
     private Button lessButton;
     private Button moreButton;
+    private Button backButton;
+    private Button placeButton;
     private Text countSelectionText;
     private HashMap<ClickableTerritory, StackPane> paneForEachTer;
 
@@ -48,6 +50,7 @@ public class RiskView extends StackPane {
 
     private RiskGame riskGame;
     private Territory[] territoriesAsClass;
+    private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
@@ -69,23 +72,32 @@ public class RiskView extends StackPane {
         initiateRiskGame();
     }
 
-    //below is for the first mode
     public Territory getClickedTerritory() {
         Territory territoryClicked = null;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                territoryClicked = clickableTerritory.getAssociatedTerritory();
-                territoriesAlreadyClicked.add(clickableTerritory);
+        switch (mode) {
+            case TerAllocationMode: {
+                for( ClickableTerritory clickableTerritory: territoryList) {
+                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
+                        territoryClicked = clickableTerritory.getAssociatedTerritory();
+                        territoriesAlreadyClicked.add(clickableTerritory);
 
-                //add troop count
-                Text troopText = new Text("1");
-                troopText.setFont(Font.font("Snap ITC", 30));
-                paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
-
-                break;
+                        //add troop count
+                        Text troopText = new Text("1");
+                        troopText.setFont(Font.font("Snap ITC", 30));
+                        paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
+                        break;
+                    }
+                }
+                return territoryClicked;
+            }
+            case SoldierAllocationMode: {
+                for( ClickableTerritory clickableTerritory: territoryList) {
+                    if (clickableTerritory.getClicked())
+                        return clickableTerritory.getAssociatedTerritory();
+                }
             }
         }
-        return territoryClicked;
+        return null;
     }
 
     public void initiateRiskGame() {
@@ -94,6 +106,11 @@ public class RiskView extends StackPane {
     }
 
     public void setTerritoryMode(RiskGame.GameMode mode) {
+        if(mode == RiskGame.GameMode.SoldierAllocationMode) {
+            for( ClickableTerritory clickableTerritory: territoryList)
+                clickableTerritory.setClicked(false);
+        }
+        this.mode = mode;
         for( ClickableTerritory clickableTerritory: territoryList) {
             clickableTerritory.setMode(mode);
         }
@@ -113,33 +130,52 @@ public class RiskView extends StackPane {
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
-
         lessButton.setOnMouseClicked(e -> {
-
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            if(selectedTroopCount > 1)
+                countSelectionText.setText(String.valueOf(selectedTroopCount - 1));
         });
 
         moreButton.setOnMouseClicked(e -> {
-
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            if(selectedTroopCount < troopCount)
+                countSelectionText.setText(String.valueOf(selectedTroopCount + 1));
         });
     }
 
-    private void removeTroopCountSelector() {
+    public void removeTroopCountSelector() {
         this.getChildren().remove(troopCountSelectionPane);
     }
 
-    public void setTroopCountSelector() {
+    private void setTroopCountSelector() {
         troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
+
+        Text textBack = new Text("Back");
+        textBack.setFont(Font.font("Snap ITC", 30));
+        backButton = new Button("Back");
+
+        Text textPlace = new Text("Place");
+        textPlace.setFont(Font.font("Snap ITC", 30));
+        placeButton = new Button("Place");
         countSelectionText = new Text("1");
+        countSelectionText.setFont(Font.font("Snap ITC", 30));
 
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
         moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
         HBox hbox = new HBox();
+
+        //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
+        hbox.getChildren().add(backButton);
         hbox.getChildren().add(lessButton);
         hbox.getChildren().add(countSelectionText);
         hbox.getChildren().add(moreButton);
+        hbox.getChildren().add(placeButton);
 
+        hbox.setAlignment(Pos.CENTER);
+
+        //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox);
         troopCountSelectionPane.setAlignment(Pos.CENTER);
     }
@@ -262,14 +298,5 @@ public class RiskView extends StackPane {
         }
         nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
         this.getChildren().add(nameBarPane);
-    }
-
-    public void removeListeners(){
-        setOnMousePressed(e->{
-
-        });
-        setOnMouseReleased(e->{
-
-        });
     }
 }
