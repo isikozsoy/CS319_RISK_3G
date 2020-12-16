@@ -12,13 +12,17 @@ public class RiskGame {
     private Cards cards;
     private boolean isGameOver;
     private RiskView riskView;
+    private Territory source;
+    private Territory target;
     private int tempTerCount = TER_COUNT;
+    private int nextPlayerIndex;
+    private int ctr = 0;
     // RPS
     // Continent List
     enum GameMode {
-        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode
+        TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode1, FortifyMode2
     }
-    private GameMode mode = GameMode.TroopAllocationMode;
+    private GameMode mode = GameMode.FortifyMode1;
 
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
          this.players = players;
@@ -35,7 +39,10 @@ public class RiskGame {
     }
 
     public Player play() {
+        //startTerAlloc();
         startTerAlloc();
+
+        //riskView.addTroopCountSelector(1);
         /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
@@ -123,13 +130,73 @@ public class RiskGame {
     }
 
     public void startFortify(Player player) {
-         Territory tempSource = null;
-         Territory tempTarget = null;
-         int troopToTransfer = 5;
-         if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
-             tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
-             tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
-         }
+        curPlayerId = player.getId();
+        if(mode == GameMode.FortifyMode1) { //checking the current mode
+            System.out.println("mode 1");
+            riskView.setOnMouseClicked((e) -> {
+                source = riskView.getClickedTerritory(); //source territory is assigned
+                ctr++; //counter is incremented to stay in the listeners for a certain amount of time
+                System.out.println("1 " + source.getName());
+                //riskView.addTroopCountSelector();
+            }
+            );
+
+            riskView.setOnMouseReleased((e)->{
+                    if (source != null /*&& source.getOwnerId() != -1*/) {
+                        System.out.println("entered");
+                        mode = GameMode.FortifyMode2;
+                        setMode(mode);
+                        ctr++;
+                    }
+                    if( ctr == 2)
+                        continueFortify(player); //second phase of fortify is called for the same player
+            });
+        }
+
+
+    }
+    public void continueFortify(Player player) {
+        ctr = 0; //ctr is reseted again to be able to terminate the listener
+        int troopToTransfer = 5; //temporary
+        if(mode == GameMode.FortifyMode2){ //checking the current mode
+            System.out.println("mode 2");
+            riskView.setOnMouseClicked(e->{
+                target = riskView.getClickedTerritory(); //target territory is assigned
+
+                System.out.println("2 " +target.getName());
+
+                if(target != null && target.getOwnerId() != -1){
+                    if(source.getTroopCount() >= troopToTransfer) { //check if the selected troop count exceeds
+                                                                    // available troops in the territory or not
+                        if ((source.getOwnerId() == target.getOwnerId())) {
+                            source.setTroopCount(source.getTroopCount() - troopToTransfer);
+                            target.setTroopCount(target.getTroopCount() + troopToTransfer);
+
+                            //riskView.removeTroopCountSelector();
+                            mode = GameMode.SoldierAllocationMode;
+                            setMode(mode);
+                            nextTurn(); //next player is found
+                            ctr++;
+                            if(ctr == 1) //to terminate the listener
+                                startSoldierAlloc(players.get(curPlayerId)); //soldier allocation is initiated for
+                                                                             //next player
+                        }
+                    }
+                    else{ //reselect the number of soldiers
+
+                    }
+                }
+                else
+                {
+                    mode = GameMode.FortifyMode1;
+                    setMode(mode);
+                    ctr++;
+                    if(ctr == 1)
+                        startFortify(player); //if the player fails to select his/her own territory first
+                                              //phase of the fortify is called again
+                }
+            });
+        }
     }
 
     //Builds an airport to the territory whose id is given.
@@ -144,5 +211,9 @@ public class RiskGame {
         //////////////////////////////////
         ///         TO DO              ///
         //////////////////////////////////
+    }
+
+    public void nextTurn() {
+        curPlayerId = (curPlayerId + 1) % playerCount;
     }
 }
