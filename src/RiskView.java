@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*; //exceptions
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ public class RiskView extends StackPane {
     private Pane territoryTextPane;
 
     private Button currPlayerBar;
+    private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
@@ -87,7 +87,7 @@ public class RiskView extends StackPane {
     private void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
         //set its graphic as the one in the icons directory
-        Image nextPhaseImage = new Image("icons/next_phase_icon.png");
+        Image nextPhaseImage = new Image("icons/arrow_icon.png");
         nextPhaseButton.setGraphic( new ImageView(nextPhaseImage));
         //set its background as transparent
         nextPhaseButton.setStyle("-fx-background-color:transparent;");
@@ -123,7 +123,7 @@ public class RiskView extends StackPane {
         this.getChildren().add(flowPane);
     }
 
-    public void addTroopsLeft(@NotNull Player currPlayer) {
+    public void addTroopsLeft(Player currPlayer) {
         currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
                                 "-fx-text-fill:white;");
         currPlayerBar.setText(currPlayer.getName());
