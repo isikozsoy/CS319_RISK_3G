@@ -87,7 +87,7 @@ public class RiskView extends StackPane {
     private void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
         //set its graphic as the one in the icons directory
-        Image nextPhaseImage = new Image("icons/arrow_icon.png");
+        Image nextPhaseImage = new Image("icons/next_phase_icon.png");
         nextPhaseButton.setGraphic( new ImageView(nextPhaseImage));
         //set its background as transparent
         nextPhaseButton.setStyle("-fx-background-color:transparent;");
