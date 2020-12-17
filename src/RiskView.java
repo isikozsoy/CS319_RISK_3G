@@ -34,6 +34,7 @@ public class RiskView extends StackPane {
     private GridPane rockPaperScissorPane;
     private Stage stage;
     private VBox troopCountSelectionPane;
+    private CardExchangePane cardExchangePane;
     private Button lessButton;
     private Button moreButton;
     private Button backButton;
@@ -69,14 +70,17 @@ public class RiskView extends StackPane {
 
         setRockPaperScissorPane();
         setTroopCountSelector();
+        setCardExchangePane();
         addBackground();
-        addPlayerNameBars();
+
         setTroopsLeft();
         makeClickableMap();
+        addPlayerNameBars();
 
         addNextPhaseButton();
 
         addPlayButton();
+        this.getChildren().add(cardsButton);
 
         initiateRiskGame();
     }
@@ -118,6 +122,10 @@ public class RiskView extends StackPane {
         setAlignment(flowPane, Pos.TOP_LEFT);
         setAlignment(troopsLeftText, Pos.CENTER);
         this.getChildren().add(flowPane);
+    }
+
+    public void setCardExchangeInfo(Player player) {
+        cardExchangePane.setPlayerCards(player);
     }
 
     public void addTroopsLeft(Player currPlayer) {
@@ -240,6 +248,18 @@ public class RiskView extends StackPane {
         for( ClickableTerritory clickableTerritory: territoryList) {
             clickableTerritory.setColor(color);
         }
+    }
+
+    private void setCardExchangePane() {
+        cardExchangePane = new CardExchangePane();
+    }
+
+    public void addCardExchangePane() {
+        this.getChildren().add(cardExchangePane);
+        cardExchangePane.setAlignment(Pos.CENTER);
+        cardExchangePane.getBackButton().setOnMouseClicked(e -> {
+            this.getChildren().remove(cardExchangePane);
+        });
     }
 
     public void addTroopCountSelector( int troopCount) {
@@ -461,7 +481,7 @@ public class RiskView extends StackPane {
         cardsImg.setFitWidth(30);
         cardsImg.setFitHeight(40);
         cardsButton.setGraphic(cardsImg);
-        nameBarPane.getChildren().add(cardsButton);
+        //nameBarPane.getChildren().add(cardsButton);
         for( Player player: players) {
             Button nameButton = new Button();
             nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
