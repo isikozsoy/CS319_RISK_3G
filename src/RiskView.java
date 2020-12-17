@@ -258,6 +258,9 @@ public class RiskView extends StackPane {
         this.getChildren().add(cardExchangePane);
         cardExchangePane.setAlignment(Pos.CENTER);
         cardExchangePane.getBackButton().setOnMouseClicked(e -> {
+            if(mode == RiskGame.GameMode.SoldierAllocationMode) {
+                updateTroopsCount(cardExchangePane.getCurPlayer());
+            }
             this.getChildren().remove(cardExchangePane);
         });
     }

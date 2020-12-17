@@ -17,6 +17,8 @@ public class CardExchangePane extends VBox {
     private Button option4Button;
     private Button backButton;
 
+    private Player curPlayer;
+
     CardExchangePane() {
         exchangeInfo = new Text("Choose one of the options below to gain soldier.");
         infantryCount = new Text("-");
@@ -36,6 +38,10 @@ public class CardExchangePane extends VBox {
         return backButton;
     }
 
+    public Player getCurPlayer() {
+        return curPlayer;
+    }
+
     public void updatePlayerCards(Player player) {
         infantryCount.setText("Infantry Count: " + player.getCards()[0]);
         cavalryCount.setText("Cavalry Count: " + player.getCards()[1]);
@@ -44,6 +50,7 @@ public class CardExchangePane extends VBox {
     }
 
     public void setPlayerCards(Player player) {
+        curPlayer = player;
         exchangeInfo.setText("Choose one of the options below to gain soldier.");
         infantryCount.setText("Infantry Count: " + player.getCards()[0]);
         cavalryCount.setText("Cavalry Count: " + player.getCards()[1]);
