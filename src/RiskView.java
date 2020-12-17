@@ -241,23 +241,37 @@ public class RiskView extends StackPane {
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
-        countSelectionText.setText("1");
+        countSelectionText.setText("   1  ");
         lessButton.setOnMouseClicked(e -> {
-            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText().trim());
+            String nextCount = "";
             //circles around 1-troopcount
             if(selectedTroopCount > 1)
-                countSelectionText.setText(String.valueOf(selectedTroopCount - 1));
+                nextCount = String.valueOf(selectedTroopCount - 1);
             else if( selectedTroopCount == 1) {
-                countSelectionText.setText(String.valueOf(troopCount));
+                nextCount = String.valueOf(troopCount);
             }
+
+            if(nextCount.length() == 1)
+                nextCount = "   " + nextCount + "  ";
+            else if(nextCount.length() == 2)
+                nextCount = "  " + nextCount + "  ";
+            countSelectionText.setText(nextCount);
         });
 
         moreButton.setOnMouseClicked(e -> {
-            int selectedTroopCount = Integer.valueOf(countSelectionText.getText());
+            int selectedTroopCount = Integer.valueOf(countSelectionText.getText().trim());
+            String nextCount = "";
             if(selectedTroopCount < troopCount)
-                countSelectionText.setText(String.valueOf(selectedTroopCount + 1));
+                nextCount = String.valueOf(selectedTroopCount + 1);
             else if( selectedTroopCount == troopCount)
-                countSelectionText.setText(String.valueOf(1));
+                nextCount = "1";
+
+            if(nextCount.length() == 1)
+                nextCount = "   " + nextCount + "  ";
+            else if(nextCount.length() == 2)
+                nextCount = "  " + nextCount + "  ";
+            countSelectionText.setText(nextCount);
         });
 
         /**
@@ -303,19 +317,31 @@ public class RiskView extends StackPane {
         troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
-        placeButton = new Button("place");
-        backButton = new Button("back");
+
+        Text textBack = new Text("Back");
+        textBack.setFont(Font.font("Snap ITC", 30));
+        backButton = new Button("Back");
+
+        Text textPlace = new Text("Place");
+        textPlace.setFont(Font.font("Snap ITC", 30));
+        placeButton = new Button("Place");
         countSelectionText = new Text("1");
+        countSelectionText.setFont(Font.font("Snap ITC", 50));
 
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
         moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
         HBox hbox = new HBox();
+
+        //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
+        hbox.getChildren().add(backButton);
         hbox.getChildren().add(lessButton);
         hbox.getChildren().add(countSelectionText);
         hbox.getChildren().add(moreButton);
-        hbox.getChildren().add(backButton);
         hbox.getChildren().add(placeButton);
 
+        hbox.setAlignment(Pos.CENTER);
+
+        //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox);
         troopCountSelectionPane.setAlignment(Pos.CENTER);
     }
