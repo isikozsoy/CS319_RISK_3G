@@ -39,6 +39,7 @@ public class RiskView extends StackPane {
     private Button backButton;
     private Button placeButton;
     private Button buildAirportButton;
+    private Button cardsButton;
     private Text countSelectionText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
@@ -72,6 +73,7 @@ public class RiskView extends StackPane {
         addPlayerNameBars();
         setTroopsLeft();
         makeClickableMap();
+
         addNextPhaseButton();
 
         addPlayButton();
@@ -305,6 +307,10 @@ public class RiskView extends StackPane {
         return buildAirportButton;
     }
 
+    public Button getCardsButton() {
+        return cardsButton;
+    }
+
     public int getSelectedTroop() {
         selectedTroop = Integer.valueOf(countSelectionText.getText().trim());
         return selectedTroop;
@@ -450,6 +456,12 @@ public class RiskView extends StackPane {
         FlowPane nameBarPane = new FlowPane();
         nameBarPane.setHgap(10);
         nameBarPane.setVgap(10);
+        cardsButton = new Button();
+        ImageView cardsImg = new ImageView(new Image("icons/cards_icon.png"));
+        cardsImg.setFitWidth(30);
+        cardsImg.setFitHeight(40);
+        cardsButton.setGraphic(cardsImg);
+        nameBarPane.getChildren().add(cardsButton);
         for( Player player: players) {
             Button nameButton = new Button();
             nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
@@ -465,7 +477,7 @@ public class RiskView extends StackPane {
             });
             nameBarPane.getChildren().add(nameButton);
         }
-        nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
+        nameBarPane.setAlignment(Pos.BOTTOM_LEFT);
         this.getChildren().add(nameBarPane);
     }
 }
