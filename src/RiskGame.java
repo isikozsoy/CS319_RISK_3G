@@ -109,7 +109,7 @@ public class RiskGame {
             //troop selection screen and from here on we will be taken to another GameMode method of the game
             riskView.setOnMouseClicked(e -> {
                 ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
-                if( clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayer.getId()) {
+                if( clickableTerritory != null && clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(noOfTroops);
                     riskView.setMaxCountSelection(curPlayer.getTroopCount());
                     mode = GameMode.SoldierAllocationModeContinued;
