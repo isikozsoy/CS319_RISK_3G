@@ -38,9 +38,11 @@ public class Player {
 
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
-        if (playerCount == 2)
+        if (playerCount == 2) {
+            System.out.println("lololo");
             troopCount = 40;
-        if(playerCount == 3)
+        }
+        else if(playerCount == 3)
             troopCount = 35;
         else if(playerCount == 4)
             troopCount = 30;
@@ -213,5 +215,138 @@ public class Player {
                 ", name='" + name + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    public boolean exchangeInfantry() {
+        if (cards[0] >= 3)  { //exchanging three infantry cards
+            cards[0] = cards[0] - 3;
+            troopCount = troopCount + 3; //exchanged infantry
+            return true;
+        }
+        if (cards[0] == 2 && cards[3] >= 1) { //exchanging two infantry and one joker
+            cards[0] = 0;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 3; //exchanged infantry
+            return true;
+        }
+        if (cards[0] == 1 && cards[3] >= 2) { //exchanging one infantry and two joker
+            cards[0] = 0;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 3; //exchanged infantry
+            return true;
+        }
+        if (cards[3] >= 3) { //exchanging three joker
+            cards[3] = cards[3] - 3;
+            troopCount = troopCount + 3; //exchanged infantry
+            return true;
+        }
+        return false; //cannot exchange infantry
+    }
+
+    public boolean exchangeCavalry() {
+        if (cards[1] >= 3)  { //exchanging three cavalry cards
+            cards[1] = cards[1] - 3;
+            troopCount = troopCount + 5; //exchanged cavalry
+            return true;
+        }
+        if (cards[1] == 2 && cards[3] >= 1) { //exchanging two cavalry and one joker
+            cards[1] = 0;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 5; //exchanged cavalry
+            return true;
+        }
+        if (cards[1] == 1 && cards[3] >= 2) { //exchanging one cavalry and two joker
+            cards[1] = 0;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 5; //exchanged cavalry
+            return true;
+        }
+        if (cards[3] >= 3) { //exchanging three joker
+            cards[3] = cards[3] - 3;
+            troopCount = troopCount + 5; //exchanged cavalry
+            return true;
+        }
+        return false; //cannot exchange cavalry
+    }
+
+    public boolean exchangeCannon() {
+        if (cards[2] >= 3)  { //exchanging three cannon
+            cards[2] = cards[2] - 3;
+            troopCount = troopCount + 8; //exchanged cannon
+            return true;
+        }
+        if (cards[2] == 2 && cards[3] >= 1) { //exchanging two cannon and one joker
+            cards[2] = 0;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 8; //exchanged cannon
+            return true;
+        }
+        if (cards[2] == 1 && cards[3] >= 2) { //exchanging one cannon and two joker
+            cards[2] = 0;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 8; //exchanged cannon
+            return true;
+        }
+        if (cards[3] >= 3) { //exchanging three joker
+            cards[3] = cards[3] - 3;
+            troopCount = troopCount + 8; //exchanged cannon
+            return true;
+        }
+        return false; //cannot exchange cannon
+    }
+
+    public boolean exchangeMixed() {
+        if (cards[0] >= 1 && cards[1] >= 1 && cards[2] >= 1) { //exchanging one of each
+            cards[0] = cards[0] - 1;
+            cards[1] = cards[1] - 1;
+            cards[2] = cards[2] - 1;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[0] >= 1 && cards[1] >= 1 && cards[3] >= 1) { //no cannon and one joker
+            cards[0] = cards[0] - 1;
+            cards[1] = cards[1] - 1;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[0] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no cavalry and one joker
+            cards[0] = cards[0] - 1;
+            cards[2] = cards[2] - 1;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[1] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no infantry and one joker
+            cards[1] = cards[1] - 1;
+            cards[2] = cards[2] - 1;
+            cards[3] = cards[3] - 1;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[0] >= 1 && cards[3] >= 2) { //only infantry and two joker
+            cards[0] = cards[0] - 1;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[1] >= 1 && cards[3] >= 2) { //only cavalry and two joker
+            cards[1] = cards[1] - 1;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[2] >= 1 && cards[3] >= 2) { //only cannon and two joker
+            cards[2] = cards[2] - 1;
+            cards[3] = cards[3] - 2;
+            troopCount = troopCount + 5; //exchanged mix
+            return true;
+        }
+        if (cards[3] >= 3) { //exchanging three joker
+            cards[3] = cards[3] - 3;
+            troopCount = troopCount + 5; //exchanged mixed
+            return true;
+        }
+        return false; //cannot exchange mixed
     }
 }

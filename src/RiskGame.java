@@ -4,6 +4,7 @@ import java.util.List;
 
 public class RiskGame {
     private final int TER_COUNT = 42;
+    private final int AIRPORT_COST = 5;
     private List<Player> players;
     private Territory[] territories;
     private int curPlayerId;
@@ -17,33 +18,35 @@ public class RiskGame {
     private int tempTerCount = TER_COUNT;
     private int nextPlayerIndex;
     private int ctr = 0;
+    private Territory sourceTer;
+    private int playerCounterForEachTurn = 0;
+
     // RPS
     // Continent List
     enum GameMode {
-        TerAllocationMode, TroopAllocationMode, SoldierAllocationMode, AttackMode, FortifyMode1, FortifyMode2
+        TerAllocationMode, SoldierAllocationMode, SoldierAllocationModeContinued, AttackMode, FortifyMode
     }
-    private GameMode mode = GameMode.TerAllocationMode;
+    private GameMode mode;
 
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
+        for (Player p : players)
+            p.setPlayerCount(players.size());
          this.players = players;
          this.territories = territories;
          this.riskView = riskView;
-         for (Player p : players)
-            p.setPlayerCount(players.size());
+
          curPlayerId = 0;
          gamePhase = 0;
          playerCount = players.size();
          cards = null;   // for now
          isGameOver = false;
+         mode = GameMode.TerAllocationMode;
          // Continents
          // RPS
     }
 
     public Player play() {
-        //startTerAlloc();
         startInitialization();
-
-        //riskView.addTroopCountSelector(1);
         /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
@@ -64,20 +67,21 @@ public class RiskGame {
     public void startTerAlloc() {
         if( mode == GameMode.TerAllocationMode) {
             riskView.setTerritoryColor(players.get(0).getColor());
+            riskView.addTroopsLeft(players.get(0));
 
             riskView.setOnMouseClicked(e -> {
                 //check which territory was clicked for
-                Territory territoryClicked = riskView.getClickedTerritory();
-                if(territoryClicked != null && territoryClicked.getOwnerId() == -1) {
-                    System.out.println(territoryClicked.getName());
+                ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
+                if(clickableTerritory != null && clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == -1) {
                     Player curPlayer = players.get(curPlayerId);
 
-                    System.out.println(curPlayerId);
-                    territoryClicked.setOwnerId(curPlayerId);
+                    clickableTerritory.getAssociatedTerritory().setOwnerId(curPlayerId);
 
                     curPlayer.decreaseTroop(1);
                     curPlayer.setTerCount(curPlayer.getTerCount() + 1);
                     nextTurn();
+
+                    riskView.addTroopsLeft(players.get(curPlayerId));
 
                     riskView.setTerritoryColor(players.get(curPlayerId).getColor());
                     tempTerCount--;
@@ -100,28 +104,63 @@ public class RiskGame {
 
     public void startSoldierAlloc() {
         if(mode == GameMode.SoldierAllocationMode) {
-            System.out.println("içerdeyiz");
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
+            int noOfTroops = curPlayer.getTroopCount();
+
+            //below takes the selected territory from the original map source
+            //if the selected territory is not null and is one of the current player's territories, RiskView adds
+            //troop selection screen and from here on we will be taken to another GameMode method of the game
             riskView.setOnMouseClicked(e -> {
-                System.out.println("içerdeyiz evet");
-                Territory territoryClicked = riskView.getClickedTerritory();
-                int noOfTroops = curPlayer.getTroopCount();
-                if( territoryClicked != null && territoryClicked.getOwnerId() == curPlayer.getId()) {
-                    System.out.println("benim mekan");
+                ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
+                if( clickableTerritory != null && clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(noOfTroops);
-                    int noOfTroopsToBeAllocatedTemp = 0;
-                    //////////////////////////////////////////////////////////////////////
-                    //number of troops to be allocated is got from the player with a listener
-                    //                                                                  //
-                    //////////////////////////////////////////////////////////////////////
-                    territoryClicked.setTroopCount(noOfTroopsToBeAllocatedTemp);
-                    curPlayer.decreaseTroop(noOfTroopsToBeAllocatedTemp);
-                    noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
-                    curPlayer.setTroopCount(noOfTroops);
+                    riskView.setMaxCountSelection(curPlayer.getTroopCount());
+                    mode = GameMode.SoldierAllocationModeContinued;
+                    continueSoldierAllocation(clickableTerritory);
                 }
-                if(noOfTroops == 0) {
-                    setMode(GameMode.AttackMode);
+            });
+        }
+    }
+
+    //resumes the main soldier allocation method, basically this phase goes back and forth between these two
+    public void continueSoldierAllocation(ClickableTerritory clickableTerritory) {
+        if( mode == GameMode.SoldierAllocationModeContinued) {
+            Player curPlayer = players.get(curPlayerId);
+            //the methods below each call specific buttons of RiskView instead of assigning mouse listeners to
+            // riskView itself, like we have been doing. This is because RiskView and each button listener take inputs
+            // separately, so if I were to click on "place" then I would need to click on another space in the window
+            // for functions defined below to take place, in a scenario where riskView is assigned listeners.
+            // That is why, here we are assigning mouse listeners to each button
+            riskView.getBackButton().setOnMouseClicked(e -> {
+                //goes back to the original Soldier Allocation function to take a territory as input again
+                riskView.removeTroopCountSelector();
+                mode = GameMode.SoldierAllocationMode;
+                startSoldierAlloc();
+            });
+            riskView.getPlaceButton().setOnMouseClicked(e -> {
+                //sets selected troop integer, and places it in the territory specified itself
+                int selectedTroop = riskView.getSelectedTroop();
+                clickableTerritory.getAssociatedTerritory().addTroop(selectedTroop);
+                curPlayer.decreaseTroop(selectedTroop);
+                riskView.removeTroopCountSelector();
+                riskView.updateTroopsCount(curPlayer);
+                riskView.updateTerTroopCount(clickableTerritory, selectedTroop);
+
+                //sets the number to appear between more and less buttons
+                //riskView.setMaxCountSelection(curPlayer.getTroopCount());
+                if (curPlayer.getTroopCount() <= 0) {
+                    playerCounterForEachTurn++;
+                    nextTurn();
+                    riskView.updatePlayerBar(players.get(curPlayerId));
+                    riskView.updateTroopsCount(players.get(curPlayerId));
+
+                    setMode(GameMode.SoldierAllocationMode);
+                    startSoldierAlloc();
+
+                    if( playerCounterForEachTurn >= playerCount) {
+                        setMode(GameMode.AttackMode);
+                    }
                 }
             });
         }

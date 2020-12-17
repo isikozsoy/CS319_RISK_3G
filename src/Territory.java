@@ -93,4 +93,8 @@ public class Territory {
 
         return attackableTerritories;
     }
+
+    public void addTroop (int troopCount) {
+        this.troopCount += troopCount;
+    }
 }
