@@ -110,6 +110,7 @@ public class RiskGame {
                 sourceTer = riskView.getClickedTerritoryAfterAllocation();
                 if( sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(noOfTroops);
+                    riskView.setMaxCountSelection(curPlayer.getTroopCount());
                     mode = GameMode.SoldierAllocationModeContinued;
                     continueSoldierAllocation();
                 }
@@ -137,19 +138,22 @@ public class RiskGame {
                 int selectedTroop = riskView.getSelectedTroop();
                 sourceTer.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
+                riskView.removeTroopCountSelector();
+                System.out.println("curplayer " + curPlayer.getId());
+                System.out.println("troopter " + sourceTer.getTroopCount());
+                System.out.println("troopplayer " + curPlayer.getTroopCount());
                 //sets the number to appear between more and less buttons
-                riskView.setMaxCountSelection(curPlayer.getTroopCount());
+                //riskView.setMaxCountSelection(curPlayer.getTroopCount());
                 if (curPlayer.getTroopCount() <= 0) {
-                    riskView.removeTroopCountSelector();
                     playerCounterForEachTurn++;
-                    curPlayerId = (++curPlayerId) % playerCount;
+                    nextTurn();
 
                     setMode(GameMode.SoldierAllocationMode);
                     startSoldierAlloc();
 
-                    if( playerCounterForEachTurn >= playerCount) setMode(GameMode.AttackMode);
-
-                    //setMode(GameMode.AttackMode);
+                    if( playerCounterForEachTurn >= playerCount) {
+                        setMode(GameMode.AttackMode);
+                    }
                 }
             });
         }

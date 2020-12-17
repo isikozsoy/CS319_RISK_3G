@@ -206,7 +206,7 @@ public class RiskView extends StackPane {
         lessButton = new Button();
         moreButton = new Button();
         placeButton = new Button("place");
-        backButton = new Button("new");
+        backButton = new Button("back");
         countSelectionText = new Text("1");
 
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
