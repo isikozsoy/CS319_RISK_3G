@@ -26,7 +26,6 @@ public class RiskGame {
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
         for (Player p : players)
             p.setPlayerCount(players.size());
-        System.out.println(players.size());
          this.players = players;
          this.territories = territories;
          this.riskView = riskView;
@@ -67,11 +66,11 @@ public class RiskGame {
 
             riskView.setOnMouseClicked(e -> {
                 //check which territory was clicked for
-                Territory territoryClicked = riskView.getClickedTerritory();
-                if(territoryClicked != null && territoryClicked.getOwnerId() == -1) {
+                ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
+                if(clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == -1) {
                     Player curPlayer = players.get(curPlayerId);
 
-                    territoryClicked.setOwnerId(curPlayerId);
+                    clickableTerritory.getAssociatedTerritory().setOwnerId(curPlayerId);
 
                     curPlayer.decreaseTroop(1);
                     curPlayer.setTerCount(curPlayer.getTerCount() + 1);
@@ -108,19 +107,19 @@ public class RiskGame {
             //if the selected territory is not null and is one of the current player's territories, RiskView adds
             //troop selection screen and from here on we will be taken to another GameMode method of the game
             riskView.setOnMouseClicked(e -> {
-                sourceTer = riskView.getClickedTerritoryAfterAllocation();
-                if( sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
+                ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
+                if( clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(noOfTroops);
                     riskView.setMaxCountSelection(curPlayer.getTroopCount());
                     mode = GameMode.SoldierAllocationModeContinued;
-                    continueSoldierAllocation();
+                    continueSoldierAllocation(clickableTerritory);
                 }
             });
         }
     }
 
     //resumes the main soldier allocation method, basically this phase goes back and forth between these two
-    public void continueSoldierAllocation() {
+    public void continueSoldierAllocation(ClickableTerritory clickableTerritory) {
         if( mode == GameMode.SoldierAllocationModeContinued) {
             Player curPlayer = players.get(curPlayerId);
             //the methods below each call specific buttons of RiskView instead of assigning mouse listeners to
@@ -137,14 +136,19 @@ public class RiskGame {
             riskView.getPlaceButton().setOnMouseClicked(e -> {
                 //sets selected troop integer, and places it in the territory specified itself
                 int selectedTroop = riskView.getSelectedTroop();
-                sourceTer.addTroop(selectedTroop);
+                clickableTerritory.getAssociatedTerritory().addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
                 riskView.removeTroopCountSelector();
+                riskView.updateTroopsCount(curPlayer);
+                riskView.updateTerTroopCount(clickableTerritory, selectedTroop);
+
                 //sets the number to appear between more and less buttons
                 //riskView.setMaxCountSelection(curPlayer.getTroopCount());
                 if (curPlayer.getTroopCount() <= 0) {
                     playerCounterForEachTurn++;
                     nextTurn();
+                    riskView.updatePlayerBar(players.get(curPlayerId));
+                    riskView.updateTroopsCount(players.get(curPlayerId));
 
                     setMode(GameMode.SoldierAllocationMode);
                     startSoldierAlloc();

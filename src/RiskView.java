@@ -1,7 +1,3 @@
-import javafx.beans.binding.ListBinding;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -11,10 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
-import java.io.*; //exceptions
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -132,24 +126,40 @@ public class RiskView extends StackPane {
         troopsLeftText.setText(Integer.toString(currPlayer.getTroopCount()));
     }
 
+    public void updateTroopsCount(Player curPlayer) {
+        troopsLeftText.setText(Integer.toString(curPlayer.getTroopCount()));
+    }
+
+    public  void updatePlayerBar (Player curPlayer) {
+        currPlayerBar.setStyle("-fx-background-color:" + curPlayer.getColor() + ";" +
+                "-fx-text-fill:white;");
+        currPlayerBar.setText(curPlayer.getName());
+        currPlayerBar.setFont(Font.font("SNAP ITC", 30));
+    }
+
+    public void updateTerTroopCount(ClickableTerritory clickableTerritory, int count) {
+        Text terText = textForEachTer.get(clickableTerritory);
+        terText.setText(String.valueOf(Integer.valueOf(terText.getText()) + count));
+    }
+
     //below is only for the first mode, which is the Territory Allocation Mode
     //After that, it will not be used anymore
-    public Territory getClickedTerritory() {
-        Territory territoryClicked = null;
+    public ClickableTerritory getClickableTerritory() {
+        ClickableTerritory clickableTerritory = null;
         switch (mode) {
             case TerAllocationMode: {
-                for( ClickableTerritory clickableTerritory: territoryList) {
-                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                        territoryClicked = clickableTerritory.getAssociatedTerritory();
-                        territoriesAlreadyClicked.add(clickableTerritory);
+                for( ClickableTerritory ct: territoryList) {
+                    if( ct.getClicked() && !territoriesAlreadyClicked.contains(ct)) {
+                        clickableTerritory = ct;
+                        territoriesAlreadyClicked.add(ct);
 
                         Text territoryText = new Text("1");
                         territoryText.setFont(Font.font("Snap ITC", 20));
                         territoryText.setFill(Color.rgb(255, 255, 255));
                         territoryText.setStroke(Color.ORANGERED);
-                        int[] imgLocations = clickableTerritory.getTerritoryXY();
+                        int[] imgLocations = ct.getTerritoryXY();
 
-                        textForEachTer.put( clickableTerritory, territoryText);
+                        textForEachTer.put( ct, territoryText);
                         this.getChildren().add(territoryText);
 
                         //code below changes the location of the texts
@@ -162,15 +172,15 @@ public class RiskView extends StackPane {
                         //below are some special cases where the territory center is not the same as the center of the png image
                         //associated with it
                         //the explanations for the functions inside them will be given after the if statements
-                        if( clickableTerritory.getAssociatedTerritory().getName().equals( "Japan")) {
+                        if( ct.getAssociatedTerritory().getName().equals( "Japan")) {
                             territoryText.setTranslateX(1165 * width / 1280 - width / 2);
                             territoryText.setTranslateY(380 * height / 1024 - height / 2);
                         }
-                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Kamchatka")) {
+                        else if( ct.getAssociatedTerritory().getName().equals( "Kamchatka")) {
                             territoryText.setTranslateX(1170 * width / 1280 - width / 2);
                             territoryText.setTranslateY(200 * height / 1024 - height / 2);
                         }
-                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
+                        else if( ct.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
                             System.out.println("aa");
                             territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
                         }
@@ -181,29 +191,20 @@ public class RiskView extends StackPane {
                         break;
                     }
                 }
-                return territoryClicked;
+                return clickableTerritory;
             }
             case SoldierAllocationMode: {
-                for( ClickableTerritory clickableTerritory: territoryList) {
-                    if (clickableTerritory.getClicked())
-                        return clickableTerritory.getAssociatedTerritory();
+                for( ClickableTerritory ct: territoryList) {
+                    if( ct.getClicked()) {
+                        clickableTerritory = ct;
+                        ct.setClicked(false);
+                        break;
+                    }
                 }
+                return clickableTerritory;
             }
         }
-        return null;
-    }
-
-    public Territory getClickedTerritoryAfterAllocation() {
-        Territory territoryClicked = null;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            if( clickableTerritory.getClicked()) {
-                territoryClicked = clickableTerritory.getAssociatedTerritory();
-                clickableTerritory.setClicked(false);
-                break;
-            }
-        }
-
-        return territoryClicked;
+        return clickableTerritory;
     }
 
     public boolean backButtonIsClicked() {
