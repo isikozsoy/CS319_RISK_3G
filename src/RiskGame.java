@@ -4,6 +4,7 @@ import java.util.List;
 
 public class RiskGame {
     private final int TER_COUNT = 42;
+    private final int AIRPORT_COST = 5;
     private List<Player> players;
     private Territory[] territories;
     private int curPlayerId;
@@ -67,7 +68,7 @@ public class RiskGame {
             riskView.setOnMouseClicked(e -> {
                 //check which territory was clicked for
                 ClickableTerritory clickableTerritory = riskView.getClickableTerritory();
-                if(clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == -1) {
+                if(clickableTerritory != null && clickableTerritory.getAssociatedTerritory() != null && clickableTerritory.getAssociatedTerritory().getOwnerId() == -1) {
                     Player curPlayer = players.get(curPlayerId);
 
                     clickableTerritory.getAssociatedTerritory().setOwnerId(curPlayerId);
@@ -157,6 +158,12 @@ public class RiskGame {
                         setMode(GameMode.AttackMode);
                     }
                 }
+            });
+            riskView.getBuildAirportButton().setOnMouseClicked(e -> {
+                curPlayer.decreaseTroop(AIRPORT_COST);
+                /*
+                * Territory should be modified.
+                **/
             });
         }
     }
