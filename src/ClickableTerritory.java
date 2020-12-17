@@ -11,6 +11,7 @@ public class ClickableTerritory extends ImageView {
     private String color;
     private Territory associatedTerritory;
     private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
+    private PixelReader pixelReader;
 
     private boolean clicked = false;
 
@@ -34,11 +35,40 @@ public class ClickableTerritory extends ImageView {
         try {
             Image origImage = new Image(origPath);
             setImage(origImage);
+            pixelReader = origImage.getPixelReader();
             addEventListeners();
         }
         catch( Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int[] getTerritoryXY() {
+        int W = (int) this.getImage().getWidth();
+        int H = (int) this.getImage().getHeight();
+
+        int smallestY = Integer.MAX_VALUE;
+        int smallestX = Integer.MAX_VALUE;
+        int largestY = Integer.MIN_VALUE;
+        int largestX = Integer.MIN_VALUE;
+
+        int argb = 0;
+
+        for( int y = 0; y < H; y++) {
+            for(int x = 0; x < W; x++) {
+                argb = pixelReader.getArgb(x, y);
+                if( argb != 0) {
+                    if( x < smallestX) smallestX = x;
+                    if( x > largestX) largestX = x;
+                    if( y < smallestY) smallestY = y;
+                    if( y > largestY) largestY = y;
+                }
+            }
+        }
+
+        int[] locArray = { smallestX + (largestX - smallestX) / 2, smallestY + (largestY - smallestY) / 2};
+
+        return locArray;
     }
 
     public void setColor(String color) {
@@ -69,12 +99,14 @@ public class ClickableTerritory extends ImageView {
                     if (clicked) {
                         return;
                     }
+                    changeColor();
                 });
                 setOnMouseReleased(e -> {
                     if (clicked) {
                         return;
                     }
                     clicked = true;
+                    changeColor();
                 });
                 setOnMouseEntered(e -> {
                     if (clicked) {
@@ -143,6 +175,7 @@ public class ClickableTerritory extends ImageView {
                     setEffect(shadowAndColorBlend);
                 });
                 setOnMouseExited(e -> {
+                    setEffect(colorAdjust);
                 });
             }
         }
@@ -173,5 +206,4 @@ public class ClickableTerritory extends ImageView {
             }
         }
     }
-
 }

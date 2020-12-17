@@ -1,13 +1,21 @@
+import javafx.beans.binding.ListBinding;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.*; //exceptions
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -41,18 +49,24 @@ public class RiskView extends StackPane {
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<ClickableTerritory, StackPane> paneForEachTer;
+    private HashMap<ClickableTerritory, Text> textForEachTer;
 
-    private Text territoryText;
+    private Button nextPhaseButton;
+
+    private Text troopsLeftText;
 
     private RiskGame riskGame;
     private Territory[] territoriesAsClass;
-    private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
+    private Pane territoryTextPane;
+
+    private Button currPlayerBar;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
         territoryList = new ArrayList<>();
-        paneForEachTer = new HashMap<>();
+        textForEachTer = new HashMap<>();
         territoriesAsClass = new Territory[42];
+        nextPhaseButton = new Button();
         this.width = width;
         this.height = height;
         this.stage = stage;
@@ -61,13 +75,65 @@ public class RiskView extends StackPane {
         setTroopCountSelector();
         addBackground();
         addPlayerNameBars();
+        setTroopsLeft();
         makeClickableMap();
+        addNextPhaseButton();
 
         addPlayButton();
 
         initiateRiskGame();
     }
 
+    private void addNextPhaseButton() {
+        this.getChildren().add(nextPhaseButton);
+        //set its graphic as the one in the icons directory
+        Image nextPhaseImage = new Image("icons/next_phase_icon.png");
+        nextPhaseButton.setGraphic( new ImageView(nextPhaseImage));
+        //set its background as transparent
+        nextPhaseButton.setStyle("-fx-background-color:transparent;");
+        //set its location x y coordinates
+        //originally its locations are (x, y) : (0, 800) in a 1280-1024 (width-height) space
+        //so I adjust its size to fit in with whatever our size is
+        //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
+        nextPhaseButton.setTranslateX( 0 * width / 1280 - width / 2 + nextPhaseImage.getWidth() / 2);
+        nextPhaseButton.setTranslateY( 800 * height / 1024 - height / 2);
+
+        nextPhaseButton.translateXProperty();
+        nextPhaseButton.translateYProperty();
+    }
+
+    private void setTroopsLeft() {
+        FlowPane flowPane = new FlowPane();
+        troopsLeftText = new Text();
+        currPlayerBar = new Button(); //change it based on the current player
+        currPlayerBar.setPrefSize(200, 100);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
+        vbox.getChildren().add(troopsLeftText);
+        vbox.setAlignment(Pos.TOP_RIGHT);
+
+        flowPane.getChildren().add(currPlayerBar);
+        flowPane.getChildren().add(vbox);
+
+        troopsLeftText.setFont(Font.font("SNAP ITC", 30));
+
+        setAlignment(flowPane, Pos.TOP_LEFT);
+        setAlignment(troopsLeftText, Pos.CENTER);
+        this.getChildren().add(flowPane);
+    }
+
+    public void addTroopsLeft(@NotNull Player currPlayer) {
+        currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
+                                "-fx-text-fill:white;");
+        currPlayerBar.setText(currPlayer.getName());
+        currPlayerBar.setFont(Font.font("SNAP ITC", 30));
+
+        troopsLeftText.setText(Integer.toString(currPlayer.getTroopCount()));
+    }
+
+    //below is only for the first mode, which is the Territory Allocation Mode
+    //After that, it will not be used anymore
     public Territory getClickedTerritory() {
         Territory territoryClicked = null;
         switch (mode) {
@@ -77,10 +143,41 @@ public class RiskView extends StackPane {
                         territoryClicked = clickableTerritory.getAssociatedTerritory();
                         territoriesAlreadyClicked.add(clickableTerritory);
 
-                        //add troop count
-                        Text troopText = new Text("1");
-                        troopText.setFont(Font.font("Snap ITC", 30));
-                        paneForEachTer.get(clickableTerritory).getChildren().add(troopText);
+                        Text territoryText = new Text("1");
+                        territoryText.setFont(Font.font("Snap ITC", 20));
+                        territoryText.setFill(Color.rgb(255, 255, 255));
+                        territoryText.setStroke(Color.ORANGERED);
+                        int[] imgLocations = clickableTerritory.getTerritoryXY();
+
+                        textForEachTer.put( clickableTerritory, territoryText);
+                        this.getChildren().add(territoryText);
+
+                        //code below changes the location of the texts
+                        //their original locations in the (1280, 1024) (width, height) space are held inside the imgLocations array
+                        //so I adjust these x and y locations to fit within whatever width and height settings we have for the game
+                        //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
+                        territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2);
+                        territoryText.setTranslateY(imgLocations[1] * height / 1024 - height / 2);
+
+                        //below are some special cases where the territory center is not the same as the center of the png image
+                        //associated with it
+                        //the explanations for the functions inside them will be given after the if statements
+                        if( clickableTerritory.getAssociatedTerritory().getName().equals( "Japan")) {
+                            territoryText.setTranslateX(1165 * width / 1280 - width / 2);
+                            territoryText.setTranslateY(380 * height / 1024 - height / 2);
+                        }
+                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Kamchatka")) {
+                            territoryText.setTranslateX(1170 * width / 1280 - width / 2);
+                            territoryText.setTranslateY(200 * height / 1024 - height / 2);
+                        }
+                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
+                            System.out.println("aa");
+                            territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
+                        }
+
+                        territoryText.translateXProperty();
+                        territoryText.translateYProperty();
+
                         break;
                     }
                 }
@@ -250,17 +347,12 @@ public class RiskView extends StackPane {
 
     private void makeClickableMap() {
         for (int i = 0; i < territories.length; i++) {
-            StackPane territoryPane = new StackPane();
-
             Territory territory = new Territory(territories[i]);
 
             ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
                     DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
                     territory);
             bindMapToPaneSize(clickableTerritory);
-
-            territoryPane.getChildren().add(clickableTerritory);
-            paneForEachTer.put(clickableTerritory, territoryPane);
 
             territoryList.add(clickableTerritory);
 
