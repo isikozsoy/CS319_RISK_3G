@@ -20,6 +20,7 @@ public class RiskGame {
     private int ctr = 0;
     private Territory sourceTer;
     private int playerCounterForEachTurn = 0;
+    private List<Request> requests;
 
     // RPS
     // Continent List
@@ -43,6 +44,7 @@ public class RiskGame {
          mode = GameMode.TerAllocationMode;
          // Continents
          // RPS
+        requests = new ArrayList<>();
     }
 
     public Player play() {
@@ -172,7 +174,7 @@ public class RiskGame {
          //////////////////////////////////
     }
 
-    public void startFortify(Player player) {
+    /*public void startFortify(Player player) {
         curPlayerId = player.getId();
         if(mode == GameMode.FortifyMode1) { //checking the current mode
             System.out.println("mode 1");
@@ -185,7 +187,7 @@ public class RiskGame {
             );
 
             riskView.setOnMouseReleased((e)->{
-                    if (source != null /*&& source.getOwnerId() != -1*/) {
+                    if (source != null *//*&& source.getOwnerId() != -1*//*) {
                         System.out.println("entered");
                         mode = GameMode.FortifyMode2;
                         setMode(mode);
@@ -204,7 +206,7 @@ public class RiskGame {
         if(mode == GameMode.FortifyMode2){ //checking the current mode
             System.out.println("mode 2");
             riskView.setOnMouseClicked(e->{
-                target = riskView.getClickedTerritory(); //target territory is assigned
+                target = riskView.getClickableTerritory(); //target territory is assigned
 
                 System.out.println("2 " +target.getName());
 
@@ -240,7 +242,7 @@ public class RiskGame {
                 }
             });
         }
-    }
+    }*/
 
     //Builds an airport to the territory whose id is given.
     public void buildAirport(int territoryId) {
@@ -258,5 +260,78 @@ public class RiskGame {
 
     public void nextTurn() {
         curPlayerId = (curPlayerId + 1) % playerCount;
+    }
+
+    public void sendAllianceRequest(Player source, Player target) //to send an alliance req. with
+                                                                    // source and target players
+    {
+        if( (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued ||
+                mode == GameMode.AttackMode || mode == GameMode.FortifyMode) && !source.isAlly(target))
+        //A player can send the request only in the SoldierAllocationMode, AttackMode, and FortifyMode
+        {
+            Request request = new Request(source, target); // new request is created
+            requests.add(request); //request is added to the arraylist containing requests
+        }
+    }
+
+    public void interactWithRequest(Player player, boolean choice) //to interact with an alliance; choice:(reject or accept)
+    {
+        if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued)
+        //A player can interact with a request only in the SoldierAllocationMode
+        {
+            for(Request r:requests) { //the arraylist for requests is traversed
+                if(r.target == player) { //it is checked if the request is targeted to the player
+                    if(choice) //if the target player wants to accept the request
+                        player.addAlly(r.source.getId()); //the source player is added as an ally
+                    if(!choice) //if the target player doesn't want to accept the request
+                        requests.remove(r); //the request is deleted
+                    break;
+                }
+            }
+        }
+    }
+
+    public void cancelAlliance(Player source, Player target) //to cancel an existing alliance
+    {
+        if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued) {
+            //A player can cancel an alliance only in the SoldierAllocationMode
+            for(Request r: requests)//the arraylist for requests is traversed (we got help from to
+                                    // requests hold the alliances too)
+            {
+                if(r.source == source && r.target == target) //if the parameters are true
+                {
+                    requests.remove(r); //the alliance is removed from the requests
+
+                    //the alliance is removed from the both players
+                    source.removeAlly(target.getId());
+                    target.removeAlly(source.getId());
+
+                    break;
+                }
+            }
+        }
+    }
+
+    /*
+        REQUEST CLASS FOR ALLIANCES
+    */
+    class Request{
+        Player source;
+        Player target;
+
+        public Request(Player source, Player target)
+        {
+            this.source = source;
+            this.target = target;
+        }
+
+        Player getSource()
+        {
+            return source;
+        }
+
+        Player getTarget(){
+            return target;
+        }
     }
 }
