@@ -24,17 +24,17 @@ public class RiskGame {
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
         for (Player p : players)
             p.setPlayerCount(players.size());
-         this.players = players;
-         this.territories = territories;
-         this.riskView = riskView;
+        this.players = players;
+        this.territories = territories;
+        this.riskView = riskView;
 
-         curPlayerId = 0;
-         playerCount = players.size();
-         cards = null;   // for now
-         isGameOver = false;
-         mode = GameMode.TerAllocationMode;
-         // Continents
-         // RPS
+        curPlayerId = 0;
+        playerCount = players.size();
+        cards = null;   // for now
+        isGameOver = false;
+        mode = GameMode.TerAllocationMode;
+        // Continents
+        // RPS
     }
 
     public int getCurPlayerId() {
@@ -44,14 +44,14 @@ public class RiskGame {
     public Player play() {
         startInitialization();
         /**
-        while (!isGameOver) {
-            Player curPlayer = players.get(curPlayerId);
-            startSoldierAlloc(curPlayer);
-            startAttack(curPlayer);
-            startFortify(curPlayer);
-            update();
-            curPlayerId = (curPlayerId + 1) % playerCount;
-        }
+         while (!isGameOver) {
+         Player curPlayer = players.get(curPlayerId);
+         startSoldierAlloc(curPlayer);
+         startAttack(curPlayer);
+         startFortify(curPlayer);
+         update();
+         curPlayerId = (curPlayerId + 1) % playerCount;
+         }
          **/
         return null;
     }
@@ -170,26 +170,26 @@ public class RiskGame {
             riskView.getBuildAirportButton().setOnMouseClicked(e -> {
                 curPlayer.decreaseTroop(AIRPORT_COST);
                 /*
-                * Territory should be modified.
-                **/
+                 * Territory should be modified.
+                 **/
             });
         }
     }
 
     public void startAttack(Player player) {
-         //////////////////////////////////
-         ///         TO DO              ///
-         //////////////////////////////////
+        //////////////////////////////////
+        ///         TO DO              ///
+        //////////////////////////////////
     }
 
     public void startFortify(Player player) {
-         Territory tempSource = null;
-         Territory tempTarget = null;
-         int troopToTransfer = 5;
-         if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
-             tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
-             tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
-         }
+        Territory tempSource = null;
+        Territory tempTarget = null;
+        int troopToTransfer = 5;
+        if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
+            tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
+            tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
+        }
     }
 
     //Builds an airport to the territory whose id is given.
@@ -229,11 +229,11 @@ public class RiskGame {
     {
         if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued) {
             if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
-                {
-                    //the alliance is removed from the both players
-                    players.get(this.curPlayerId).removeAlly(target.getId());
-                    target.removeAlly(this.curPlayerId);
-                }
+            {
+                //the alliance is removed from the both players
+                players.get(this.curPlayerId).removeAlly(target.getId());
+                target.removeAlly(this.curPlayerId);
+            }
         }
     }
 }
