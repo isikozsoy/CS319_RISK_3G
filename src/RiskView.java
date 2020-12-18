@@ -35,6 +35,7 @@ public class RiskView extends StackPane {
     private Stage stage;
     private VBox troopCountSelectionPane;
     private CardExchangePane cardExchangePane;
+    private AllianceRequestPane allianceRequestPane;
     private Button lessButton;
     private Button moreButton;
     private Button backButton;
@@ -71,6 +72,7 @@ public class RiskView extends StackPane {
         setRockPaperScissorPane();
         setTroopCountSelector();
         setCardExchangePane();
+        setAllianceRequestPane();
         addBackground();
 
         setTroopsLeft();
@@ -83,6 +85,12 @@ public class RiskView extends StackPane {
 
         initiateRiskGame();
     }
+
+    private void setCardExchangePane() {
+        cardExchangePane = new CardExchangePane();
+    }
+
+    private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
     private void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
@@ -249,10 +257,6 @@ public class RiskView extends StackPane {
         }
     }
 
-    private void setCardExchangePane() {
-        cardExchangePane = new CardExchangePane();
-    }
-
     public void addCardExchangePane() {
         this.getChildren().add(cardExchangePane);
         cardExchangePane.setAlignment(Pos.CENTER);
@@ -263,6 +267,39 @@ public class RiskView extends StackPane {
             this.getChildren().remove(cardExchangePane);
         });
     }
+
+    public void setAllianceRequestInfo(Player player) {
+        allianceRequestPane.setAllianceRequests(player);
+    }
+
+    public void addAllianceRequestPane(Player curPlayer) {
+        this.getChildren().add(allianceRequestPane);
+        allianceRequestPane.setAlignment(Pos.CENTER);
+        List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
+        for (AllianceRequestPane.AllianceRequest element : list) {
+            element.getAcceptButton().setOnMouseClicked( e -> {
+                riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
+                curPlayer.addAlly(element.getElementId());
+                element.removeButtons();
+                if(allianceRequestPane.decreaseRequestCount() == 0) {
+                    this.getChildren().remove(allianceRequestPane);
+                }
+            });
+
+            element.getIgnoreButton().setOnMouseClicked( e -> {
+                element.removeButtons();
+                allianceRequestPane.decreaseRequestCount();
+                if(allianceRequestPane.getRequestCount() == 0) {
+                    this.getChildren().remove(allianceRequestPane);
+                }
+            });
+        }
+    }
+
+    public HashMap<Integer, Integer> getAllianceRequests() {
+        return allianceRequestPane.getAcceptedRequests();
+    }
+
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);

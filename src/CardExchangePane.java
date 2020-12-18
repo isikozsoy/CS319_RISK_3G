@@ -85,4 +85,6 @@ public class CardExchangePane extends VBox {
             else exchangeInfo.setText("You do not have enough number of troops.");
         });
     }
+
+
 }
