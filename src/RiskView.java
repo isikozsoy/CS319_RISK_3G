@@ -99,6 +99,10 @@ public class RiskView extends StackPane {
         nextPhaseButton.translateYProperty();
     }
 
+    public Button getNextPhaseButton() {
+        return nextPhaseButton;
+    }
+
     private void setTroopsLeft() {
         FlowPane flowPane = new FlowPane();
         troopsLeftText = new Text();
