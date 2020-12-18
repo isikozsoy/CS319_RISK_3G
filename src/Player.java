@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class Player {
     private int[] cards;
     private boolean cardDeserved;
     private boolean[] allies;
-    private List<Integer> allianceReq;
+    private HashMap<Integer, String> allianceReq;
     private int troopCount;
     private int playerCount;
 
@@ -51,7 +52,7 @@ public class Player {
             troopCount = 20;
 
         allies = new boolean[playerCount];
-        allianceReq = new ArrayList<Integer>();
+        allianceReq = new HashMap<Integer, String>();
         for (int i = 0; i < playerCount; i++)
         {
             allies[i] = false; // We will ignore his own id
@@ -135,11 +136,11 @@ public class Player {
         this.allies = allies;
     }
 
-    public List<Integer> getAllianceReq() {
+    public HashMap<Integer, String> getAllianceReq() {
         return allianceReq;
     }
 
-    public void setAllianceReq(List<Integer> allianceReq) {
+    public void setAllianceReq(HashMap<Integer, String> allianceReq) {
         this.allianceReq = allianceReq;
     }
 
@@ -186,8 +187,8 @@ public class Player {
     }
 
     // Adds the alliance request.
-    public void addAllianceReq(int playerId) {
-        allianceReq.add(playerId);
+    public void addAllianceReq(int playerId, String playerName) {
+        allianceReq.put(playerId, playerName);
     }
 
     // Calculates the troop count that player earns.
