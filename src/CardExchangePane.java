@@ -2,6 +2,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 
+import java.awt.*;
+
 public class CardExchangePane extends VBox {
     private Text exchangeInfo;
     private Text infantryCount;
@@ -17,7 +19,7 @@ public class CardExchangePane extends VBox {
 
     private Player curPlayer;
 
-    CardExchangePane() {
+    public CardExchangePane() {
         exchangeInfo = new Text("Choose one of the options below to gain soldier.");
         infantryCount = new Text("-");
         cavalryCount = new Text("-");
@@ -83,4 +85,6 @@ public class CardExchangePane extends VBox {
             else exchangeInfo.setText("You do not have enough number of troops.");
         });
     }
+
+
 }

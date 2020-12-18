@@ -2,6 +2,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 
+import java.awt.*;
+
 public class AlliancePane extends VBox{
     private Button sendAllianceRequest;
     private Button cancelAlliance;
