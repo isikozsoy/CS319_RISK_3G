@@ -1,9 +1,14 @@
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 
 public class AllianceRequestPane extends VBox {
@@ -61,9 +66,20 @@ public class AllianceRequestPane extends VBox {
 
         AllianceRequest(int id, String name) {
             this.id = id;
-            playerName = new Text(name);
+            playerName = new Text(name + "  ");
+            playerName.setFont(Font.font("SNAP ITC", 25));
             acceptButton = new Button("ACCEPT");
+            ImageView acceptIcon = new ImageView(new Image("icons/accept_icon.png"));
+            acceptIcon.setFitHeight(15);
+            acceptIcon.setFitWidth(15);
+            acceptButton.setGraphic(acceptIcon);
+
             ignoreButton = new Button("IGNORE");
+            ImageView ignoreIcon = new ImageView(new Image("icons/ignore_icon.png"));
+            ignoreIcon.setFitHeight(15);
+            ignoreIcon.setFitWidth(15);
+            ignoreButton.setGraphic(ignoreIcon);
+
             this.getChildren().addAll(playerName, acceptButton, ignoreButton);
         }
         public Button getIgnoreButton() {
