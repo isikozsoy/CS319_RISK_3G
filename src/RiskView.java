@@ -35,6 +35,7 @@ public class RiskView extends StackPane {
     private Stage stage;
     private VBox troopCountSelectionPane;
     private CardExchangePane cardExchangePane;
+    private AllianceRequestPane allianceRequestPane;
     private AlliancePane alliancePane;
     private Button lessButton;
     private Button moreButton;
@@ -72,6 +73,7 @@ public class RiskView extends StackPane {
         setRockPaperScissorPane();
         setTroopCountSelector();
         setCardExchangePane();
+        setAllianceRequestPane();
         addBackground();
 
         setTroopsLeft();
@@ -84,6 +86,12 @@ public class RiskView extends StackPane {
 
         initiateRiskGame();
     }
+
+    private void setCardExchangePane() {
+        cardExchangePane = new CardExchangePane();
+    }
+
+    private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
     private void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
@@ -130,7 +138,7 @@ public class RiskView extends StackPane {
 
     public void addTroopsLeft(Player currPlayer) {
         currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
-                "-fx-text-fill:white;");
+                                "-fx-text-fill:white;");
         currPlayerBar.setText(currPlayer.getName());
         currPlayerBar.setFont(Font.font("SNAP ITC", 30));
 
@@ -255,7 +263,7 @@ public class RiskView extends StackPane {
     }
 
     public void addAlliancePane(boolean isAlly,  Player target) { //method to add the alliance pane
-                                                                  // whenever a player is clicked
+        // whenever a player is clicked
         alliancePane = new AlliancePane();
         this.getChildren().add(alliancePane);
         alliancePane.setAlignment(Pos.CENTER);
@@ -263,12 +271,12 @@ public class RiskView extends StackPane {
         if(!isAlly) {
             if (!target.getAllianceReq().containsKey(riskGame.getPlayers().get(riskGame.getCurPlayerId()).getId()))
                 alliancePane.addSendAllianceButton(); //send alliance button is added to the pane
-                                                      // if the target player is not an ally of the source player
-                                                      // and the player has not been sent a request by the same player
+            // if the target player is not an ally of the source player
+            // and the player has not been sent a request by the same player
         }
         else
             alliancePane.addCancelAllianceButton(); //if the players are allies, cancel alliance
-                                                    // button is added to the pane
+        // button is added to the pane
 
         alliancePane.getSendAllianceRequestButton().setOnMouseClicked(e->{
             //alliance request is sent to the target player
@@ -297,6 +305,39 @@ public class RiskView extends StackPane {
             this.getChildren().remove(cardExchangePane);
         });
     }
+
+    public void setAllianceRequestInfo(Player player) {
+        allianceRequestPane.setAllianceRequests(player);
+    }
+
+    public void addAllianceRequestPane(Player curPlayer) {
+        this.getChildren().add(allianceRequestPane);
+        allianceRequestPane.setAlignment(Pos.CENTER);
+        List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
+        for (AllianceRequestPane.AllianceRequest element : list) {
+            element.getAcceptButton().setOnMouseClicked( e -> {
+                riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
+                curPlayer.addAlly(element.getElementId());
+                element.removeButtons();
+                if(allianceRequestPane.decreaseRequestCount() == 0) {
+                    this.getChildren().remove(allianceRequestPane);
+                }
+            });
+
+            element.getIgnoreButton().setOnMouseClicked( e -> {
+                element.removeButtons();
+                allianceRequestPane.decreaseRequestCount();
+                if(allianceRequestPane.getRequestCount() == 0) {
+                    this.getChildren().remove(allianceRequestPane);
+                }
+            });
+        }
+    }
+
+    public HashMap<Integer, Integer> getAllianceRequests() {
+        return allianceRequestPane.getAcceptedRequests();
+    }
+
 
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
@@ -334,14 +375,14 @@ public class RiskView extends StackPane {
         });
 
         /**
-         backButton.setOnMouseClicked(e -> {
-         backButtonIsClicked = true;
-         removeTroopCountSelector();
-         });
+        backButton.setOnMouseClicked(e -> {
+            backButtonIsClicked = true;
+            removeTroopCountSelector();
+        });
 
-         placeButton.setOnMouseClicked(e -> {
-         selectedTroop = Integer.valueOf(countSelectionText.getText());
-         });
+        placeButton.setOnMouseClicked(e -> {
+            selectedTroop = Integer.valueOf(countSelectionText.getText());
+        });
          **/
     }
 

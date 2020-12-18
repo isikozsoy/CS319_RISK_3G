@@ -114,6 +114,8 @@ public class RiskGame {
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
             int noOfTroops = curPlayer.getTroopCount();
+            riskView.addAllianceRequestPane(curPlayer);
+            riskView.setAllianceRequestInfo(curPlayer);
 
             //below takes the selected territory from the original map source
             //if the selected territory is not null and is one of the current player's territories, RiskView adds
@@ -261,6 +263,11 @@ public class RiskGame {
         //////////////////////////////////
         ///         TO DO              ///
         //////////////////////////////////
+    }
+
+    public ArrayList<Player> getPlayers()
+    {
+        return (ArrayList<Player>) players;
     }
 
     public void nextTurn() {
