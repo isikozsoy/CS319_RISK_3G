@@ -1,7 +1,3 @@
-import javafx.beans.binding.ListBinding;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -11,10 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
-import java.io.*; //exceptions
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -47,7 +41,7 @@ public class RiskView extends StackPane {
     private Text countSelectionText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
-    private HashMap<ClickableTerritory, StackPane> paneForEachTer;
+    private HashMap<String, Territory> nameAndTerritory;
     private HashMap<ClickableTerritory, Text> textForEachTer;
 
     private Button nextPhaseButton;
@@ -56,7 +50,6 @@ public class RiskView extends StackPane {
 
     private RiskGame riskGame;
     private Territory[] territoriesAsClass;
-    private Pane territoryTextPane;
 
     private Button currPlayerBar;
     private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
@@ -65,6 +58,7 @@ public class RiskView extends StackPane {
         players = playerList;
         territoryList = new ArrayList<>();
         textForEachTer = new HashMap<>();
+        nameAndTerritory = new HashMap<>();
         territoriesAsClass = new Territory[42];
         nextPhaseButton = new Button();
         this.width = width;
@@ -78,6 +72,9 @@ public class RiskView extends StackPane {
         setTroopsLeft();
         makeClickableMap();
         addNextPhaseButton();
+        for( Territory territory: nameAndTerritory.values()) {
+            setTerritoryNeighbors(territory);
+        }
 
         addPlayButton();
 
@@ -134,7 +131,7 @@ public class RiskView extends StackPane {
 
     //below is only for the first mode, which is the Territory Allocation Mode
     //After that, it will not be used anymore
-    public Territory getClickedTerritory() {
+    public Territory getClickedTerritory(RiskGame.GameMode mode) {
         Territory territoryClicked = null;
         switch (mode) {
             case TerAllocationMode: {
@@ -171,7 +168,6 @@ public class RiskView extends StackPane {
                             territoryText.setTranslateY(200 * height / 1024 - height / 2);
                         }
                         else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
-                            System.out.println("aa");
                             territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
                         }
 
@@ -183,14 +179,17 @@ public class RiskView extends StackPane {
                 }
                 return territoryClicked;
             }
-            case SoldierAllocationMode: {
+            default: {
                 for( ClickableTerritory clickableTerritory: territoryList) {
-                    if (clickableTerritory.getClicked())
-                        return clickableTerritory.getAssociatedTerritory();
+                    if( clickableTerritory.getClicked()) {
+                        territoryClicked = clickableTerritory.getAssociatedTerritory();
+                        clickableTerritory.setClicked(false);
+                        break;
+                    }
                 }
+                return territoryClicked;
             }
         }
-        return null;
     }
 
     public Territory getClickedTerritoryAfterAllocation() {
@@ -357,6 +356,7 @@ public class RiskView extends StackPane {
             territoryList.add(clickableTerritory);
 
             territoriesAsClass[i] = territory;
+            nameAndTerritory.put(territories[i], territory);
 
             this.getChildren().add(clickableTerritory);
         }
@@ -432,5 +432,303 @@ public class RiskView extends StackPane {
         }
         nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
         this.getChildren().add(nameBarPane);
+    }
+
+    final public void setTerritoryNeighbors( Territory territory) {
+        //for all 42
+        switch (territory.getName()) {
+            case "Alaska": {
+                territory.addNeighbor(nameAndTerritory.get("Northwest Territory"));
+                territory.addNeighbor(nameAndTerritory.get("Alberta"));
+                territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
+                break;
+            }
+            case "Northwest Territory": {
+                territory.addNeighbor(nameAndTerritory.get("Alaska"));
+                territory.addNeighbor(nameAndTerritory.get("Alberta"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("Greenland"));
+                break;
+            }
+            case "Alberta": {
+                territory.addNeighbor(nameAndTerritory.get("Alaska"));
+                territory.addNeighbor(nameAndTerritory.get("Northwest Territory"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("West America"));
+                break;
+            }
+            case "Ontario": {
+                territory.addNeighbor(nameAndTerritory.get("Alberta"));
+                territory.addNeighbor(nameAndTerritory.get("Northwest Territory"));
+                territory.addNeighbor(nameAndTerritory.get("East America"));
+                territory.addNeighbor(nameAndTerritory.get("West America"));
+                territory.addNeighbor(nameAndTerritory.get("Quebec"));
+                territory.addNeighbor(nameAndTerritory.get("Greenland"));
+                break;
+            }
+            case "Quebec": {
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("East America"));
+                territory.addNeighbor(nameAndTerritory.get("Greenland"));
+                break;
+            }
+            case "Greenland" : {
+                territory.addNeighbor(nameAndTerritory.get("Quebec"));
+                territory.addNeighbor(nameAndTerritory.get("Northwest Territory"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("Iceland"));
+                break;
+            }
+            case "East America": {
+                territory.addNeighbor(nameAndTerritory.get("West America"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("Quebec"));
+                territory.addNeighbor(nameAndTerritory.get("Central America"));
+                break;
+            }
+            case "West America": {
+                territory.addNeighbor(nameAndTerritory.get("East America"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("Central America"));
+                territory.addNeighbor(nameAndTerritory.get("Alberta"));
+                break;
+            }
+            case "Central America": {
+                territory.addNeighbor(nameAndTerritory.get("West America"));
+                territory.addNeighbor(nameAndTerritory.get("East America"));
+                territory.addNeighbor(nameAndTerritory.get("Venezuela"));
+                break;
+            }
+            case "Venezuela": {
+                territory.addNeighbor(nameAndTerritory.get("Brazil"));
+                territory.addNeighbor(nameAndTerritory.get("Ontario"));
+                territory.addNeighbor(nameAndTerritory.get("Peru"));
+                break;
+            }
+            case "Brazil": {
+                territory.addNeighbor(nameAndTerritory.get("Venezuela"));
+                territory.addNeighbor(nameAndTerritory.get("Argentina"));
+                territory.addNeighbor(nameAndTerritory.get("Peru"));
+                territory.addNeighbor(nameAndTerritory.get("North Africa"));
+                break;
+            }
+            case "Peru": {
+                territory.addNeighbor(nameAndTerritory.get("Venezuela"));
+                territory.addNeighbor(nameAndTerritory.get("Argentina"));
+                territory.addNeighbor(nameAndTerritory.get("Brazil"));
+                break;
+            }
+            case "Argentina": {
+                territory.addNeighbor(nameAndTerritory.get("Brazil"));
+                territory.addNeighbor(nameAndTerritory.get("Peru"));
+                break;
+            }
+            case "Egypt": {
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("North Africa"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "East Africa": {
+                territory.addNeighbor(nameAndTerritory.get("Congo"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("North Africa"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "Congo": {
+                territory.addNeighbor(nameAndTerritory.get("South Africa"));
+                territory.addNeighbor(nameAndTerritory.get("North Africa"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "North Africa": {
+                territory.addNeighbor(nameAndTerritory.get("Congo"));
+                territory.addNeighbor(nameAndTerritory.get("Brazil"));
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Egypt"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "South Africa": {
+                territory.addNeighbor(nameAndTerritory.get("Madagascar"));
+                territory.addNeighbor(nameAndTerritory.get("Congo"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "Madagascar": {
+                territory.addNeighbor(nameAndTerritory.get("South Africa"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "SE": {
+                territory.addNeighbor(nameAndTerritory.get("NE"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                territory.addNeighbor(nameAndTerritory.get("India"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                break;
+            }
+            case "Afghanistan": {
+                territory.addNeighbor(nameAndTerritory.get("Ural"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("India"));
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                break;
+            }
+            case "Ukraine": {
+                territory.addNeighbor(nameAndTerritory.get("NE"));
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Scandinavia"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                territory.addNeighbor(nameAndTerritory.get("Ural"));
+                break;
+            }
+            case "Ural": {
+                territory.addNeighbor(nameAndTerritory.get("Siberia"));
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                break;
+            }
+            case "India": {
+                territory.addNeighbor(nameAndTerritory.get("Siam"));
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("Middle East"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                break;
+            }
+            case "Siam": {
+                territory.addNeighbor(nameAndTerritory.get("India"));
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("Indonesia"));
+                break;
+            }
+            case "China": {
+                territory.addNeighbor(nameAndTerritory.get("India"));
+                territory.addNeighbor(nameAndTerritory.get("Siam"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                territory.addNeighbor(nameAndTerritory.get("Ural"));
+                territory.addNeighbor(nameAndTerritory.get("Siberia"));
+                territory.addNeighbor(nameAndTerritory.get("Mongolia"));
+                break;
+            }
+            case "Mongolia": {
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("Siam"));
+                territory.addNeighbor(nameAndTerritory.get("Irkutsk"));
+                territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
+                territory.addNeighbor(nameAndTerritory.get("Japan"));
+                break;
+            }
+            case "Kamchatka": {
+                territory.addNeighbor(nameAndTerritory.get("Alaska"));
+                territory.addNeighbor(nameAndTerritory.get("Yakutsk"));
+                territory.addNeighbor(nameAndTerritory.get("Mongolia"));
+                territory.addNeighbor(nameAndTerritory.get("Japan"));
+                break;
+            }
+            case "Yakutsk": {
+                territory.addNeighbor(nameAndTerritory.get("Siberia"));
+                territory.addNeighbor(nameAndTerritory.get("Irkutsk"));
+                territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
+                break;
+            }
+            case "Irkutsk": {
+                territory.addNeighbor(nameAndTerritory.get("Yakutsk"));
+                territory.addNeighbor(nameAndTerritory.get("Siberia"));
+                territory.addNeighbor(nameAndTerritory.get("Mongolia"));
+                territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
+                break;
+            }
+            case "Siberia": {
+                territory.addNeighbor(nameAndTerritory.get("Ural"));
+                territory.addNeighbor(nameAndTerritory.get("China"));
+                territory.addNeighbor(nameAndTerritory.get("Mongolia"));
+                territory.addNeighbor(nameAndTerritory.get("Irkutsk"));
+                territory.addNeighbor(nameAndTerritory.get("Yakutsk"));
+                break;
+            }
+            case "Japan": {
+                territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
+                territory.addNeighbor(nameAndTerritory.get("Mongolia"));
+                break;
+            }
+            case "Indonesia": {
+                territory.addNeighbor(nameAndTerritory.get("Siam"));
+                territory.addNeighbor(nameAndTerritory.get("New Guinea"));
+                territory.addNeighbor(nameAndTerritory.get("Western Australia"));
+                territory.addNeighbor(nameAndTerritory.get("Eastern Australia"));
+                break;
+            }
+            case "New Guinea": {
+                territory.addNeighbor(nameAndTerritory.get("Indonesia"));
+                territory.addNeighbor(nameAndTerritory.get("New Guinea"));
+                territory.addNeighbor(nameAndTerritory.get("Western Australia"));
+                territory.addNeighbor(nameAndTerritory.get("Eastern Australia"));
+                break;
+            }
+            case "Western Australia": {
+                territory.addNeighbor(nameAndTerritory.get("Indonesia"));
+                territory.addNeighbor(nameAndTerritory.get("New Guinea"));
+                territory.addNeighbor(nameAndTerritory.get("Eastern Australia"));
+                break;
+            }
+            case "Eastern Australia": {
+                territory.addNeighbor(nameAndTerritory.get("Indonesia"));
+                territory.addNeighbor(nameAndTerritory.get("New Guinea"));
+                territory.addNeighbor(nameAndTerritory.get("Western Australia"));
+                break;
+            }
+            case "NE": {
+                territory.addNeighbor(nameAndTerritory.get("Britain"));
+                territory.addNeighbor(nameAndTerritory.get("WE"));
+                territory.addNeighbor(nameAndTerritory.get("Scandinavia"));
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                break;
+            }
+            case "WE": {
+                territory.addNeighbor(nameAndTerritory.get("Britain"));
+                territory.addNeighbor(nameAndTerritory.get("NE"));
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                break;
+            }
+            case "Britain": {
+                territory.addNeighbor(nameAndTerritory.get("NE"));
+                territory.addNeighbor(nameAndTerritory.get("WE"));
+                territory.addNeighbor(nameAndTerritory.get("Scandinavia"));
+                territory.addNeighbor(nameAndTerritory.get("Iceland"));
+                break;
+            }
+            case "Iceland": {
+                territory.addNeighbor(nameAndTerritory.get("Greenland"));
+                territory.addNeighbor(nameAndTerritory.get("Britain"));
+                territory.addNeighbor(nameAndTerritory.get("Scandinavia"));
+                break;
+            }
+            case "Middle East": {
+                territory.addNeighbor(nameAndTerritory.get("SE"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                territory.addNeighbor(nameAndTerritory.get("Egypt"));
+                territory.addNeighbor(nameAndTerritory.get("India"));
+                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                break;
+            }
+            case "Scandinavia": {
+                territory.addNeighbor(nameAndTerritory.get("Iceland"));
+                territory.addNeighbor(nameAndTerritory.get("NE"));
+                territory.addNeighbor(nameAndTerritory.get("Ukraine"));
+                break;
+            }
+            default: {
+                System.out.println(territory.getName() + " is not present.");
+            }
+        }
     }
 }
