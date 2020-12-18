@@ -2,8 +2,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 
-import java.awt.*;
-
 public class CardExchangePane extends VBox {
     private Text exchangeInfo;
     private Text infantryCount;
