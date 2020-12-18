@@ -61,6 +61,7 @@ public class RiskGame {
     }
 
     public void startTerAlloc() {
+        players.get(0).addAllianceReq(players.get(1).getId(), players.get(1).getName());
         if( mode == GameMode.TerAllocationMode) {
             riskView.getCardsButton().setOnMouseClicked(e -> {
                 riskView.addCardExchangePane();
@@ -107,8 +108,8 @@ public class RiskGame {
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
             int noOfTroops = curPlayer.getTroopCount();
-            riskView.addAllianceRequestPane(curPlayer);
             riskView.setAllianceRequestInfo(curPlayer);
+            riskView.addAllianceRequestPane(curPlayer);
 
             //below takes the selected territory from the original map source
             //if the selected territory is not null and is one of the current player's territories, RiskView adds
