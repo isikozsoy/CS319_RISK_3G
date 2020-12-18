@@ -34,11 +34,13 @@ public class RiskView extends StackPane {
     private GridPane rockPaperScissorPane;
     private Stage stage;
     private VBox troopCountSelectionPane;
+    private CardExchangePane cardExchangePane;
     private Button lessButton;
     private Button moreButton;
     private Button backButton;
     private Button placeButton;
     private Button buildAirportButton;
+    private Button cardsButton;
     private Text countSelectionText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
@@ -68,10 +70,13 @@ public class RiskView extends StackPane {
 
         setRockPaperScissorPane();
         setTroopCountSelector();
+        setCardExchangePane();
         addBackground();
-        addPlayerNameBars();
+
         setTroopsLeft();
         makeClickableMap();
+        addPlayerNameBars();
+
         addNextPhaseButton();
 
         addPlayButton();
@@ -116,6 +121,10 @@ public class RiskView extends StackPane {
         setAlignment(flowPane, Pos.TOP_LEFT);
         setAlignment(troopsLeftText, Pos.CENTER);
         this.getChildren().add(flowPane);
+    }
+
+    public void setCardExchangeInfo(Player player) {
+        cardExchangePane.setPlayerCards(player);
     }
 
     public void addTroopsLeft(Player currPlayer) {
@@ -240,6 +249,21 @@ public class RiskView extends StackPane {
         }
     }
 
+    private void setCardExchangePane() {
+        cardExchangePane = new CardExchangePane();
+    }
+
+    public void addCardExchangePane() {
+        this.getChildren().add(cardExchangePane);
+        cardExchangePane.setAlignment(Pos.CENTER);
+        cardExchangePane.getBackButton().setOnMouseClicked(e -> {
+            if(mode == RiskGame.GameMode.SoldierAllocationMode) {
+                updateTroopsCount(cardExchangePane.getCurPlayer());
+            }
+            this.getChildren().remove(cardExchangePane);
+        });
+    }
+
     public void addTroopCountSelector( int troopCount) {
         this.getChildren().add(troopCountSelectionPane);
         countSelectionText.setText("   1  ");
@@ -303,6 +327,10 @@ public class RiskView extends StackPane {
 
     public Button getBuildAirportButton() {
         return buildAirportButton;
+    }
+
+    public Button getCardsButton() {
+        return cardsButton;
     }
 
     public int getSelectedTroop() {
@@ -450,6 +478,12 @@ public class RiskView extends StackPane {
         FlowPane nameBarPane = new FlowPane();
         nameBarPane.setHgap(10);
         nameBarPane.setVgap(10);
+        cardsButton = new Button();
+        ImageView cardsImg = new ImageView(new Image("icons/cards_icon.png"));
+        cardsImg.setFitWidth(30);
+        cardsImg.setFitHeight(40);
+        cardsButton.setGraphic(cardsImg);
+        nameBarPane.getChildren().add(cardsButton);
         for( Player player: players) {
             Button nameButton = new Button();
             nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
@@ -465,7 +499,9 @@ public class RiskView extends StackPane {
             });
             nameBarPane.getChildren().add(nameButton);
         }
-        nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
+        nameBarPane.setMaxHeight(0);
+        nameBarPane.setMaxWidth(1000);
         this.getChildren().add(nameBarPane);
+        setAlignment(nameBarPane, Pos.BOTTOM_CENTER);
     }
 }

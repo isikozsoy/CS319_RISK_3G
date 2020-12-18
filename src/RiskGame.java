@@ -68,6 +68,10 @@ public class RiskGame {
 
     public void startTerAlloc() {
         if( mode == GameMode.TerAllocationMode) {
+            riskView.getCardsButton().setOnMouseClicked(e -> {
+                riskView.addCardExchangePane();
+                riskView.setCardExchangeInfo(players.get(curPlayerId));
+            });
             riskView.setTerritoryColor(players.get(0).getColor());
             riskView.addTroopsLeft(players.get(0));
 
