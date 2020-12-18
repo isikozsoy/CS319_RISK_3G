@@ -117,13 +117,9 @@ public class RiskView extends StackPane {
         currPlayerBar = new Button(); //change it based on the current player
         currPlayerBar.setPrefSize(200, 100);
 
-        VBox vbox = new VBox();
-        vbox.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
-        vbox.getChildren().add(troopsLeftText);
-        vbox.setAlignment(Pos.TOP_RIGHT);
-
         flowPane.getChildren().add(currPlayerBar);
-        flowPane.getChildren().add(vbox);
+        flowPane.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
+        flowPane.getChildren().add(troopsLeftText);
 
         troopsLeftText.setFont(Font.font("SNAP ITC", 30));
 
@@ -275,7 +271,8 @@ public class RiskView extends StackPane {
 
     public void addAllianceRequestPane(Player curPlayer) {
         this.getChildren().add(allianceRequestPane);
-        allianceRequestPane.setAlignment(Pos.CENTER);
+        allianceRequestPane.setMaxHeight(300);
+        setAlignment(allianceRequestPane, Pos.CENTER);
         List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
         for (AllianceRequestPane.AllianceRequest element : list) {
             element.getAcceptButton().setOnMouseClicked( e -> {
