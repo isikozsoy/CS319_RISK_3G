@@ -329,17 +329,6 @@ public class RiskView extends StackPane {
                 nextCount = "  " + nextCount + "  ";
             countSelectionText.setText(nextCount);
         });
-
-        /**
-        backButton.setOnMouseClicked(e -> {
-            backButtonIsClicked = true;
-            removeTroopCountSelector();
-        });
-
-        placeButton.setOnMouseClicked(e -> {
-            selectedTroop = Integer.valueOf(countSelectionText.getText());
-        });
-         **/
     }
 
     public void setMaxCountSelection( int troopCount) {

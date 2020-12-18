@@ -169,9 +169,7 @@ public class RiskGame {
             });
             riskView.getBuildAirportButton().setOnMouseClicked(e -> {
                 curPlayer.decreaseTroop(AIRPORT_COST);
-                /*
-                * Territory should be modified.
-                **/
+                riskView.updateTroopsCount(players.get(curPlayerId));
             });
         }
     }
