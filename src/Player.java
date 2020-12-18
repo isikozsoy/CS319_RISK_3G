@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class Player {
     private int[] cards;
     private boolean cardDeserved;
     private boolean[] allies;
-    private List<Integer> allianceReq;
+    private HashMap<Integer, String> allianceReq;
     private int troopCount;
     private int playerCount;
 
@@ -39,7 +40,6 @@ public class Player {
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
         if (playerCount == 2) {
-            System.out.println("lololo");
             troopCount = 40;
         }
         else if(playerCount == 3)
@@ -52,7 +52,7 @@ public class Player {
             troopCount = 20;
 
         allies = new boolean[playerCount];
-        allianceReq = new ArrayList<Integer>();
+        allianceReq = new HashMap<Integer, String>();
         for (int i = 0; i < playerCount; i++)
         {
             allies[i] = false; // We will ignore his own id
@@ -136,11 +136,11 @@ public class Player {
         this.allies = allies;
     }
 
-    public List<Integer> getAllianceReq() {
+    public HashMap<Integer, String> getAllianceReq() {
         return allianceReq;
     }
 
-    public void setAllianceReq(List<Integer> allianceReq) {
+    public void setAllianceReq(HashMap<Integer, String> allianceReq) {
         this.allianceReq = allianceReq;
     }
 
@@ -170,12 +170,12 @@ public class Player {
     public boolean isAlly(Player player) {
         return allies[player.id];
     }
-/**
-    // Checks whether a player is an ally or not using the given player ID.
-    public boolean isAlly(int playerId) {
-        return allies[playerId];
-    }
-**/
+    /**
+     // Checks whether a player is an ally or not using the given player ID.
+     public boolean isAlly(int playerId) {
+     return allies[playerId];
+     }
+     **/
     // Makes the given player an ally.
     public void addAlly(int playerId) {
         allies[playerId] = true;
@@ -187,8 +187,8 @@ public class Player {
     }
 
     // Adds the alliance request.
-    public void addAllianceReq(int playerId) {
-        allianceReq.add(playerId);
+    public void addAllianceReq(int playerId, String playerName) {
+        allianceReq.put(playerId, playerName);
     }
 
     // Calculates the troop count that player earns.
@@ -223,19 +223,19 @@ public class Player {
             troopCount = troopCount + 3; //exchanged infantry
             return true;
         }
-        if (cards[0] == 2 && cards[3] >= 1) { //exchanging two infantry and one joker
+        else if (cards[0] == 2 && cards[3] >= 1) { //exchanging two infantry and one joker
             cards[0] = 0;
             cards[3] = cards[3] - 1;
             troopCount = troopCount + 3; //exchanged infantry
             return true;
         }
-        if (cards[0] == 1 && cards[3] >= 2) { //exchanging one infantry and two joker
+        else if (cards[0] == 1 && cards[3] >= 2) { //exchanging one infantry and two joker
             cards[0] = 0;
             cards[3] = cards[3] - 2;
             troopCount = troopCount + 3; //exchanged infantry
             return true;
         }
-        if (cards[3] >= 3) { //exchanging three joker
+        else if (cards[3] >= 3) { //exchanging three joker
             cards[3] = cards[3] - 3;
             troopCount = troopCount + 3; //exchanged infantry
             return true;
@@ -246,24 +246,24 @@ public class Player {
     public boolean exchangeCavalry() {
         if (cards[1] >= 3)  { //exchanging three cavalry cards
             cards[1] = cards[1] - 3;
-            troopCount = troopCount + 5; //exchanged cavalry
+            troopCount = troopCount + 4; //exchanged cavalry
             return true;
         }
-        if (cards[1] == 2 && cards[3] >= 1) { //exchanging two cavalry and one joker
+        else if (cards[1] == 2 && cards[3] >= 1) { //exchanging two cavalry and one joker
             cards[1] = 0;
             cards[3] = cards[3] - 1;
-            troopCount = troopCount + 5; //exchanged cavalry
+            troopCount = troopCount + 4; //exchanged cavalry
             return true;
         }
-        if (cards[1] == 1 && cards[3] >= 2) { //exchanging one cavalry and two joker
+        else if (cards[1] == 1 && cards[3] >= 2) { //exchanging one cavalry and two joker
             cards[1] = 0;
             cards[3] = cards[3] - 2;
-            troopCount = troopCount + 5; //exchanged cavalry
+            troopCount = troopCount + 4; //exchanged cavalry
             return true;
         }
-        if (cards[3] >= 3) { //exchanging three joker
+        else if (cards[3] >= 3) { //exchanging three joker
             cards[3] = cards[3] - 3;
-            troopCount = troopCount + 5; //exchanged cavalry
+            troopCount = troopCount + 4; //exchanged cavalry
             return true;
         }
         return false; //cannot exchange cavalry
@@ -272,24 +272,24 @@ public class Player {
     public boolean exchangeCannon() {
         if (cards[2] >= 3)  { //exchanging three cannon
             cards[2] = cards[2] - 3;
-            troopCount = troopCount + 8; //exchanged cannon
+            troopCount = troopCount + 5; //exchanged cannon
             return true;
         }
-        if (cards[2] == 2 && cards[3] >= 1) { //exchanging two cannon and one joker
+        else if (cards[2] == 2 && cards[3] >= 1) { //exchanging two cannon and one joker
             cards[2] = 0;
             cards[3] = cards[3] - 1;
-            troopCount = troopCount + 8; //exchanged cannon
+            troopCount = troopCount + 5; //exchanged cannon
             return true;
         }
-        if (cards[2] == 1 && cards[3] >= 2) { //exchanging one cannon and two joker
+        else if (cards[2] == 1 && cards[3] >= 2) { //exchanging one cannon and two joker
             cards[2] = 0;
             cards[3] = cards[3] - 2;
-            troopCount = troopCount + 8; //exchanged cannon
+            troopCount = troopCount + 5; //exchanged cannon
             return true;
         }
-        if (cards[3] >= 3) { //exchanging three joker
+        else if (cards[3] >= 3) { //exchanging three joker
             cards[3] = cards[3] - 3;
-            troopCount = troopCount + 8; //exchanged cannon
+            troopCount = troopCount + 5; //exchanged cannon
             return true;
         }
         return false; //cannot exchange cannon
@@ -300,51 +300,51 @@ public class Player {
             cards[0] = cards[0] - 1;
             cards[1] = cards[1] - 1;
             cards[2] = cards[2] - 1;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[0] >= 1 && cards[1] >= 1 && cards[3] >= 1) { //no cannon and one joker
+        else if (cards[0] >= 1 && cards[1] >= 1 && cards[3] >= 1) { //no cannon and one joker
             cards[0] = cards[0] - 1;
             cards[1] = cards[1] - 1;
             cards[3] = cards[3] - 1;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[0] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no cavalry and one joker
+        else if (cards[0] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no cavalry and one joker
             cards[0] = cards[0] - 1;
             cards[2] = cards[2] - 1;
             cards[3] = cards[3] - 1;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[1] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no infantry and one joker
+        else if (cards[1] >= 1 && cards[2] >= 1 && cards[3] >= 1) { //no infantry and one joker
             cards[1] = cards[1] - 1;
             cards[2] = cards[2] - 1;
             cards[3] = cards[3] - 1;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[0] >= 1 && cards[3] >= 2) { //only infantry and two joker
+        else if (cards[0] >= 1 && cards[3] >= 2) { //only infantry and two joker
             cards[0] = cards[0] - 1;
             cards[3] = cards[3] - 2;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[1] >= 1 && cards[3] >= 2) { //only cavalry and two joker
+        else if (cards[1] >= 1 && cards[3] >= 2) { //only cavalry and two joker
             cards[1] = cards[1] - 1;
             cards[3] = cards[3] - 2;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[2] >= 1 && cards[3] >= 2) { //only cannon and two joker
+        else if (cards[2] >= 1 && cards[3] >= 2) { //only cannon and two joker
             cards[2] = cards[2] - 1;
             cards[3] = cards[3] - 2;
-            troopCount = troopCount + 5; //exchanged mix
+            troopCount = troopCount + 6; //exchanged mix
             return true;
         }
-        if (cards[3] >= 3) { //exchanging three joker
+        else if (cards[3] >= 3) { //exchanging three joker
             cards[3] = cards[3] - 3;
-            troopCount = troopCount + 5; //exchanged mixed
+            troopCount = troopCount + 6; //exchanged mixed
             return true;
         }
         return false; //cannot exchange mixed
