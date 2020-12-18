@@ -19,7 +19,7 @@ public class CardExchangePane extends VBox {
 
     private Player curPlayer;
 
-    CardExchangePane() {
+    public CardExchangePane() {
         exchangeInfo = new Text("Choose one of the options below to gain soldier.");
         infantryCount = new Text("-");
         cavalryCount = new Text("-");
