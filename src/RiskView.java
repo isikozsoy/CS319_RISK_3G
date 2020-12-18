@@ -80,7 +80,6 @@ public class RiskView extends StackPane {
         addNextPhaseButton();
 
         addPlayButton();
-        this.getChildren().add(cardsButton);
 
         initiateRiskGame();
     }
@@ -484,7 +483,7 @@ public class RiskView extends StackPane {
         cardsImg.setFitWidth(30);
         cardsImg.setFitHeight(40);
         cardsButton.setGraphic(cardsImg);
-        //nameBarPane.getChildren().add(cardsButton);
+        nameBarPane.getChildren().add(cardsButton);
         for( Player player: players) {
             Button nameButton = new Button();
             nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
@@ -500,7 +499,9 @@ public class RiskView extends StackPane {
             });
             nameBarPane.getChildren().add(nameButton);
         }
-        nameBarPane.setAlignment(Pos.BOTTOM_LEFT);
+        nameBarPane.setMaxHeight(0);
+        nameBarPane.setMaxWidth(1000);
         this.getChildren().add(nameBarPane);
+        setAlignment(nameBarPane, Pos.BOTTOM_CENTER);
     }
 }
