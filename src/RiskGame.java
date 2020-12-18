@@ -49,6 +49,7 @@ public class RiskGame {
 
     public Player play() {
         startInitialization();
+        //riskView.addAlliancePane();
         /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
@@ -269,12 +270,12 @@ public class RiskGame {
     public void sendAllianceRequest(Player source, Player target) //to send an alliance req. with
                                                                     // source and target players
     {
-        if( (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued ||
-                mode == GameMode.AttackMode || mode == GameMode.FortifyMode) && !source.isAlly(target))
+        if(!source.isAlly(target))
         //A player can send the request only in the SoldierAllocationMode, AttackMode, and FortifyMode
         {
             Request request = new Request(source, target); // new request is created
             requests.add(request); //request is added to the arraylist containing requests
+            target.addAllianceReq(source.getId(), source.getName());
         }
     }
 
@@ -314,6 +315,21 @@ public class RiskGame {
                 }
             }
         }
+    }
+
+    public Enum<GameMode> getMode()
+    {
+        return mode;
+    }
+
+    public int getCurPlayerId()
+    {
+        return curPlayerId;
+    }
+
+    public ArrayList<Player> getPlayers()
+    {
+        return (ArrayList<Player>) players;
     }
 
     /*
