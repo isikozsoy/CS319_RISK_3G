@@ -35,6 +35,7 @@ public class RiskView extends StackPane {
     private Stage stage;
     private VBox troopCountSelectionPane;
     private CardExchangePane cardExchangePane;
+    private AlliancePane alliancePane;
     private Button lessButton;
     private Button moreButton;
     private Button backButton;
@@ -251,6 +252,39 @@ public class RiskView extends StackPane {
 
     private void setCardExchangePane() {
         cardExchangePane = new CardExchangePane();
+    }
+
+    public void addAlliancePane(boolean isAlly,  Player target) { //method to add the alliance pane
+                                                                  // whenever a player is clicked
+        alliancePane = new AlliancePane();
+        this.getChildren().add(alliancePane);
+        alliancePane.setAlignment(Pos.CENTER);
+
+        if(!isAlly) {
+            if (!target.getAllianceReq().containsKey(riskGame.getPlayers().get(riskGame.getCurPlayerId()).getId()))
+                alliancePane.addSendAllianceButton(); //send alliance button is added to the pane
+                                                      // if the target player is not an ally of the source player
+                                                      // and the player has not been sent a request by the same player
+        }
+        else
+            alliancePane.addCancelAllianceButton(); //if the players are allies, cancel alliance
+                                                    // button is added to the pane
+
+        alliancePane.getSendAllianceRequestButton().setOnMouseClicked(e->{
+            //alliance request is sent to the target player
+            riskGame.sendAllianceRequest(riskGame.getPlayers().get(riskGame.getCurPlayerId()), target);
+            this.getChildren().remove(alliancePane); //returned back to the game
+        });
+
+        alliancePane.getCancelAllianceButton().setOnMouseClicked(e->{
+            //alliance is cancelled
+            riskGame.cancelAlliance(riskGame.getPlayers().get(riskGame.getCurPlayerId()), target);
+            this.getChildren().remove(alliancePane); //returned back to the game
+        });
+
+        alliancePane.getBackButton().setOnMouseClicked(e -> {
+            this.getChildren().remove(alliancePane); //returned back to the game
+        });
     }
 
     public void addCardExchangePane() {
@@ -494,9 +528,20 @@ public class RiskView extends StackPane {
                 nameButton.setFont(Font.font("Snap ITC", 30));
             else
                 nameButton.setFont(Font.font("Snap ITC", 30*4/(players.size())));
+
+            //IMPLEMENTED FOR ALLIANCE PANE
             nameButton.setOnMouseClicked(e -> {
-                System.out.println("Clicked");
+                //this long if statement checks if the player clicked is NOT the same player, who clicked the button
+                // and the phases of the game
+                if(riskGame.getCurPlayerId() != player.getId() &&
+                (riskGame.getMode() == RiskGame.GameMode.TerAllocationMode
+                 || riskGame.getMode() == RiskGame.GameMode.SoldierAllocationMode
+                 || riskGame.getMode() == RiskGame.GameMode.SoldierAllocationModeContinued
+                 || riskGame.getMode() == RiskGame.GameMode.AttackMode || riskGame.getMode() == RiskGame.GameMode.FortifyMode))
+                    //alliance pane is added
+                    this.addAlliancePane(riskGame.getPlayers().get(riskGame.getCurPlayerId()).isAlly(player), player);
             });
+            /////////////////////////////////////////////////////////////////////////////
             nameBarPane.getChildren().add(nameButton);
         }
         nameBarPane.setMaxHeight(0);
