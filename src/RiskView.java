@@ -271,8 +271,7 @@ public class RiskView extends StackPane {
 
     public void addAllianceRequestPane(Player curPlayer) {
         this.getChildren().add(allianceRequestPane);
-        allianceRequestPane.setMaxHeight(300);
-        setAlignment(allianceRequestPane, Pos.CENTER);
+        allianceRequestPane.setAlignment(Pos.CENTER);
         List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
         for (AllianceRequestPane.AllianceRequest element : list) {
             element.getAcceptButton().setOnMouseClicked( e -> {
