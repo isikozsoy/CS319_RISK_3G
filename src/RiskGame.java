@@ -8,14 +8,11 @@ public class RiskGame {
     private List<Player> players;
     private Territory[] territories;
     private int curPlayerId;
-    private int gamePhase;
     private int playerCount;
     private Cards cards;
     private boolean isGameOver;
     private RiskView riskView;
     private int tempTerCount = TER_COUNT;
-    private Territory sourceTer;
-    private int ctr = 0;
     private int playerCounterForEachTurn = 0;
     // RPS
     // Continent List
@@ -32,13 +29,16 @@ public class RiskGame {
          this.riskView = riskView;
 
          curPlayerId = 0;
-         gamePhase = 0;
          playerCount = players.size();
          cards = null;   // for now
          isGameOver = false;
          mode = GameMode.TerAllocationMode;
          // Continents
          // RPS
+    }
+
+    public int getCurPlayerId() {
+        return curPlayerId;
     }
 
     public Player play() {
@@ -107,8 +107,10 @@ public class RiskGame {
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
             int noOfTroops = curPlayer.getTroopCount();
-            riskView.setAllianceRequestInfo(curPlayer);
-            riskView.addAllianceRequestPane(curPlayer);
+            if(!curPlayer.getAllianceReq().isEmpty()) {
+                riskView.setAllianceRequestInfo(curPlayer);
+                riskView.addAllianceRequestPane(curPlayer);
+            }
 
             //below takes the selected territory from the original map source
             //if the selected territory is not null and is one of the current player's territories, RiskView adds
@@ -211,5 +213,15 @@ public class RiskGame {
 
     public void nextTurn() {
         curPlayerId = (curPlayerId + 1) % playerCount;
+    }
+
+    public void sendAllianceRequest(Player target) //to send an alliance req. with
+    // source and target players
+    {
+        if(!players.get(curPlayerId).isAlly(target))
+        //A player can send the request only in the SoldierAllocationMode, AttackMode, and FortifyMode
+        {
+            target.addAllianceReq(curPlayerId, players.get(curPlayerId).getName());
+        }
     }
 }
