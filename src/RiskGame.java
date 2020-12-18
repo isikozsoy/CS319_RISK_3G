@@ -8,20 +8,12 @@ public class RiskGame {
     private List<Player> players;
     private Territory[] territories;
     private int curPlayerId;
-    private int gamePhase;
     private int playerCount;
     private Cards cards;
     private boolean isGameOver;
     private RiskView riskView;
-    private Territory source;
-    private Territory target;
     private int tempTerCount = TER_COUNT;
-    private int nextPlayerIndex;
-    private int ctr = 0;
-    private Territory sourceTer;
     private int playerCounterForEachTurn = 0;
-    private List<Request> requests;
-
     // RPS
     // Continent List
     enum GameMode {
@@ -37,19 +29,20 @@ public class RiskGame {
          this.riskView = riskView;
 
          curPlayerId = 0;
-         gamePhase = 0;
          playerCount = players.size();
          cards = null;   // for now
          isGameOver = false;
          mode = GameMode.TerAllocationMode;
          // Continents
          // RPS
-        requests = new ArrayList<>();
+    }
+
+    public int getCurPlayerId() {
+        return curPlayerId;
     }
 
     public Player play() {
         startInitialization();
-        //riskView.addAlliancePane();
         /**
         while (!isGameOver) {
             Player curPlayer = players.get(curPlayerId);
@@ -114,8 +107,10 @@ public class RiskGame {
             riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
             Player curPlayer = players.get(curPlayerId);
             int noOfTroops = curPlayer.getTroopCount();
-            riskView.addAllianceRequestPane(curPlayer);
-            riskView.setAllianceRequestInfo(curPlayer);
+            if(!curPlayer.getAllianceReq().isEmpty()) {
+                riskView.setAllianceRequestInfo(curPlayer);
+                riskView.addAllianceRequestPane(curPlayer);
+            }
 
             //below takes the selected territory from the original map source
             //if the selected territory is not null and is one of the current player's territories, RiskView adds
@@ -172,6 +167,12 @@ public class RiskGame {
                     }
                 }
             });
+            riskView.getBuildAirportButton().setOnMouseClicked(e -> {
+                curPlayer.decreaseTroop(AIRPORT_COST);
+                /*
+                * Territory should be modified.
+                **/
+            });
         }
     }
 
@@ -181,75 +182,15 @@ public class RiskGame {
          //////////////////////////////////
     }
 
-    /*public void startFortify(Player player) {
-        curPlayerId = player.getId();
-        if(mode == GameMode.FortifyMode1) { //checking the current mode
-            System.out.println("mode 1");
-            riskView.setOnMouseClicked((e) -> {
-                source = riskView.getClickedTerritory(); //source territory is assigned
-                ctr++; //counter is incremented to stay in the listeners for a certain amount of time
-                System.out.println("1 " + source.getName());
-                //riskView.addTroopCountSelector();
-            }
-            );
-
-            riskView.setOnMouseReleased((e)->{
-                    if (source != null *//*&& source.getOwnerId() != -1*//*) {
-                        System.out.println("entered");
-                        mode = GameMode.FortifyMode2;
-                        setMode(mode);
-                        ctr++;
-                    }
-                    if( ctr == 2)
-                        continueFortify(player); //second phase of fortify is called for the same player
-            });
-        }
-
-
+    public void startFortify(Player player) {
+         Territory tempSource = null;
+         Territory tempTarget = null;
+         int troopToTransfer = 5;
+         if(tempSource.getOwnerId() == curPlayerId && tempTarget.getOwnerId() == curPlayerId) {
+             tempSource.setTroopCount(tempSource.getTroopCount() - troopToTransfer);
+             tempTarget.setTroopCount(tempTarget.getTroopCount() + troopToTransfer);
+         }
     }
-    public void continueFortify(Player player) {
-        ctr = 0; //ctr is reseted again to be able to terminate the listener
-        int troopToTransfer = 5; //temporary
-        if(mode == GameMode.FortifyMode2){ //checking the current mode
-            System.out.println("mode 2");
-            riskView.setOnMouseClicked(e->{
-                target = riskView.getClickableTerritory(); //target territory is assigned
-
-                System.out.println("2 " +target.getName());
-
-                if(target != null && target.getOwnerId() != -1){
-                    if(source.getTroopCount() >= troopToTransfer) { //check if the selected troop count exceeds
-                                                                    // available troops in the territory or not
-                        if ((source.getOwnerId() == target.getOwnerId())) {
-                            source.setTroopCount(source.getTroopCount() - troopToTransfer);
-                            target.setTroopCount(target.getTroopCount() + troopToTransfer);
-
-                            //riskView.removeTroopCountSelector();
-                            mode = GameMode.SoldierAllocationMode;
-                            setMode(mode);
-                            nextTurn(); //next player is found
-                            ctr++;
-                            if(ctr == 1){} //to terminate the listener
-                                //startSoldierAlloc(players.get(curPlayerId)); //soldier allocation is initiated for
-                                                                             //next player
-                        }
-                    }
-                    else{ //reselect the number of soldiers
-
-                    }
-                }
-                else
-                {
-                    mode = GameMode.FortifyMode1;
-                    setMode(mode);
-                    ctr++;
-                    if(ctr == 1)
-                        startFortify(player); //if the player fails to select his/her own territory first
-                                              //phase of the fortify is called again
-                }
-            });
-        }
-    }*/
 
     //Builds an airport to the territory whose id is given.
     public void buildAirport(int territoryId) {
@@ -274,91 +215,25 @@ public class RiskGame {
         curPlayerId = (curPlayerId + 1) % playerCount;
     }
 
-    public void sendAllianceRequest(Player source, Player target) //to send an alliance req. with
-                                                                    // source and target players
+    public void sendAllianceRequest(Player target) //to send an alliance req. with
+    // source and target players
     {
-        if(!source.isAlly(target))
+        if(!players.get(curPlayerId).isAlly(target))
         //A player can send the request only in the SoldierAllocationMode, AttackMode, and FortifyMode
         {
-            Request request = new Request(source, target); // new request is created
-            requests.add(request); //request is added to the arraylist containing requests
-            target.addAllianceReq(source.getId(), source.getName());
+            target.addAllianceReq(curPlayerId, players.get(curPlayerId).getName());
         }
     }
 
-    public void interactWithRequest(Player player, boolean choice) //to interact with an alliance; choice:(reject or accept)
-    {
-        if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued)
-        //A player can interact with a request only in the SoldierAllocationMode
-        {
-            for(Request r:requests) { //the arraylist for requests is traversed
-                if(r.target == player) { //it is checked if the request is targeted to the player
-                    if(choice) //if the target player wants to accept the request
-                        player.addAlly(r.source.getId()); //the source player is added as an ally
-                    if(!choice) //if the target player doesn't want to accept the request
-                        requests.remove(r); //the request is deleted
-                    break;
-                }
-            }
-        }
-    }
-
-    public void cancelAlliance(Player source, Player target) //to cancel an existing alliance
+    public void cancelAlliance(Player target) //to cancel an existing alliance
     {
         if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued) {
-            //A player can cancel an alliance only in the SoldierAllocationMode
-            for(Request r: requests)//the arraylist for requests is traversed (we got help from to
-                                    // requests hold the alliances too)
-            {
-                if(r.source == source && r.target == target) //if the parameters are true
+            if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
                 {
-                    requests.remove(r); //the alliance is removed from the requests
-
                     //the alliance is removed from the both players
-                    source.removeAlly(target.getId());
-                    target.removeAlly(source.getId());
-
-                    break;
+                    players.get(this.curPlayerId).removeAlly(target.getId());
+                    target.removeAlly(this.curPlayerId);
                 }
-            }
-        }
-    }
-
-    public Enum<GameMode> getMode()
-    {
-        return mode;
-    }
-
-    public int getCurPlayerId()
-    {
-        return curPlayerId;
-    }
-
-    public ArrayList<Player> getPlayers()
-    {
-        return (ArrayList<Player>) players;
-    }
-
-    /*
-        REQUEST CLASS FOR ALLIANCES
-    */
-    class Request{
-        Player source;
-        Player target;
-
-        public Request(Player source, Player target)
-        {
-            this.source = source;
-            this.target = target;
-        }
-
-        Player getSource()
-        {
-            return source;
-        }
-
-        Player getTarget(){
-            return target;
         }
     }
 }
