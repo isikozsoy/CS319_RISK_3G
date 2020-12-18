@@ -281,17 +281,19 @@ public class RiskView extends StackPane {
             element.getAcceptButton().setOnMouseClicked( e -> {
                 riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
                 curPlayer.addAlly(element.getElementId());
-                element.removeButtons();
+                element.removeRequest();
                 if(allianceRequestPane.decreaseRequestCount() == 0) {
                     this.getChildren().remove(allianceRequestPane);
+                    curPlayer.getAllianceReq().clear();
                 }
             });
 
             element.getIgnoreButton().setOnMouseClicked( e -> {
-                element.removeButtons();
+                element.removeRequest();
                 allianceRequestPane.decreaseRequestCount();
                 if(allianceRequestPane.getRequestCount() == 0) {
                     this.getChildren().remove(allianceRequestPane);
+                    curPlayer.getAllianceReq().clear();
                 }
             });
         }
@@ -519,7 +521,7 @@ public class RiskView extends StackPane {
             // if the target player is not an ally of the source player
             // and the player has not been sent a request by the same player
         }
-        else
+        else if(mode == RiskGame.GameMode.SoldierAllocationMode || mode == RiskGame.GameMode.SoldierAllocationModeContinued)
             alliancePane.addCancelAllianceButton(); //if the players are allies, cancel alliance
         // button is added to the pane
 
@@ -530,9 +532,8 @@ public class RiskView extends StackPane {
         });
 
         alliancePane.getCancelAllianceButton().setOnMouseClicked(e->{
-            //alliance is cancelled
-            //riskGame.cancelAlliance(riskGame.getCurPlayerId(), target);
-            //this.getChildren().remove(alliancePane); //returned back to the game
+            riskGame.cancelAlliance(target);
+            this.getChildren().remove(alliancePane); //returned back to the game
         });
 
         alliancePane.getBackButton().setOnMouseClicked(e -> {

@@ -78,8 +78,8 @@ public class AllianceRequestPane extends VBox {
             return id;
         }
 
-        public void removeButtons() {
-            this.getChildren().removeAll(acceptButton, ignoreButton);
+        public void removeRequest() {
+            this.getChildren().removeAll(playerName, acceptButton, ignoreButton);
         }
     }
 }
