@@ -61,7 +61,6 @@ public class RiskGame {
     }
 
     public void startTerAlloc() {
-        players.get(0).addAllianceReq(players.get(1).getId(), players.get(1).getName());
         if( mode == GameMode.TerAllocationMode) {
             riskView.getCardsButton().setOnMouseClicked(e -> {
                 riskView.addCardExchangePane();
