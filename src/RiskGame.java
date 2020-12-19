@@ -336,17 +336,19 @@ public class RiskGame {
         }
     }*/
 
-    public boolean startAttack(int sourceId, int targetId, int troopCount) {
+    public int startAttack(int sourceId, int targetId, int troopCount, int[] newTroopCount) {
 
         if (mode != GameMode.AttackMode || troopCount < 1) {
-            return false;
+            return -1;
         }
 
         Territory source = territories[sourceId];
         int sourceTroopCount = source.getTroopCount();
 
         if(sourceTroopCount <= troopCount)
-            return false;
+            return -1;
+
+        int result;
 
         Territory target = territories[targetId];
 
@@ -358,13 +360,20 @@ public class RiskGame {
 
         int[] remainingTroops = rpsGame.play('A', '1',troopCount, targetTroopCount);
 
-        target.setTroopCount(Math.abs(troopCount - targetTroopCount));
-
-        if(remainingTroops[0] > 0) {
+        if(remainingTroops[1] == 0) {
+            target.setTroopCount(remainingTroops[0]);
             target.setOwner(players.get(curPlayerId));
+            result = 0;
+        }
+        else {
+            target.setTroopCount(remainingTroops[1]);
+            result = 1;
         }
 
-        return true;
+        newTroopCount[0] = source.getTroopCount();
+        newTroopCount[1] = target.getTroopCount();
+
+        return result;
     }
 
     public void startFortify(Player player) {

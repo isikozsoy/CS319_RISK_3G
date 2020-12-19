@@ -424,25 +424,31 @@ public class RiskView extends StackPane {
             if (!textField.getText().isEmpty()) {
                 int troopCount = Integer.parseInt(textField.getText());
 
-                if(!riskGame.startAttack(source.getTerritoryId(), target.getTerritoryId(), troopCount)) {
+                int[] newTroopCounts = new int[2];
+
+                int result = riskGame.startAttack(source.getTerritoryId(), target.getTerritoryId(), troopCount,
+                        newTroopCounts);
+
+                //Game not played.
+                if(result == -1) {
                     return;
                 }
 
                 Text targetTerritoryText = textForEachTer.get(target);
-                int targetTroopCount = Integer.parseInt(targetTerritoryText.getText());
-
                 Text sourceTerritoryText = textForEachTer.get(source);
-                this.getChildren().remove(sourceTerritoryText);
 
-                int sourceTroopCount = Integer.parseInt(sourceTerritoryText.getText());
-                sourceTerritoryText.setText("" + (sourceTroopCount - troopCount));
+                this.getChildren().remove(sourceTerritoryText);
+                sourceTerritoryText.setText("" + newTroopCounts[0]);
                 this.getChildren().add(sourceTerritoryText);
 
-
                 this.getChildren().remove(targetTerritoryText);
-                targetTerritoryText.setText("" + (targetTroopCount - troopCount));
-
+                targetTerritoryText.setText("" + newTroopCounts[1]);
                 this.getChildren().add(targetTerritoryText);
+
+                //The owner of the source won.
+                if(result == 0) {
+                    target.setColor(players.get(riskGame.getCurPlayerId()).getColor());
+                }
             }
             this.getChildren().remove(vbox);
         });

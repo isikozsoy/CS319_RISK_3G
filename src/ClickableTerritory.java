@@ -190,7 +190,6 @@ public class ClickableTerritory extends ImageView {
             shadowAndColorBlend.setBottomInput(colorAdjust);
             shadowAndColorBlend.setBottomInput(new DropShadow());
             setEffect(shadowAndColorBlend);
-            System.out.println(territoryName);
         });
         setOnMouseExited(e -> {
             setEffect(colorAdjust);
