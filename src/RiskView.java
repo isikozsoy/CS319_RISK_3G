@@ -77,9 +77,11 @@ public class RiskView extends StackPane {
 
         Button mainMenuButton = backToMenu(stage);
         HBox mainMenuContainer = new HBox();
+        mainMenuContainer.setMaxHeight(0);
+        mainMenuContainer.setMaxWidth(1000);
         mainMenuContainer.getChildren().add(mainMenuButton);
         mainMenuContainer.setAlignment(Pos.TOP_RIGHT);
-
+        setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
 
         setRockPaperScissorPane();
         setTroopCountSelector();
