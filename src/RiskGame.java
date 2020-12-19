@@ -180,7 +180,7 @@ public class RiskGame {
         riskView.getBuildAirportButton().setOnMouseClicked(e -> {
             Territory sourceTerritory;
             sourceTerritory = sourceTer;
-            if (sourceTerritory.getTroopCount() > 5) {
+            if (sourceTerritory.getTroopCount() > AIRPORT_COST) {
                 sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
                 riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
                 riskView.removeTroopCountSelector();
