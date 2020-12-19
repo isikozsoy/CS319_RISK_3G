@@ -305,38 +305,8 @@ public class RiskGame {
         this.mode = mode;
     }
 
-/*    public void startSoldierAlloc(Player player) {
-        riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
-        if(mode == GameMode.SoldierAllocationMode) {
-            riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
 
-            riskView.setOnMouseClicked(e -> {
-                int noOfTroops = player.getTroopCount();
-                Territory territoryClicked = riskView.getClickedTerritory();
-                if( territoryClicked != null) {
-                    Territory territoryTemp = new Territory("deneme");
-                    int noOfTroopsToBeAllocatedTemp = 0;
-                    //number of troops to be allocated is got from the player with a listener
-                    //                                                                  //
-                    ///////////////////////////////////////////////////////////////////////
-
-                    if( territoryTemp.getOwner().getId() == player.getId()) {
-                        territoryTemp.setTroopCount(noOfTroopsToBeAllocatedTemp);
-                        player.decreaseTroop(noOfTroopsToBeAllocatedTemp);
-                        noOfTroops = noOfTroops - noOfTroopsToBeAllocatedTemp;
-                    }
-                }
-
-                if(noOfTroops == 0) {
-                    setMode(GameMode.AttackMode);
-                }
-            });
-
-            player.setTroopCount(0);
-        }
-    }*/
-
-    public int startAttack(int sourceId, int targetId, int troopCount, int[] newTroopCount) {
+    public int startAttack(int sourceId, int targetId, int troopCount, int[] newTroopCounts) {
 
         if (mode != GameMode.AttackMode || troopCount < 1) {
             return -1;
@@ -352,17 +322,16 @@ public class RiskGame {
 
         Territory target = territories[targetId];
 
-        riskView.setTerritoryMode(GameMode.SoldierAllocationMode);
-
         source.setTroopCount(sourceTroopCount - troopCount);
 
         int targetTroopCount = territories[targetId].getTroopCount();
 
-        int[] remainingTroops = rpsGame.play('A', '1',troopCount, targetTroopCount);
+        int[] remainingTroops = rpsGame.play('A', '1', troopCount, targetTroopCount);
 
         if(remainingTroops[1] == 0) {
             target.setTroopCount(remainingTroops[0]);
             target.setOwner(players.get(curPlayerId));
+            attackableTer.remove(target);
             result = 0;
         }
         else {
@@ -370,8 +339,8 @@ public class RiskGame {
             result = 1;
         }
 
-        newTroopCount[0] = source.getTroopCount();
-        newTroopCount[1] = target.getTroopCount();
+        newTroopCounts[0] = source.getTroopCount();
+        newTroopCounts[1] = target.getTroopCount();
 
         return result;
     }

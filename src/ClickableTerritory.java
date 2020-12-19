@@ -44,6 +44,7 @@ public class ClickableTerritory extends ImageView {
         }
     }
 
+
     public int getTerritoryId() {
         return territoryId;
     }

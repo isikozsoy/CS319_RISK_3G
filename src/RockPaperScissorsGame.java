@@ -7,10 +7,12 @@ public class RockPaperScissorsGame{
     public int[] play(char p1Choice, char p2Choice, int noOfP1Soldiers, int noOfP2Soldiers) {
 
         do {
-            if(noOfP1Soldiers == 1 && noOfP2Soldiers == 1){
-                break;
-            }
+
             int winner = compare(p1Choice, p2Choice);
+
+            if(winner == 0 && noOfP1Soldiers == 1 && noOfP2Soldiers == 1) {
+                continue;
+            }
 
             if (winner != 1) {
                 noOfP1Soldiers--;
