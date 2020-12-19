@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class RiskGame {
@@ -170,6 +171,18 @@ public class RiskGame {
             riskView.getBuildAirportButton().setOnMouseClicked(e -> {
                 curPlayer.decreaseTroop(AIRPORT_COST);
                 riskView.updateTroopsCount(players.get(curPlayerId));
+                Territory currentTer = clickableTerritory.getAssociatedTerritory();
+                Territory newTer = new AirportDecorator(currentTer);
+                HashSet<Territory> neighbors = currentTer.getNeighbors();
+                for (Territory ter : neighbors) {
+                    ter.removeNeighbor(currentTer);
+                    ter.addNeighbor(newTer);
+                }
+                for (int i = 0; i < TER_COUNT; i++) {
+                    if(territories[i].getName() == currentTer.getName()) {
+                        territories[i] = newTer;
+                    }
+                }
             });
         }
     }
