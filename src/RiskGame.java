@@ -27,6 +27,7 @@ public class RiskGame
     private HashSet<Territory> fortifyableFromSource;
     private boolean gameStarted = false;
     private boolean soldierAllocBeforeClicking = false;
+    private Territory targetTerritory;
     // RPS
     // Continent List
     enum GameMode {
@@ -52,6 +53,7 @@ public class RiskGame
 
         riskView.setTerritoryColor(players.get(0).getColor());
         riskView.addTroopsLeft(players.get(0));
+        setButtons();
 
         play();
     }
@@ -68,6 +70,7 @@ public class RiskGame
     }
 
     public void executeFunctions() {
+        System.out.println(mode);
         switch (mode) {
             case TerAllocationMode: {
                 startInitialization();
@@ -98,6 +101,75 @@ public class RiskGame
                 break;
             }
         }
+    }
+
+    public void setButtons() {
+        riskView.getPlaceButton().setOnMouseClicked(e -> {
+            if(mode == GameMode.SoldierAllocationInit
+                    || mode == GameMode.SoldierAllocationMode) {
+                //sets selected troop integer, and places it in the territory specified itself
+                int selectedTroop = riskView.getSelectedTroop();
+                sourceTer.addTroop(selectedTroop);
+                curPlayer.decreaseTroop(selectedTroop);
+
+                System.out.println(curPlayer.getTroopCount());
+
+                riskView.removeTroopCountSelector();
+                //reset source territory for a new allocation
+                sourceTer = null;
+                soldierAllocBeforeClicking = false;
+                //sets the number to appear between more and less buttons
+                //riskView.setMaxCountSelection(curPlayer.getTroopCount());
+                if (curPlayer.getTroopCount() <= 0) {
+                    playerCounterForEachTurn++;
+
+                    if (playerCounterForEachTurn >= playerCount) {
+                        curPlayerId = 0;
+                        curPlayer = players.get(curPlayerId); //the actual gameplay will start from the first player
+                        gameStarted = true;
+                    }
+
+                    if (!gameStarted) {
+                        nextTurn();
+                        startSoldierAlloc();
+                    }
+                    else {
+                        System.out.println("bbbb");
+                        nextMode();
+                        executeFunctions();
+                    }
+                }
+            }
+            else if( mode == GameMode.FortifyModeCont) {
+                System.out.println("aaaa");
+                //troopToTransfer will also be got from the troop count selection screen
+                int troopToTransfer = riskView.getSelectedTroop();
+                if (troopToTransfer != 0) {
+                    //new troop counts will be set to each territory
+                    sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
+                    targetTerritory.setTroopCount(targetTerritory.getTroopCount() - troopToTransfer);
+                }
+
+                riskView.removeTroopCountSelector();
+            }
+        });
+
+        riskView.getBackButton().setOnMouseClicked(event -> {
+            if( mode == GameMode.FortifyModeCont) {
+                riskView.removeTroopCountSelector();
+                sourceTer = null;
+                targetTerritory = null;
+                mode = GameMode.FortifyMode; //goes back to previous mode
+            }
+            if(mode == GameMode.SoldierAllocationInit
+                    || mode == GameMode.SoldierAllocationMode) {
+                //goes back to the original Soldier Allocation function to take a territory as input again
+                riskView.removeTroopCountSelector();
+                soldierAllocBeforeClicking = false;
+                sourceTer = null;
+                mode = GameMode.SoldierAllocationMode;
+            }
+        });
     }
 
     /**
@@ -143,6 +215,8 @@ public class RiskGame
                 //Starts the initial soldier allocation
                 riskView.setTerritoryClicked(false);
                 riskView.setTerritoryMode(mode);
+                curPlayerId = 0;
+                System.out.println("cccc");
                 nextMode();
             }
         }
@@ -175,83 +249,41 @@ public class RiskGame
 
             if (!soldierAllocBeforeClicking) {
                 soldierAllocBeforeClicking = true;
-                int noOfTroops = soldierAllocBeforeClicking();
-                if (noOfTroops == 0) nextMode();
+                int noOfTroops = soldierAllocBeforeClicking(); //this method returns the number of troops of the current player
+                if (noOfTroops == 0) {
+                    nextMode();
+                }
             }
 
             curPlayer = players.get(curPlayerId);
             if (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
                 sourceTer = riskView.getClickedTerritory(mode);
                 if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
+                    riskView.addTroopCountSelector(curPlayer.getTroopCount());
                     setTroopCountInView();
-                    riskView.setMaxCountSelection(curPlayer.getTroopCount());
-                    continueSoldierAllocation();
+                    //nextMode();
                 }
                 riskView.addTroopsLeft(curPlayer);
             }
         }
     }
 
-    //resumes the main soldier allocation method, basically this phase goes back and forth between these two
-    public void continueSoldierAllocation() {
-        //the methods below each call specific buttons of RiskView instead of assigning mouse listeners to
-        // riskView itself, like we have been doing. This is because RiskView and each button listener take inputs
-        // separately, so if I were to click on "place" then I would need to click on another space in the window
-        // for functions defined below to take place, in a scenario where riskView is assigned listeners.
-        // That is why, here we are assigning mouse listeners to each button
-        riskView.getBackButton().setOnMouseClicked(e -> {
-            //goes back to the original Soldier Allocation function to take a territory as input again
-            riskView.removeTroopCountSelector();
-            soldierAllocBeforeClicking = false;
-            startSoldierAlloc();
-        });
-        riskView.getPlaceButton().setOnMouseClicked(e -> {
-            //sets selected troop integer, and places it in the territory specified itself
-            int selectedTroop = riskView.getSelectedTroop();
-            sourceTer.addTroop(selectedTroop);
-            curPlayer.decreaseTroop(selectedTroop);
-            riskView.removeTroopCountSelector();
-            //sets the number to appear between more and less buttons
-            //riskView.setMaxCountSelection(curPlayer.getTroopCount());
-            if (curPlayer.getTroopCount() <= 0) {
-                playerCounterForEachTurn++;
-
-                if( playerCounterForEachTurn >= playerCount) {
-                    curPlayerId = 0;
-                    curPlayer = players.get(curPlayerId); //the actual gameplay will start from the first player
-                    gameStarted = true;
-                }
-
-                if( !gameStarted) {
-                    nextTurn();
-                    startSoldierAlloc();
-                }
-                else {
-                    nextMode();
-                    executeFunctions();
-                }
-            }
-        });
-
-    }
-
     public void startAttack() {
          //////////////////////////////////
          ///         TO DO              ///
          //////////////////////////////////
+        System.out.println("eeee");
         nextMode();
     }
 
     public void startFortify() {
         if( mode == GameMode.FortifyMode) {
-            Territory sourceTerritory = null; //first set it as null so that it returns to null when the mode is
             // returned from FortifyMode2
-            sourceTerritory = riskView.getClickedTerritory( mode);
+            sourceTer = riskView.getClickedTerritory( mode);
             //territory will both have to be non-null and match with the current player id
-            System.out.println("Source: " + sourceTerritory);
-            if (sourceTerritory != null && sourceTerritory.getOwnerId() == curPlayer.getId()) {
-                fortifyableFromSource = sourceTerritory.searchForFortifyable( new HashSet<>());
-                System.out.println(fortifyableFromSource);
+            if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
+                fortifyableFromSource = sourceTer.searchForFortifyable( new HashSet<>());
+                System.out.println("ffff");
                 nextMode();
             }
         }
@@ -263,32 +295,21 @@ public class RiskGame
         //if it is another territory that is not null, troop count screen will show up
         //territory will both have to be non-null and match with the current player id
         //riskView.setTerritoryClicked(false);
-        Territory targetTerritory = riskView.getClickedTerritory(mode);
+        targetTerritory = riskView.getClickedTerritory(mode);
         System.out.println("Target: " + targetTerritory);
         if (targetTerritory == null || targetTerritory.equals(sourceTerritory)) {
             //reset the effects to the territory
             mode = GameMode.FortifyMode;
             return;
         } else if (targetTerritory != null &&  fortifyableFromSource.contains(targetTerritory)) {
-            //troop count selection screen will show up here
-            setTroopCountInView();
+            riskView.addTroopCountSelector(sourceTerritory.getTroopCount());
 
-            riskView.getPlaceButton().setOnMouseClicked(event -> {
-                //troopToTransfer will also be got from the troop count selection screen
-                int troopToTransfer = riskView.getSelectedTroop(); // for now, a temp value
-                if( troopToTransfer != 0) {
-                    //new troop counts will be set to each territory
-                    sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - troopToTransfer);
-                    targetTerritory.setTroopCount(targetTerritory.getTroopCount() - troopToTransfer);
-                }
+            int noOfTroops = riskView.getSelectedTroop();
 
-                riskView.removeTroopCountSelector();
-            });
-
-            riskView.getBackButton().setOnMouseClicked(event -> {
-                riskView.removeTroopCountSelector();
-                mode = GameMode.FortifyMode; //goes back to previous mode
-            });
+            if( noOfTroops > 0) {
+                sourceTer.setTroopCount(sourceTer.getTroopCount() - noOfTroops);
+                targetTerritory.setTroopCount(targetTerritory.getTroopCount() + noOfTroops);
+            }
         }
 
         riskView.getNextPhaseButton().setOnMouseClicked( event -> {
@@ -303,7 +324,7 @@ public class RiskGame
                 mode = GameMode.SoldierAllocationInit;
                 break;
             }
-            case SoldierAllocationInit: {
+            case SoldierAllocationInit:{
                 mode = GameMode.SoldierAllocationMode;
                 break;
             }
@@ -324,6 +345,7 @@ public class RiskGame
                 break;
             }
             case EndOfTurn: {
+                System.out.println("End of turns");
                 mode = GameMode.SoldierAllocationMode;
                 break;
             }
