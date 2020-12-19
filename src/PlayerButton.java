@@ -107,6 +107,7 @@ public class PlayerButton extends StackPane {
     }
 
     private void setAsAdderButton() {
+        gameButtonAdded = false;
         if( minusButton != null) {
             this.getChildren().removeAll(minusButton, nameField, CONTINENTS_OPTION_BOX);
             minusButton = null;
@@ -138,6 +139,7 @@ public class PlayerButton extends StackPane {
         });
 
         if(!gameButtonAdded && playerList.size() >= 2) {
+            ((AddPlayersView)mainPane).removeGameButton();
             ((AddPlayersView)mainPane).addGameButton();
             gameButtonAdded = true;
         }
