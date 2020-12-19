@@ -365,8 +365,13 @@ public class RiskView extends StackPane {
         List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
         for (AllianceRequestPane.AllianceRequest element : list) {
             element.getAcceptButton().setOnMouseClicked( e -> {
+                System.out.println("ALLLLYYYYYY");
                 riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
                 curPlayer.addAlly(element.getElementId());
+
+                System.out.println(curPlayer.isAlly(players.get(element.getElementId())));
+                System.out.println(players.get(element.getElementId()).isAlly(curPlayer));
+
                 element.removeRequest();
                 if(allianceRequestPane.decreaseRequestCount() == 0) {
                     this.getChildren().remove(allianceRequestPane);
@@ -386,6 +391,7 @@ public class RiskView extends StackPane {
     }
 
     public void addTroopCountSelector( int troopCount) {
+        setTroopCountSelector();
         this.getChildren().add(troopCountSelectorPane);
         //countSelectionText.setText("   1  ");
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
@@ -652,12 +658,7 @@ public class RiskView extends StackPane {
             //IMPLEMENTED FOR ALLIANCE PANE
             nameButton.setOnMouseClicked(e -> {
                 //this long if statement checks if the player clicked is NOT the same player, who clicked the button
-                // and the phases of the game
-                if(riskGame.getPlayers().size() > 2 && riskGame.getCurPlayerId() != player.getId() &&
-                        (mode == RiskGame.GameMode.TerAllocationMode
-                                || mode == RiskGame.GameMode.SoldierAllocationInit
-                                || mode == RiskGame.GameMode.SoldierAllocationMode
-                                || mode == RiskGame.GameMode.AttackMode || mode == RiskGame.GameMode.FortifyMode))
+                if(riskGame.getPlayers().size() > 2 && riskGame.getCurPlayerId() != player.getId())
                     //alliance pane is added
                     this.addAlliancePane(riskGame.getPlayers().get(riskGame.getCurPlayerId()).isAlly(player), player);
             });

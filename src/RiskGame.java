@@ -426,13 +426,11 @@ public class RiskGame {
 
     public void cancelAlliance(Player target) //to cancel an existing alliance
     {
-        if(mode == GameMode.SoldierAllocationMode) {
-            if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
-            {
-                //the alliance is removed from the both players
-                players.get(this.curPlayerId).removeAlly(target.getId());
-                target.removeAlly(this.curPlayerId);
-            }
+        if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
+        {
+            //the alliance is removed from the both players
+            players.get(this.curPlayerId).removeAlly(target.getId());
+            target.removeAlly(this.curPlayerId);
         }
     }
 }
