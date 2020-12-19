@@ -1,4 +1,5 @@
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -73,6 +74,12 @@ public class RiskView extends StackPane {
         this.height = height;
         this.stage = stage;
 
+        Button mainMenuButton = backToMenu(stage);
+        HBox mainMenuContainer = new HBox();
+        mainMenuContainer.getChildren().add(mainMenuButton);
+        mainMenuContainer.setAlignment(Pos.TOP_RIGHT);
+
+
         setRockPaperScissorPane();
         setTroopCountSelector();
         setCardExchangePane();
@@ -90,8 +97,28 @@ public class RiskView extends StackPane {
         }
 
         //addPlayButton();
-
+        this.getChildren().add(mainMenuContainer);
         initiateRiskGame();
+    }
+
+    private Button backToMenu(Stage stage)
+    {
+        String styleBackground = "-fx-background-color: #ff8a14;" +
+                "-fx-border-color: #00ccff;" + "-fx-text-fill: white";
+        Button back = new Button("Return to Main Menu");
+        back.setStyle(styleBackground);
+        back.setFont(Font.font("SNAP ITC", 15));
+
+        back.setOnMouseClicked( e -> {
+            System.out.println("Clicked on New Game");
+            //RiskView gameView = new RiskView();
+            MainMenuView view = new MainMenuView( stage, width, height);
+            Scene menuScene = new Scene( view, width, height);
+
+            stage.setScene( menuScene);;
+        });
+
+        return back;
     }
 
     private void setModeText() {
