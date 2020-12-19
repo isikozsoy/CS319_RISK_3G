@@ -28,7 +28,7 @@ public class TroopCountSelectorPane extends VBox {
                 "-fx-border-color: #00ccff";
         String styleBackgroundButton = "-fx-background-color: #ff6666;";
 
-        troopCountLabel = new Label("1");
+        troopCountLabel = new Label("   1  ");
         soldier = new Label();
 
         //panes initialize
