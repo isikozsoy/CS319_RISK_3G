@@ -103,7 +103,7 @@ public class RiskGame {
     }
 
     public void setButtons() {
-        riskView.getPlaceButton().setOnMouseClicked(e -> {
+        riskView.getTroopCountSelectorPane().getPlaceButton().setOnMouseClicked(e -> {
             Territory sourceTerritory = new Territory();
             sourceTerritory = sourceTer;
             if(mode == GameMode.SoldierAllocationInit
@@ -159,7 +159,7 @@ public class RiskGame {
             }
         });
 
-        riskView.getBackButton().setOnMouseClicked(event -> {
+        riskView.getTroopCountSelectorPane().getBackButton().setOnMouseClicked(event -> {
             if( mode == GameMode.FortifyModeCont) {
                 riskView.removeTroopCountSelector();
                 sourceTer = null;
@@ -285,7 +285,7 @@ public class RiskGame {
                 riskView.addTroopsLeft(curPlayer);
             }
 
-            riskView.getBuildAirportButton().setOnMouseClicked(e -> {
+            riskView.getTroopCountSelectorPane().getBuildAirportButton().setOnMouseClicked(e -> {
                 curPlayer.decreaseTroop(AIRPORT_COST);
                 riskView.updateTroopsCount(players.get(curPlayerId));
                 Territory currentTer = sourceTer;

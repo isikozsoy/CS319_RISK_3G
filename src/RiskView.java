@@ -32,22 +32,23 @@ public class RiskView extends StackPane {
     private int height;
     private GridPane rockPaperScissorPane;
     private Stage stage;
-    private VBox troopCountSelectionPane;
+    //private VBox troopCountSelectionPane;
     private CardExchangePane cardExchangePane;
     private AllianceRequestPane allianceRequestPane;
     private AlliancePane alliancePane;
-    private Button lessButton;
-    private Button moreButton;
-    private Button backButton;
-    private Button placeButton;
-    private Button buildAirportButton;
+    //private Button lessButton;
+    //private Button moreButton;
+    //private Button backButton;
+    //private Button placeButton;
+    //private Button buildAirportButton;
     private Button cardsButton;
-    private Text countSelectionText;
+    //private Text countSelectionText;
     private Text modeText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<String, Territory> nameAndTerritory;
     private HashMap<Territory, Text> textForEachTer;
+    private TroopCountSelectorPane troopCountSelectorPane;
 
     private int[][] x_y_forEachTerritory = new int[42][2];
 
@@ -385,10 +386,10 @@ public class RiskView extends StackPane {
     }
 
     public void addTroopCountSelector( int troopCount) {
-        this.getChildren().add(troopCountSelectionPane);
-        countSelectionText.setText("   1  ");
-        lessButton.setOnMouseClicked(e -> {
-            int selectedTroopCount = Integer.valueOf(countSelectionText.getText().trim());
+        this.getChildren().add(troopCountSelectorPane);
+        //countSelectionText.setText("   1  ");
+        troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
+            int selectedTroopCount = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
             String nextCount = "";
             //circles around 1-troopcount
             if(selectedTroopCount > 1)
@@ -401,11 +402,11 @@ public class RiskView extends StackPane {
                 nextCount = "   " + nextCount + "  ";
             else if(nextCount.length() == 2)
                 nextCount = "  " + nextCount + "  ";
-            countSelectionText.setText(nextCount);
+            troopCountSelectorPane.getTroopCountLabel().setText(nextCount);
         });
 
-        moreButton.setOnMouseClicked(e -> {
-            int selectedTroopCount = Integer.valueOf(countSelectionText.getText().trim());
+        troopCountSelectorPane.getMoreButton().setOnMouseClicked(e -> {
+            int selectedTroopCount = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
             String nextCount = "";
             if(selectedTroopCount < troopCount)
                 nextCount = String.valueOf(selectedTroopCount + 1);
@@ -416,7 +417,7 @@ public class RiskView extends StackPane {
                 nextCount = "   " + nextCount + "  ";
             else if(nextCount.length() == 2)
                 nextCount = "  " + nextCount + "  ";
-            countSelectionText.setText(nextCount);
+            troopCountSelectorPane.getTroopCountLabel().setText(nextCount);
         });
 
         /**
@@ -431,12 +432,12 @@ public class RiskView extends StackPane {
     }
 
     public void setMaxCountSelection( int troopCount) {
-        countSelectionText.setText(Integer.toString(troopCount));
-        this.getChildren().remove(troopCountSelectionPane);
+        troopCountSelectorPane.getTroopCountLabel().setText(Integer.toString(troopCount));
+        this.getChildren().remove(troopCountSelectorPane);
         addTroopCountSelector( troopCount);
     }
 
-    public Button getBackButton() {
+    /*public Button getBackButton() {
         return backButton;
     }
 
@@ -446,14 +447,14 @@ public class RiskView extends StackPane {
 
     public Button getBuildAirportButton() {
         return buildAirportButton;
-    }
+    }*/
 
     public Button getCardsButton() {
         return cardsButton;
     }
 
     public int getSelectedTroop() {
-        selectedTroop = Integer.valueOf(countSelectionText.getText().trim());
+        selectedTroop = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
         return selectedTroop;
     }
 
@@ -462,11 +463,12 @@ public class RiskView extends StackPane {
     }
 
     public void removeTroopCountSelector() {
-        this.getChildren().remove(troopCountSelectionPane);
+        this.getChildren().remove(troopCountSelectorPane);
     }
 
     private void setTroopCountSelector() {
-        troopCountSelectionPane = new VBox();
+        troopCountSelectorPane = new TroopCountSelectorPane();
+        /*troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
 
@@ -498,7 +500,7 @@ public class RiskView extends StackPane {
 
         //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox1, hbox2);
-        troopCountSelectionPane.setAlignment(Pos.CENTER);
+        troopCountSelectionPane.setAlignment(Pos.CENTER);*/
     }
 
     private void setRockPaperScissorPane() {
@@ -963,5 +965,10 @@ public class RiskView extends StackPane {
                 System.out.println(territory.getName() + " is not present.");
             }
         }
+    }
+
+    public TroopCountSelectorPane getTroopCountSelectorPane()
+    {
+        return troopCountSelectorPane;
     }
 }
