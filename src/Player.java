@@ -170,12 +170,12 @@ public class Player {
     public boolean isAlly(Player player) {
         return allies[player.id];
     }
-/**
-    // Checks whether a player is an ally or not using the given player ID.
-    public boolean isAlly(int playerId) {
-        return allies[playerId];
-    }
-**/
+    /**
+     // Checks whether a player is an ally or not using the given player ID.
+     public boolean isAlly(int playerId) {
+     return allies[playerId];
+     }
+     **/
     // Makes the given player an ally.
     public void addAlly(int playerId) {
         allies[playerId] = true;

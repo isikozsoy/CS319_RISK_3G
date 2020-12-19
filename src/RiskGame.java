@@ -32,9 +32,9 @@ public class RiskGame {
     public RiskGame(ArrayList<Player> players, Territory[] territories, RiskView riskView) {
         for (Player p : players)
             p.setPlayerCount(players.size());
-         this.players = players;
-         this.territories = territories;
-         this.riskView = riskView;
+        this.players = players;
+        this.territories = territories;
+        this.riskView = riskView;
 
          curPlayerId = 0;
          playerCount = players.size();
@@ -173,15 +173,14 @@ public class RiskGame {
     public Player play() {
         startInitialization();
         /**
-        while (!isGameOver) {
-            Player curPlayer = players.get(curPlayerId);
-            startSoldierAlloc(curPlayer);
-            startAttack(curPlayer);
-            startFortify(curPlayer);
-            update();
-            curPlayerId = (curPlayerId + 1) % playerCount;
-        }
-
+         while (!isGameOver) {
+         Player curPlayer = players.get(curPlayerId);
+         startSoldierAlloc(curPlayer);
+         startAttack(curPlayer);
+         startFortify(curPlayer);
+         update();
+         curPlayerId = (curPlayerId + 1) % playerCount;
+         }
         return null;
     }
     **/
@@ -414,11 +413,11 @@ public class RiskGame {
     {
         if(mode == GameMode.SoldierAllocationMode) {
             if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
-                {
-                    //the alliance is removed from the both players
-                    players.get(this.curPlayerId).removeAlly(target.getId());
-                    target.removeAlly(this.curPlayerId);
-                }
+            {
+                //the alliance is removed from the both players
+                players.get(this.curPlayerId).removeAlly(target.getId());
+                target.removeAlly(this.curPlayerId);
+            }
         }
     }
 }

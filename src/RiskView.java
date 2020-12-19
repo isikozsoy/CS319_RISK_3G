@@ -152,7 +152,7 @@ public class RiskView extends StackPane {
 
     public void addTroopsLeft(Player currPlayer) {
         currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
-                                "-fx-text-fill:white;");
+                "-fx-text-fill:white;");
         currPlayerBar.setText(currPlayer.getName());
         currPlayerBar.setFont(Font.font("SNAP ITC", 30));
 
@@ -414,6 +414,16 @@ public class RiskView extends StackPane {
                 nextCount = "  " + nextCount + "  ";
             countSelectionText.setText(nextCount);
         });
+
+        /**
+         backButton.setOnMouseClicked(e -> {
+         backButtonIsClicked = true;
+         removeTroopCountSelector();
+         });
+         placeButton.setOnMouseClicked(e -> {
+         selectedTroop = Integer.valueOf(countSelectionText.getText());
+         });
+         **/
     }
 
     public void setMaxCountSelection( int troopCount) {
