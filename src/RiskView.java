@@ -1,5 +1,6 @@
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -48,7 +49,7 @@ public class RiskView extends StackPane {
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<String, Territory> nameAndTerritory;
-    private HashMap<Territory, Text> textForEachTer;
+    private HashMap<Territory, Label> textForEachTer;
     private TroopCountSelectorPane troopCountSelectorPane;
 
     private int[][] x_y_forEachTerritory = new int[42][2];
@@ -155,9 +156,21 @@ public class RiskView extends StackPane {
         nextPhaseButton.translateYProperty();
     }
 
-    public void updateText( Territory territory, int newNum) {
-        Text territoryText = textForEachTer.get(territory);
+    public void updateText( Territory territory, int newNum, boolean hasAirport) {
+        Label territoryText = textForEachTer.get(territory);
         territoryText.setText(Integer.toString(newNum));
+        if(hasAirport)
+        {
+            ImageView airport = new ImageView(new Image("icons/plane_icon.png"));
+            airport.setFitWidth(40);
+            airport.setFitHeight(40);
+            territoryText.setGraphic(airport);
+        }
+        else
+        {
+            territoryText.setGraphic(null);
+        }
+
     }
 
     public Button getNextPhaseButton() {
@@ -206,16 +219,19 @@ public class RiskView extends StackPane {
     }
 
     public void updateTerTroopCount(ClickableTerritory clickableTerritory, int count) {
-        Text terText = textForEachTer.get(clickableTerritory);
+        Label terText = textForEachTer.get(clickableTerritory);
         terText.setText(String.valueOf(Integer.valueOf(terText.getText()) + count));
     }
 
     public void setTerritoryTexts() {
         for( int i = 0; i < territoryList.size(); i++) {
-            Text territoryText = new Text("1");
+            Label territoryText = new Label("1");
             territoryText.setFont(Font.font("Snap ITC", 20));
-            territoryText.setFill(Color.rgb(255, 255, 255));
-            territoryText.setStroke(Color.ORANGERED);
+/*            String styleBackground = "-fx-background-color: #ff8a14;" +
+                    "-fx-border-color: #00ccff;" + "-fx-text-fill: white";*/
+            territoryText.setStyle("-fx-stroke: firebrick;"+ "-fx-text-fill: white;" + "-fx-stroke-width: 2px;");
+            //territoryText.setFill(Color.rgb(255, 255, 255));
+            //territoryText.setStroke(Color.ORANGERED);
             x_y_forEachTerritory[i] = territoryList.get(i).getTerritoryXY();
 
             //code below changes the location of the texts
@@ -258,10 +274,10 @@ public class RiskView extends StackPane {
                         clickableTerritory = ct;
                         territoriesAlreadyClicked.add(ct);
 
-                        Text territoryText = new Text("1");
+                        Label territoryText = new Label("1");
                         territoryText.setFont(Font.font("Snap ITC", 20));
-                        territoryText.setFill(Color.rgb(255, 255, 255));
-                        territoryText.setStroke(Color.ORANGERED);
+                        //territoryText.setFill(Color.rgb(255, 255, 255));
+                        //territoryText.setStroke(Color.ORANGERED);
                         int[] imgLocations = ct.getTerritoryXY();
 
                         textForEachTer.put( ct.getAssociatedTerritory(), territoryText);
@@ -476,11 +492,9 @@ public class RiskView extends StackPane {
     /*public Button getBackButton() {
         return backButton;
     }
-
     public Button getPlaceButton() {
         return placeButton;
     }
-
     public Button getBuildAirportButton() {
         return buildAirportButton;
     }*/
@@ -507,33 +521,26 @@ public class RiskView extends StackPane {
         /*troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
-
         Text textBack = new Text("Back");
         textBack.setFont(Font.font("Snap ITC", 30));
         backButton = new Button("Back");
-
         Text textPlace = new Text("Place");
         textPlace.setFont(Font.font("Snap ITC", 30));
         placeButton = new Button("Place");
-
         //Text textBuildAirport = new Text("Build Airport");
         //textBuildAirport.setFont(Font.font("Snap ITC", 30));
         buildAirportButton = new Button("Build Airport");
         countSelectionText = new Text("1");
         countSelectionText.setFont(Font.font("Snap ITC", 50));
-
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
         moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
         HBox hbox1 = new HBox();
         HBox hbox2 = new HBox();
-
         //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
         hbox1.getChildren().addAll( lessButton, countSelectionText, moreButton);
         hbox1.setAlignment(Pos.CENTER);
-
         hbox2.getChildren().addAll(backButton, placeButton, buildAirportButton);
         hbox2.setAlignment(Pos.CENTER);
-
         //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox1, hbox2);
         troopCountSelectionPane.setAlignment(Pos.CENTER);*/

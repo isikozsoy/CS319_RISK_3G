@@ -113,7 +113,7 @@ public class RiskGame {
                 sourceTerritory.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
 
-                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount(), false);
 
                 riskView.removeTroopCountSelector();
                 //reset source territory for a new allocation
@@ -149,8 +149,8 @@ public class RiskGame {
                     sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
                     targetTerritory.setTroopCount(targetTerritory.getTroopCount() - troopToTransfer);
                     //update their texts in riskview
-                    riskView.updateText(sourceTer, sourceTer.getTroopCount());
-                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount());
+                    riskView.updateText(sourceTer, sourceTer.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
+                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
 
                     targetTerritory = null;
                     sourceTer = null;
@@ -182,7 +182,7 @@ public class RiskGame {
             if (!sourceTerritory.hasAirport()) {
                 if (sourceTerritory.getTroopCount() > AIRPORT_COST) {
                     sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
-                    riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                    riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount(), true);
                     riskView.removeTroopCountSelector();
                     sourceTerritory.setHasAirport(true);
                     sourceTerritory = new AirportDecorator(sourceTer);
@@ -196,7 +196,7 @@ public class RiskGame {
             }
             else {
                 sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() + 2);
-                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount(), false);
                 riskView.removeTroopCountSelector();
                 sourceTerritory = sourceTer.getTerritory();
                 sourceTerritory.setHasAirport(false);
