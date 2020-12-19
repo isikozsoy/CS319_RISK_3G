@@ -171,14 +171,12 @@ public class RiskGame {
                 //goes back to the original Soldier Allocation function to take a territory as input again
                 riskView.removeTroopCountSelector();
                 soldierAllocBeforeClicking = false;
-                sourceTer = null;
                 //mode does not change here
             }
         });
 
         riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-            if( mode == GameMode.AttackMode) mode = GameMode.FortifyMode;
-            else if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
+            if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
             else nextMode();
             setTroopCountInView();
             executeFunctions();
