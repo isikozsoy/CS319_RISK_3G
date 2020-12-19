@@ -139,6 +139,7 @@ public class RiskGame {
                         executeFunctions();
                     }
                 }
+                riskView.updateTroopsCount(curPlayer);
             }
             else if( mode == GameMode.FortifyModeCont) {
                 //troopToTransfer will also be got from the troop count selection screen
@@ -173,6 +174,23 @@ public class RiskGame {
                 soldierAllocBeforeClicking = false;
                 sourceTer = null;
                 //mode does not change here
+            }
+        });
+
+        riskView.getBuildAirportButton().setOnMouseClicked(e -> {
+            Territory sourceTerritory;
+            sourceTerritory = sourceTer;
+            if (sourceTerritory.getTroopCount() > 5) {
+                sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
+                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                riskView.removeTroopCountSelector();
+                sourceTer.setHasAirport(true);
+                sourceTerritory = new AirportDecorator(sourceTer);
+                territories[sourceTer.getId()] = sourceTerritory;
+                //reset source territory for a new allocation
+                sourceTer = null;
+                soldierAllocBeforeClicking = false;
+                riskView.removeTroopCountSelector();
             }
         });
 
@@ -284,24 +302,6 @@ public class RiskGame {
                 }
                 riskView.addTroopsLeft(curPlayer);
             }
-
-            riskView.getBuildAirportButton().setOnMouseClicked(e -> {
-                curPlayer.decreaseTroop(AIRPORT_COST);
-                riskView.updateTroopsCount(players.get(curPlayerId));
-                Territory currentTer = sourceTer;
-                Territory newTer = new AirportDecorator(currentTer);
-                HashSet<Territory> neighbors = currentTer.getNeighbors();
-                for (Territory ter : neighbors) {
-                    ter.removeNeighbor(currentTer);
-                    ter.addNeighbor(newTer);
-                }
-                for (int i = 0; i < TER_COUNT; i++) {
-                    if(territories[i].getName() == currentTer.getName()) {
-                        territories[i] = newTer;
-                        break;
-                    }
-                }
-            });
         }
     }
 
@@ -387,14 +387,6 @@ public class RiskGame {
             }
         }
         riskView.setTerritoryMode(mode);
-    }
-
-    //Builds an airport to the territory whose id is given.
-    public void buildAirport(int territoryId) {
-        Territory territory = territories[territoryId];
-        territory.setHasAirport(true);
-        territory = new AirportDecorator(territory);
-        territories[territoryId] = territory;
     }
 
     public void update() {
