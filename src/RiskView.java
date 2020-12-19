@@ -1,5 +1,6 @@
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -183,6 +184,54 @@ public class RiskView extends StackPane {
     }
 
     public void addTroopsLeft(Player currPlayer) {
+        VBox alliesBox = new VBox();
+        Button back = new Button("Back");
+        back.setOnMouseClicked(e -> {
+            alliesBox.getChildren().clear();
+            this.getChildren().remove(alliesBox);
+        });
+        back.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        back.setFont(Font.font("Snap ITC", 30));
+        back.setMaxSize(300,75);
+        javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
+        backImg.setFitHeight(50);
+        backImg.setFitWidth(50);
+        back.setGraphic(backImg);
+
+        Label title = new Label("Allies:");
+        title.setMaxSize(300,75);
+        title.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        title.setFont(Font.font("Snap ITC", 30));
+        title.setAlignment(Pos.CENTER);
+        javafx.scene.image.ImageView allyImg = new ImageView(new Image("icons/ally_icon.png"));
+        allyImg.setFitHeight(50);
+        allyImg.setFitWidth(50);
+        title.setGraphic(allyImg);
+        currPlayerBar.setOnMouseClicked(e -> {
+            alliesBox.getChildren().add(title);
+            boolean hasAlly = false;
+            boolean[] alliesList = currPlayer.getAllies();
+            for (int i = 0; i < players.size(); i++) {
+                if(alliesList[i]) {
+                    hasAlly = true;
+                    Label ally = new Label(players.get(i).getName());
+                    ally.setStyle("-fx-background-color: #ff6666;" +
+                            "-fx-border-color: #00ccff");
+                    ally.setFont(Font.font("Snap ITC", 30));
+                    ally.setMaxSize(300,75);
+                    ally.setAlignment(Pos.CENTER);
+                    alliesBox.getChildren().add(ally);
+                    alliesBox.setAlignment(Pos.CENTER);
+                }
+            }
+            if (!hasAlly) {
+                title.setText("You do not have any ally.");
+            }
+            alliesBox.getChildren().add(back);
+            this.getChildren().add(alliesBox);
+        });
         currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
                 "-fx-text-fill:white;");
         currPlayerBar.setText(currPlayer.getName());
@@ -392,13 +441,8 @@ public class RiskView extends StackPane {
         List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
         for (AllianceRequestPane.AllianceRequest element : list) {
             element.getAcceptButton().setOnMouseClicked( e -> {
-                System.out.println("ALLLLYYYYYY");
                 riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
                 curPlayer.addAlly(element.getElementId());
-
-                System.out.println(curPlayer.isAlly(players.get(element.getElementId())));
-                System.out.println(players.get(element.getElementId()).isAlly(curPlayer));
-
                 element.removeRequest();
                 if(allianceRequestPane.decreaseRequestCount() == 0) {
                     this.getChildren().remove(allianceRequestPane);
@@ -418,7 +462,6 @@ public class RiskView extends StackPane {
     }
 
     public void addTroopCountSelector( int troopCount) {
-        setTroopCountSelector();
         this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
@@ -693,7 +736,7 @@ public class RiskView extends StackPane {
             nameBarPane.getChildren().add(nameButton);
         }
         nameBarPane.setMaxHeight(0);
-        nameBarPane.setMaxWidth(1000);
+        nameBarPane.setMaxWidth(2000);
         this.getChildren().add(nameBarPane);
         setAlignment(nameBarPane, Pos.BOTTOM_CENTER);
     }

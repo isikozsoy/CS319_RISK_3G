@@ -3,7 +3,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -46,6 +45,9 @@ public class MainMenuView extends BeforeGameView {
             "For detailed-visualized manual regarding Annexation, please check out\n" +
             "our GitHub repository:\n" +
             "https://github.com/isikozsoy/CS319_RISK_3G\n\n\n";
+
+    private final String styleBackground = "-fx-background-color: #ff6666;" +
+            "-fx-border-color: #00ccff";
 
 
     Dimension screenSize;
@@ -119,8 +121,6 @@ public class MainMenuView extends BeforeGameView {
 
         infoLabel.setText(info);
         infoLabel.setFont(Font.font("Snap ITC", 15));
-        String styleBackground = "-fx-background-color: #ff6666;" +
-                "-fx-border-color: #00ccff";
         infoLabel.setStyle(styleBackground);
 
         back.setStyle(styleBackground);
@@ -149,7 +149,56 @@ public class MainMenuView extends BeforeGameView {
 
     private MainMenuButton settingsButton() {
         MainMenuButton settingsButton = new MainMenuButton(locSettings[0], locSettings[1], 3);
+/**
+        VBox sizeButtons = new VBox();
+        Label currentSize = new Label("Default Size: 1000 x 750");
+        currentSize.setStyle("-fx-background-color: #ffc588;" +
+                "-fx-border-color: #0d5873");
+        currentSize.setFont(Font.font("Snap ITC", 20));
+        sizeButtons.getChildren().add(currentSize);
+        String[] sizes = {"1400 x 1050", "1280 x 800", "1680 x 1050", "1280 x 1024", "1600 x 1200", "1920 x 1200"};
+        for (int i = 0; i < sizes.length; i++) {
+            Button option = new Button(sizes[i]);
+            String info = sizes[i];
+            option.setStyle(styleBackground);
+            option.setFont(Font.font("Snap ITC", 30));
+            option.setMaxSize(300,75);
+            sizeButtons.getChildren().add(option);
+            option.setOnMouseClicked(e -> {
+                width = Integer.valueOf(info.substring(0, 4));
+                height = Integer.valueOf(info.substring(7));
+                currentSize.setText("Current Size: " + info);
+            });
+        }
 
+        Button fullScreen = new Button("FULL SCREEN");
+        fullScreen.setStyle(styleBackground);
+        fullScreen.setFont(Font.font("Snap ITC", 30));
+        fullScreen.setMaxSize(300,75);
+        fullScreen.setOnMouseClicked(e -> {
+
+        });
+
+        Button back = new Button("Back");
+        back.setStyle(styleBackground);
+        back.setFont(Font.font("Snap ITC", 30));
+        back.setMaxSize(300,75);
+
+        javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
+        backImg.setFitHeight(50);
+        backImg.setFitWidth(50);
+        back.setGraphic(backImg);
+        sizeButtons.getChildren().add(back);
+
+        settingsButton.setOnMouseClicked(e -> {
+            sizeButtons.setAlignment(Pos.CENTER);
+            this.getChildren().add(sizeButtons);
+        });
+
+        back.setOnMouseClicked(e->{
+            this.getChildren().remove(sizeButtons);
+        });
+*/
         return settingsButton;
     }
 
@@ -172,9 +221,6 @@ public class MainMenuView extends BeforeGameView {
         hakan.setFont(Font.font("Snap ITC", 30));
         creditsText.setFont(Font.font("Snap ITC", FontWeight.EXTRA_BOLD, FontPosture.ITALIC, 30));
         creditsText.setUnderline(true);
-
-        String styleBackground = "-fx-background-color: #ff6666;" +
-                "-fx-border-color: #00ccff";
 
         back.setStyle(styleBackground);
         back.setFont(Font.font("Snap ITC", 30));
