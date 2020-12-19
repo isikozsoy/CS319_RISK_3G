@@ -11,6 +11,10 @@ public class AirportDecorator extends Territory {
 
     //method
 
+    public Territory getTerritory() {
+        return territory;
+    }
+
     //Returns all the territories that can be attacked from this territory.
     @Override
     public HashSet<Territory> searchForAttackable() {
@@ -31,5 +35,4 @@ public class AirportDecorator extends Territory {
 
         return attackableTerritories;
     }
-
 }

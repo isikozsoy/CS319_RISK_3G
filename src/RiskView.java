@@ -537,7 +537,7 @@ public class RiskView extends StackPane {
 
     private void makeClickableMap() {
         for (int i = 0; i < territories.length; i++) {
-            Territory territory = new Territory(territories[i]);
+            Territory territory = new Territory(territories[i], i);
 
             ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
                     DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,

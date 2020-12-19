@@ -3,23 +3,24 @@ import java.util.Objects;
 
 public class Territory {
     //properties
+    private boolean hasAirport = false;
     private String name;
+    private int id;
     private int ownerId;
     private int troopCount;
-    private boolean hasAirport;
     protected Player owner;
     protected HashSet<Territory> neighbors;
 
     private static int territoryCount = 0;
 
     //constructor
-    public Territory(String name) {
+    public Territory(String name, int i) {
         this.name = name;
         ownerId = -1;
         owner = null;
-        hasAirport = false;
         troopCount = 0;
         neighbors = new HashSet<>();
+        this.id = id;
     }
 
     public Territory() {
@@ -32,6 +33,10 @@ public class Territory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getOwnerId() {
@@ -56,7 +61,9 @@ public class Territory {
 
     public boolean hasAirport() { return hasAirport; }
 
-    public void setHasAirport(boolean hasAirport) { this.hasAirport = hasAirport; }
+    public void setHasAirport(boolean hasAirport) {
+        this.hasAirport = hasAirport;
+    }
 
     public HashSet<Territory> getNeighbors() {
         return neighbors;
@@ -136,5 +143,9 @@ public class Territory {
         Territory territory = (Territory) o;
         return ownerId == territory.ownerId &&
                 Objects.equals(name, territory.name);
+    }
+
+    public Territory getTerritory() {
+        return this;
     }
 }

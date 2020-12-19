@@ -36,13 +36,13 @@ public class RiskGame {
         this.territories = territories;
         this.riskView = riskView;
 
-         curPlayerId = 0;
-         playerCount = players.size();
-         cards = null;   // for now
-         isGameOver = false;
-         mode = GameMode.TerAllocationMode;
-         // Continents
-         // RPS
+        curPlayerId = 0;
+        playerCount = players.size();
+        cards = null;   // for now
+        isGameOver = false;
+        mode = GameMode.TerAllocationMode;
+        // Continents
+        // RPS
 
         riskView.setTerritoryColor(players.get(0).getColor());
         riskView.addTroopsLeft(players.get(0));
@@ -139,6 +139,7 @@ public class RiskGame {
                         executeFunctions();
                     }
                 }
+                riskView.updateTroopsCount(curPlayer);
             }
             else if( mode == GameMode.FortifyModeCont) {
                 //troopToTransfer will also be got from the troop count selection screen
@@ -171,14 +172,45 @@ public class RiskGame {
                 //goes back to the original Soldier Allocation function to take a territory as input again
                 riskView.removeTroopCountSelector();
                 soldierAllocBeforeClicking = false;
-                sourceTer = null;
                 //mode does not change here
             }
         });
 
+        riskView.getTroopCountSelectorPane().getBuildAirportButton().setOnMouseClicked(e -> {
+            Territory sourceTerritory;
+            sourceTerritory = sourceTer;
+            if (!sourceTerritory.hasAirport()) {
+                if (sourceTerritory.getTroopCount() > AIRPORT_COST) {
+                    sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
+                    riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                    riskView.removeTroopCountSelector();
+                    sourceTerritory.setHasAirport(true);
+                    sourceTerritory = new AirportDecorator(sourceTer);
+                    territories[sourceTer.getId()] = sourceTerritory;
+                    //reset source territory for a new allocation
+                    sourceTer = null;
+                    soldierAllocBeforeClicking = false;
+                    riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
+                    riskView.removeTroopCountSelector();
+                }
+            }
+            else {
+                sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() + 2);
+                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                riskView.removeTroopCountSelector();
+                sourceTerritory = sourceTer.getTerritory();
+                sourceTerritory.setHasAirport(false);
+                territories[sourceTer.getId()] = sourceTerritory;
+                //reset source territory for a new allocation
+                sourceTer = null;
+                soldierAllocBeforeClicking = false;
+                riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Build Airport");
+                riskView.removeTroopCountSelector();
+            }
+        });
+
         riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-            if( mode == GameMode.AttackMode) mode = GameMode.FortifyMode;
-            else if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
+            if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
             else nextMode();
             setTroopCountInView();
             executeFunctions();
@@ -186,20 +218,20 @@ public class RiskGame {
     }
 
     /**
-    public Player play() {
-        startInitialization();
-        /**
-         while (!isGameOver) {
-         Player curPlayer = players.get(curPlayerId);
-         startSoldierAlloc(curPlayer);
-         startAttack(curPlayer);
-         startFortify(curPlayer);
-         update();
-         curPlayerId = (curPlayerId + 1) % playerCount;
-         }
-        return null;
-    }
-    **/
+     public Player play() {
+     startInitialization();
+     /**
+     while (!isGameOver) {
+     Player curPlayer = players.get(curPlayerId);
+     startSoldierAlloc(curPlayer);
+     startAttack(curPlayer);
+     startFortify(curPlayer);
+     update();
+     curPlayerId = (curPlayerId + 1) % playerCount;
+     }
+     return null;
+     }
+     **/
 
     public void startInitialization() {
         startTerAlloc();
@@ -284,31 +316,13 @@ public class RiskGame {
                 }
                 riskView.addTroopsLeft(curPlayer);
             }
-
-            riskView.getTroopCountSelectorPane().getBuildAirportButton().setOnMouseClicked(e -> {
-                curPlayer.decreaseTroop(AIRPORT_COST);
-                riskView.updateTroopsCount(players.get(curPlayerId));
-                Territory currentTer = sourceTer;
-                Territory newTer = new AirportDecorator(currentTer);
-                HashSet<Territory> neighbors = currentTer.getNeighbors();
-                for (Territory ter : neighbors) {
-                    ter.removeNeighbor(currentTer);
-                    ter.addNeighbor(newTer);
-                }
-                for (int i = 0; i < TER_COUNT; i++) {
-                    if(territories[i].getName() == currentTer.getName()) {
-                        territories[i] = newTer;
-                        break;
-                    }
-                }
-            });
         }
     }
 
     public void startAttack() {
-         //////////////////////////////////
-         ///         TO DO              ///
-         //////////////////////////////////
+        //////////////////////////////////
+        ///         TO DO              ///
+        //////////////////////////////////
         System.out.println("eeee");
         nextMode();
     }
@@ -387,14 +401,6 @@ public class RiskGame {
             }
         }
         riskView.setTerritoryMode(mode);
-    }
-
-    //Builds an airport to the territory whose id is given.
-    public void buildAirport(int territoryId) {
-        Territory territory = territories[territoryId];
-        territory.setHasAirport(true);
-        territory = new AirportDecorator(territory);
-        territories[territoryId] = territory;
     }
 
     public void update() {
