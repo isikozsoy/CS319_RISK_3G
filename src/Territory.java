@@ -74,6 +74,10 @@ public class Territory {
         neighbors.add(neighbor);
     }
 
+    public void removeNeighbor(Territory ter) {
+        neighbors.remove(ter);
+    }
+
     public boolean isNeighbor(Territory territory) //checks if a given Territory object
     // is contained in the hashset: neighbors
     {

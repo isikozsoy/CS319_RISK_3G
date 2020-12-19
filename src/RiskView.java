@@ -124,13 +124,9 @@ public class RiskView extends StackPane {
         currPlayerBar = new Button(); //change it based on the current player
         currPlayerBar.setPrefSize(200, 100);
 
-        VBox vbox = new VBox();
-        vbox.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
-        vbox.getChildren().add(troopsLeftText);
-        vbox.setAlignment(Pos.TOP_RIGHT);
-
         flowPane.getChildren().add(currPlayerBar);
-        flowPane.getChildren().add(vbox);
+        flowPane.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
+        flowPane.getChildren().add(troopsLeftText);
 
         troopsLeftText.setFont(Font.font("SNAP ITC", 30));
 
@@ -338,17 +334,6 @@ public class RiskView extends StackPane {
                 nextCount = "  " + nextCount + "  ";
             countSelectionText.setText(nextCount);
         });
-
-        /**
-        backButton.setOnMouseClicked(e -> {
-            backButtonIsClicked = true;
-            removeTroopCountSelector();
-        });
-
-        placeButton.setOnMouseClicked(e -> {
-            selectedTroop = Integer.valueOf(countSelectionText.getText());
-        });
-         **/
     }
 
     public void setMaxCountSelection( int troopCount) {
