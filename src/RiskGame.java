@@ -181,6 +181,7 @@ public class RiskGame {
                 for (int i = 0; i < TER_COUNT; i++) {
                     if(territories[i].getName() == currentTer.getName()) {
                         territories[i] = newTer;
+                        break;
                     }
                 }
             });
