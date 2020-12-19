@@ -27,7 +27,6 @@ public class RiskView extends StackPane {
     private List<ClickableTerritory> territoryList;
     private ArrayList<ClickableTerritory> territoriesAlreadyClicked = new ArrayList<>();
     private Button playButton;
-    private int clickedOnPlay = 0;
     private ArrayList<Player> players;
     private int width;
     private int height;
@@ -47,7 +46,9 @@ public class RiskView extends StackPane {
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<String, Territory> nameAndTerritory;
-    private HashMap<ClickableTerritory, Text> textForEachTer;
+    private HashMap<Territory, Text> textForEachTer;
+
+    private int[][] x_y_forEachTerritory = new int[42][2];
 
     private Button nextPhaseButton;
 
@@ -78,6 +79,7 @@ public class RiskView extends StackPane {
 
         setTroopsLeft();
         makeClickableMap();
+        setTerritoryTexts();
         addPlayerNameBars();
 
         addNextPhaseButton();
@@ -88,6 +90,10 @@ public class RiskView extends StackPane {
         addPlayButton();
 
         initiateRiskGame();
+    }
+
+    public void updateTerritoryText( ClickableTerritory clickableTerritory) {
+
     }
 
     private void setCardExchangePane() {
@@ -112,6 +118,11 @@ public class RiskView extends StackPane {
 
         nextPhaseButton.translateXProperty();
         nextPhaseButton.translateYProperty();
+    }
+
+    public void updateText( Territory territory, int newNum) {
+        Text territoryText = textForEachTer.get(territory);
+        territoryText.setText(Integer.toString(newNum));
     }
 
     public Button getNextPhaseButton() {
@@ -164,24 +175,61 @@ public class RiskView extends StackPane {
         terText.setText(String.valueOf(Integer.valueOf(terText.getText()) + count));
     }
 
+    public void setTerritoryTexts() {
+        for( int i = 0; i < territoryList.size(); i++) {
+            Text territoryText = new Text("1");
+            territoryText.setFont(Font.font("Snap ITC", 20));
+            territoryText.setFill(Color.rgb(255, 255, 255));
+            territoryText.setStroke(Color.ORANGERED);
+            x_y_forEachTerritory[i] = territoryList.get(i).getTerritoryXY();
+
+            //code below changes the location of the texts
+            //their original locations in the (1280, 1024) (width, height) space are held inside the imgLocations array
+            //so I adjust these x and y locations to fit within whatever width and height settings we have for the game
+            //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
+            territoryText.setTranslateX(x_y_forEachTerritory[i][0] * width / 1280 - width / 2);
+            territoryText.setTranslateY(x_y_forEachTerritory[i][1] * height / 1024 - height / 2);
+
+            //below are some special cases where the territory center is not the same as the center of the png image
+            //associated with it
+            //the explanations for the functions inside them will be given after the if statements
+            if( territoryList.get(i).getAssociatedTerritory().getName().equals( "Japan")) {
+                territoryText.setTranslateX(1165 * width / 1280 - width / 2);
+                territoryText.setTranslateY(380 * height / 1024 - height / 2);
+            }
+            else if( territoryList.get(i).getAssociatedTerritory().getName().equals( "Kamchatka")) {
+                territoryText.setTranslateX(1170 * width / 1280 - width / 2);
+                territoryText.setTranslateY(200 * height / 1024 - height / 2);
+            }
+            else if( territoryList.get(i).getAssociatedTerritory().getName().equals( "Eastern Australia")) {
+                territoryText.setTranslateX(x_y_forEachTerritory[i][0] * width / 1280 - width / 2 + 20 * width / 1280);
+            }
+
+            territoryText.translateXProperty();
+            territoryText.translateYProperty();
+
+            textForEachTer.put( territoryList.get(i).getAssociatedTerritory(), territoryText);
+        }
+    }
+
     //below is only for the first mode, which is the Territory Allocation Mode
     //After that, it will not be used anymore
-    public Territory getClickedTerritory(RiskGame.GameMode mode) {
-        Territory territoryClicked = null;
+    public ClickableTerritory getClickableTerritory() {
+        ClickableTerritory clickableTerritory = null;
         switch (mode) {
             case TerAllocationMode: {
-                for( ClickableTerritory clickableTerritory: territoryList) {
-                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                        territoryClicked = clickableTerritory.getAssociatedTerritory();
-                        territoriesAlreadyClicked.add(clickableTerritory);
+                for( ClickableTerritory ct: territoryList) {
+                    if( ct.getClicked() && !territoriesAlreadyClicked.contains(ct)) {
+                        clickableTerritory = ct;
+                        territoriesAlreadyClicked.add(ct);
 
                         Text territoryText = new Text("1");
                         territoryText.setFont(Font.font("Snap ITC", 20));
                         territoryText.setFill(Color.rgb(255, 255, 255));
                         territoryText.setStroke(Color.ORANGERED);
-                        int[] imgLocations = clickableTerritory.getTerritoryXY();
+                        int[] imgLocations = ct.getTerritoryXY();
 
-                        textForEachTer.put( clickableTerritory, territoryText);
+                        textForEachTer.put( ct.getAssociatedTerritory(), territoryText);
                         this.getChildren().add(territoryText);
 
                         //code below changes the location of the texts
@@ -194,20 +242,52 @@ public class RiskView extends StackPane {
                         //below are some special cases where the territory center is not the same as the center of the png image
                         //associated with it
                         //the explanations for the functions inside them will be given after the if statements
-                        if( clickableTerritory.getAssociatedTerritory().getName().equals( "Japan")) {
+                        if( ct.getAssociatedTerritory().getName().equals( "Japan")) {
                             territoryText.setTranslateX(1165 * width / 1280 - width / 2);
                             territoryText.setTranslateY(380 * height / 1024 - height / 2);
                         }
-                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Kamchatka")) {
+                        else if( ct.getAssociatedTerritory().getName().equals( "Kamchatka")) {
                             territoryText.setTranslateX(1170 * width / 1280 - width / 2);
                             territoryText.setTranslateY(200 * height / 1024 - height / 2);
                         }
-                        else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
+                        else if( ct.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
+                            System.out.println("aa");
                             territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
                         }
 
                         territoryText.translateXProperty();
                         territoryText.translateYProperty();
+
+                        break;
+                    }
+                }
+                return clickableTerritory;
+            }
+            default: {
+                for( ClickableTerritory ct: territoryList) {
+                    if( ct.getClicked()) {
+                        clickableTerritory = ct;
+                        ct.setClicked(false);
+                        break;
+                    }
+                }
+                return clickableTerritory;
+            }
+        }
+    }
+
+    //below is only for the first mode, which is the Territory Allocation Mode
+    //After that, it will not be used anymore
+    public Territory getClickedTerritory(RiskGame.GameMode mode) {
+        Territory territoryClicked = null;
+        switch (mode) {
+            case TerAllocationMode: {
+                for( ClickableTerritory clickableTerritory: territoryList) {
+                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
+                        territoryClicked = clickableTerritory.getAssociatedTerritory();
+                        territoriesAlreadyClicked.add(clickableTerritory);
+
+                        this.getChildren().add(textForEachTer.get(territoryClicked));
 
                         break;
                     }

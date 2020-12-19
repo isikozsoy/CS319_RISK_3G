@@ -1,9 +1,4 @@
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -108,18 +103,19 @@ public class RiskGame {
 
     public void setButtons() {
         riskView.getPlaceButton().setOnMouseClicked(e -> {
+            Territory sourceTerritory = sourceTer;
             if(mode == GameMode.SoldierAllocationInit
                     || mode == GameMode.SoldierAllocationMode) {
                 //sets selected troop integer, and places it in the territory specified itself
                 int selectedTroop = riskView.getSelectedTroop();
-                sourceTer.addTroop(selectedTroop);
+                sourceTerritory.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
 
-                System.out.println(curPlayer.getTroopCount());
+                riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
 
                 riskView.removeTroopCountSelector();
                 //reset source territory for a new allocation
-                sourceTer = null;
+                sourceTerritory = null;
                 soldierAllocBeforeClicking = false;
                 //sets the number to appear between more and less buttons
                 //riskView.setMaxCountSelection(curPlayer.getTroopCount());
@@ -205,6 +201,7 @@ public class RiskGame {
             if (territoryClicked != null && territoryClicked.getOwnerId() == -1) {
                 territoryClicked.setOwner(curPlayer);
                 territoryClicked.setOwnerId(curPlayerId);
+                territoryClicked.addTroop(1);
 
                 curPlayer.decreaseTroop(1);
                 curPlayer.setTerCount(curPlayer.getTerCount() + 1);
@@ -266,8 +263,8 @@ public class RiskGame {
                 sourceTer = riskView.getClickedTerritory(mode);
                 if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(curPlayer.getTroopCount());
+                    setButtons();
                     setTroopCountInView();
-                    //nextMode();
                 }
                 riskView.addTroopsLeft(curPlayer);
             }
@@ -275,7 +272,7 @@ public class RiskGame {
             riskView.getBuildAirportButton().setOnMouseClicked(e -> {
                 curPlayer.decreaseTroop(AIRPORT_COST);
                 riskView.updateTroopsCount(players.get(curPlayerId));
-                Territory currentTer = clickableTerritory.getAssociatedTerritory();
+                Territory currentTer = sourceTer;
                 Territory newTer = new AirportDecorator(currentTer);
                 HashSet<Territory> neighbors = currentTer.getNeighbors();
                 for (Territory ter : neighbors) {
@@ -327,6 +324,7 @@ public class RiskGame {
             return;
         } else if (targetTerritory != null &&  fortifyableFromSource.contains(targetTerritory)) {
             riskView.addTroopCountSelector(sourceTerritory.getTroopCount());
+            setButtons();
 
             int noOfTroops = riskView.getSelectedTroop();
 

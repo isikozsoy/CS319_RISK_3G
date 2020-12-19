@@ -1,4 +1,3 @@
-import javafx.scene.paint.Color;
 import java.util.HashSet;
 import java.util.Objects;
 
