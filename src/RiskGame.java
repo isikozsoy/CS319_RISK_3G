@@ -92,6 +92,7 @@ public class RiskGame {
             }
             case FortifyModeCont: {
                 fortifyContinued( sourceTer);
+                break;
             }
             case EndOfTurn: {
                 nextTurn();
@@ -146,6 +147,12 @@ public class RiskGame {
                     //new troop counts will be set to each territory
                     sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
                     targetTerritory.setTroopCount(targetTerritory.getTroopCount() - troopToTransfer);
+                    //update their texts in riskview
+                    riskView.updateText(sourceTer, sourceTer.getTroopCount());
+                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount());
+
+                    targetTerritory = null;
+                    sourceTer = null;
                 }
 
                 riskView.removeTroopCountSelector();
@@ -167,6 +174,14 @@ public class RiskGame {
                 sourceTer = null;
                 //mode does not change here
             }
+        });
+
+        riskView.getNextPhaseButton().setOnMouseClicked( event -> {
+            if( mode == GameMode.AttackMode) mode = GameMode.FortifyMode;
+            else if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
+            else nextMode();
+            setTroopCountInView();
+            executeFunctions();
         });
     }
 
@@ -322,6 +337,8 @@ public class RiskGame {
         if (targetTerritory == null || targetTerritory.equals(sourceTerritory)) {
             //reset the effects to the territory
             mode = GameMode.FortifyMode;
+            targetTerritory = null; //if it is equal to the sourceTerritory, this will be useful
+            sourceTer = null;
             return;
         } else if (targetTerritory != null &&  fortifyableFromSource.contains(targetTerritory)) {
             riskView.addTroopCountSelector(sourceTerritory.getTroopCount());
@@ -334,11 +351,6 @@ public class RiskGame {
                 targetTerritory.setTroopCount(targetTerritory.getTroopCount() + noOfTroops);
             }
         }
-
-        riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-            nextMode();
-            executeFunctions();
-        });
     }
 
     public void nextMode() {
@@ -364,6 +376,7 @@ public class RiskGame {
                 break;
             }
             case FortifyModeCont: {
+                System.out.println("To the end of turns");
                 mode = GameMode.EndOfTurn;
                 break;
             }
