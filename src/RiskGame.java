@@ -73,6 +73,7 @@ public class RiskGame {
 
     public void executeFunctions() {
         System.out.println(mode);
+        System.out.println(sourceTer);
         switch (mode) {
             case TerAllocationMode: {
                 startInitialization();
@@ -136,14 +137,12 @@ public class RiskGame {
                         startSoldierAlloc();
                     }
                     else {
-                        System.out.println("bbbb");
                         nextMode();
                         executeFunctions();
                     }
                 }
             }
             else if( mode == GameMode.FortifyModeCont) {
-                System.out.println("aaaa");
                 //troopToTransfer will also be got from the troop count selection screen
                 int troopToTransfer = riskView.getSelectedTroop();
                 if (troopToTransfer != 0) {
@@ -169,7 +168,7 @@ public class RiskGame {
                 riskView.removeTroopCountSelector();
                 soldierAllocBeforeClicking = false;
                 sourceTer = null;
-                mode = GameMode.SoldierAllocationMode;
+                //mode does not change here
             }
         });
     }
@@ -235,7 +234,6 @@ public class RiskGame {
         if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
             Player curPlayer = players.get(curPlayerId);
             noOfTroops = curPlayer.getTroopCount();
-            int noOfTroops = curPlayer.getTroopCount();
             if(!curPlayer.getAllianceReq().isEmpty()) {
                 riskView.setAllianceRequestInfo(curPlayer);
                 riskView.addAllianceRequestPane(curPlayer);
@@ -398,7 +396,7 @@ public class RiskGame {
 
     public void cancelAlliance(Player target) //to cancel an existing alliance
     {
-        if(mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationModeContinued) {
+        if(mode == GameMode.SoldierAllocationMode) {
             if(players.get(this.curPlayerId).isAlly(target)) //if the parameters are true
                 {
                     //the alliance is removed from the both players

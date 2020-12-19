@@ -231,15 +231,6 @@ public class RiskView extends StackPane {
         }
     }
 
-    public Territory getClickedTerritoryAfterAllocation() {
-        Territory territoryClicked = null;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            if( clickableTerritory.getClicked()) {
-                territoryClicked = clickableTerritory.getAssociatedTerritory();
-                clickableTerritory.setClicked(false);
-                break;
-    }
-
     public boolean backButtonIsClicked() {
         return backButtonIsClicked;
     }
@@ -255,8 +246,8 @@ public class RiskView extends StackPane {
                 clickableTerritory.setClicked(false);
         }
         this.mode = mode;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            clickableTerritory.setMode(mode);
+        for( ClickableTerritory clickableTerritory1: territoryList) {
+            clickableTerritory1.setMode(mode);
         }
     }
 
@@ -536,7 +527,7 @@ public class RiskView extends StackPane {
             // if the target player is not an ally of the source player
             // and the player has not been sent a request by the same player
         }
-        else if(mode == RiskGame.GameMode.SoldierAllocationMode || mode == RiskGame.GameMode.SoldierAllocationModeContinued)
+        else if(mode == RiskGame.GameMode.SoldierAllocationMode)
             alliancePane.addCancelAllianceButton(); //if the players are allies, cancel alliance
         // button is added to the pane
 
@@ -584,7 +575,6 @@ public class RiskView extends StackPane {
                 if(riskGame.getCurPlayerId() != player.getId() &&
                         (mode == RiskGame.GameMode.TerAllocationMode
                                 || mode == RiskGame.GameMode.SoldierAllocationMode
-                                || mode == RiskGame.GameMode.SoldierAllocationModeContinued
                                 || mode == RiskGame.GameMode.AttackMode || mode == RiskGame.GameMode.FortifyMode))
                     //alliance pane is added
                     this.addAlliancePane(riskGame.getPlayers().get(riskGame.getCurPlayerId()).isAlly(player), player);
