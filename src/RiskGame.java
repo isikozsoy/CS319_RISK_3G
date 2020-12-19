@@ -36,13 +36,13 @@ public class RiskGame {
         this.territories = territories;
         this.riskView = riskView;
 
-         curPlayerId = 0;
-         playerCount = players.size();
-         cards = null;   // for now
-         isGameOver = false;
-         mode = GameMode.TerAllocationMode;
-         // Continents
-         // RPS
+        curPlayerId = 0;
+        playerCount = players.size();
+        cards = null;   // for now
+        isGameOver = false;
+        mode = GameMode.TerAllocationMode;
+        // Continents
+        // RPS
 
         riskView.setTerritoryColor(players.get(0).getColor());
         riskView.addTroopsLeft(players.get(0));
@@ -186,20 +186,20 @@ public class RiskGame {
     }
 
     /**
-    public Player play() {
-        startInitialization();
-        /**
-         while (!isGameOver) {
-         Player curPlayer = players.get(curPlayerId);
-         startSoldierAlloc(curPlayer);
-         startAttack(curPlayer);
-         startFortify(curPlayer);
-         update();
-         curPlayerId = (curPlayerId + 1) % playerCount;
-         }
-        return null;
-    }
-    **/
+     public Player play() {
+     startInitialization();
+     /**
+     while (!isGameOver) {
+     Player curPlayer = players.get(curPlayerId);
+     startSoldierAlloc(curPlayer);
+     startAttack(curPlayer);
+     startFortify(curPlayer);
+     update();
+     curPlayerId = (curPlayerId + 1) % playerCount;
+     }
+     return null;
+     }
+     **/
 
     public void startInitialization() {
         startTerAlloc();
@@ -306,9 +306,9 @@ public class RiskGame {
     }
 
     public void startAttack() {
-         //////////////////////////////////
-         ///         TO DO              ///
-         //////////////////////////////////
+        //////////////////////////////////
+        ///         TO DO              ///
+        //////////////////////////////////
         System.out.println("eeee");
         nextMode();
     }
