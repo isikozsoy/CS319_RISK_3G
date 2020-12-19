@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Player {
-    final Random random=new Random();
+    final static Random random = new Random();
     private String color;
 
     // Properties
@@ -34,6 +34,7 @@ public class Player {
         cardDeserved = false;
         this.targetCont = targetCont;
         isTargetTaken = false;
+        allies = new boolean[6];
     }
 
     public void setPlayerCount(int playerCount) {

@@ -3,41 +3,20 @@ import java.util.HashSet;
 
 public class Territory {
     //properties
-    private String name;
-    private int ownerId;
     private int troopCount;
     private boolean hasAirport;
     protected Player owner;
     protected HashSet<Territory> neighbors;
+    protected int id;
 
     //constructor
-    public Territory(String name) {
-        this.name = name;
-        ownerId = -1;
-        owner = null;
-        hasAirport = false;
-        troopCount = 0;
-    }
 
-    public Territory() {
+    public Territory(int id) {
+        this.id = id;
+        neighbors = new HashSet<>();
     }
 
     //getter setters
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public Player getOwner() { return owner; }
 

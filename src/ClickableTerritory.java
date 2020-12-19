@@ -1,5 +1,6 @@
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 
@@ -8,18 +9,18 @@ public class ClickableTerritory extends ImageView {
     private ColorAdjust colorAdjust;
     private HashMap<String, Double> colorsAndHues;
     private String color;
-    private Territory associatedTerritory;
     private RiskGame.GameMode mode = RiskGame.GameMode.TroopAllocationMode;
     private PixelReader pixelReader;
+    private Text territoryText;
+    private int territoryId;
 
     private boolean clicked = false;
 
     private Blend shadowAndColorBlend;
 
-    ClickableTerritory( String territoryName, String origPath, Territory associatedTerritory) {
+    ClickableTerritory( String territoryName, String origPath, int territoryId) {
+        this.territoryId = territoryId;
         this.territoryName = territoryName;
-        this.associatedTerritory = associatedTerritory;
-
         colorAdjust = new ColorAdjust();
         color = "aqua"; //as an initial value
         colorsAndHues = new HashMap<>();
@@ -41,6 +42,22 @@ public class ClickableTerritory extends ImageView {
         catch( Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int getTerritoryId() {
+        return territoryId;
+    }
+
+    public String getTerritoryName() {
+        return territoryName;
+    }
+
+    public void setTerritoryText(Text territoryText) {
+        this.territoryText = territoryText;
+    }
+
+    public Text getTerritoryText() {
+        return territoryText;
     }
 
     public int[] getTerritoryXY() {
@@ -71,10 +88,6 @@ public class ClickableTerritory extends ImageView {
         return locArray;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public boolean getClicked() {
         return clicked;
     }
@@ -88,12 +101,8 @@ public class ClickableTerritory extends ImageView {
         this.clicked = clicked;
     }
 
-    public Territory getAssociatedTerritory() {
-        return associatedTerritory;
-    }
-
     public void addEventListeners() {
-        switch( mode) {
+       /* switch( mode) {
             case TroopAllocationMode: {
                 setOnMousePressed(e -> {
                     if (clicked) {
@@ -112,7 +121,7 @@ public class ClickableTerritory extends ImageView {
                     if (clicked) {
                         return;
                     }
-                    changeColor();
+                    //changeColor();
                 });
                 setOnMouseExited(e -> {
                     if (clicked) {
@@ -121,6 +130,19 @@ public class ClickableTerritory extends ImageView {
                     setEffect(null);
                 });
                 break;
+            }
+            case AttackMode: {
+                setOnMousePressed(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                });
+                setOnMouseReleased(e -> {
+                    if (clicked) {
+                        return;
+                    }
+                    clicked = true;
+                });
             }
             default: {
                 setOnMousePressed( e -> {
@@ -158,21 +180,43 @@ public class ClickableTerritory extends ImageView {
                     setEffect(colorAdjust);
                 });
             }
-        }
+        }*/
+
+
+        setOnMouseEntered(e -> {
+            shadowAndColorBlend = new Blend();
+            shadowAndColorBlend.setMode(BlendMode.ADD);
+            //Setting both the shadow effects to the blend
+            shadowAndColorBlend.setBottomInput(colorAdjust);
+            shadowAndColorBlend.setBottomInput(new DropShadow());
+            setEffect(shadowAndColorBlend);
+            System.out.println(territoryName);
+        });
+        setOnMouseExited(e -> {
+            setEffect(colorAdjust);
+        });
     }
 
     public void removeEventListeners() {
-        setOnMousePressed( e -> {
+/*        setOnMousePressed( e -> {
         });
         setOnMouseReleased( e -> {
         });
         setOnMouseEntered( e -> {
         });
         setOnMouseExited( e -> {
-        });
+        });*/
     }
 
-    private void changeColor() {
+    public void changeColor() {
+        colorAdjust.setHue(colorsAndHues.get(color));
+        colorAdjust.setSaturation(95);
+        colorAdjust.setBrightness(0.35);
+        this.setEffect(colorAdjust);
+    }
+
+    public void setColor(String color) {
+        this.color = color;
         colorAdjust.setHue(colorsAndHues.get(color));
         colorAdjust.setSaturation(95);
         colorAdjust.setBrightness(0.35);

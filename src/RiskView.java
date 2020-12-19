@@ -1,8 +1,13 @@
 import javafx.beans.binding.ListBinding;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -12,7 +17,9 @@ import javafx.scene.layout.*;
 import javafx.scene.image.*;
 import org.jetbrains.annotations.NotNull;
 
+//import java.awt.event.MouseEvent;
 import java.io.*; //exceptions
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,8 +38,7 @@ public class RiskView extends StackPane {
     };
     final String BACKGROUND_IMG_PATH = "background_image_bw.png";
 
-    private List<ClickableTerritory> territoryList;
-    private ArrayList<ClickableTerritory> territoriesAlreadyClicked = new ArrayList<>();
+    private ArrayList<ClickableTerritory> territoryList;
     private Button playButton;
     private int clickedOnPlay = 0;
     private ArrayList<Player> players;
@@ -51,20 +57,24 @@ public class RiskView extends StackPane {
     private Text troopsLeftText;
 
     private RiskGame riskGame;
-    private Territory[] territoriesAsClass;
     private Pane territoryTextPane;
 
     private Button currPlayerBar;
 
+    private boolean attackFlag;
+    private ClickableTerritory source;
+    private RiskGame.GameMode mode;
+
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
-        players = playerList;
+        this.riskGame = new RiskGame(playerList, this);
         territoryList = new ArrayList<>();
         textForEachTer = new HashMap<>();
-        territoriesAsClass = new Territory[42];
+        this.players = playerList;
         nextPhaseButton = new Button();
         this.width = width;
         this.height = height;
         this.stage = stage;
+        mode = RiskGame.GameMode.TroopAllocationMode;
 
         setRockPaperScissorPane();
         setTroopCountSelector();
@@ -73,10 +83,53 @@ public class RiskView extends StackPane {
         setTroopsLeft();
         makeClickableMap();
         addNextPhaseButton();
-
         addPlayButton();
 
-        initiateRiskGame();
+        territoryAllocation();
+
+
+    }
+
+
+
+    public void attackPhase() {
+        for (int i = 0; i < territoryList.size(); i++) {
+
+            ClickableTerritory clickableTerritory = territoryList.get(i);
+            clickableTerritory.setDisable(false);
+            final int territoryId = i;
+
+            //Source territory is clicked.
+            if(riskGame.getTerritoryOwnerId(territoryId) == riskGame.getCurPlayerId()) {
+                clickableTerritory.setOnMousePressed((new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent event) {
+
+                        if (source != null) {
+                            source.setColor(players.get(riskGame.getCurPlayerId()).getColor());
+                        }
+                        clickableTerritory.setColor("aqua");
+                        source = clickableTerritory;
+                        riskGame.loadAttackableTer(source.getTerritoryId());
+
+                    }
+                }));
+                continue;
+            }
+
+
+            //Target territory is clicked.
+            clickableTerritory.setOnMousePressed((new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent event) {
+                    if(source != null) {
+                        if(riskGame.isAttackable(clickableTerritory.getTerritoryId())){
+                            startAttack(source, clickableTerritory);
+                        }
+
+                    }
+                }
+            }));
+        }
+
     }
 
     private void addNextPhaseButton() {
@@ -127,65 +180,12 @@ public class RiskView extends StackPane {
         troopsLeftText.setText(Integer.toString(currPlayer.getTroopCount()));
     }
 
-    //below is only for the first mode, which is the Territory Allocation Mode
-    //After that, it will not be used anymore
-    public Territory getClickedTerritory() {
-        Territory territoryClicked = null;
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                territoryClicked = clickableTerritory.getAssociatedTerritory();
-                territoriesAlreadyClicked.add(clickableTerritory);
-
-                Text territoryText = new Text("1");
-                territoryText.setFont(Font.font("Snap ITC", 20));
-                territoryText.setFill(Color.rgb(255, 255, 255));
-                territoryText.setStroke(Color.ORANGERED);
-                int[] imgLocations = clickableTerritory.getTerritoryXY();
-
-                textForEachTer.put( clickableTerritory, territoryText);
-                this.getChildren().add(territoryText);
-
-                //code below changes the location of the texts
-                //their original locations in the (1280, 1024) (width, height) space are held inside the imgLocations array
-                //so I adjust these x and y locations to fit within whatever width and height settings we have for the game
-                //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
-                territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2);
-                territoryText.setTranslateY(imgLocations[1] * height / 1024 - height / 2);
-
-                //below are some special cases where the territory center is not the same as the center of the png image
-                //associated with it
-                //the explanations for the functions inside them will be given after the if statements
-                if( clickableTerritory.getAssociatedTerritory().getName().equals( "Japan")) {
-                    territoryText.setTranslateX(1165 * width / 1280 - width / 2);
-                    territoryText.setTranslateY(380 * height / 1024 - height / 2);
-                }
-                else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Kamchatka")) {
-                    territoryText.setTranslateX(1170 * width / 1280 - width / 2);
-                    territoryText.setTranslateY(200 * height / 1024 - height / 2);
-                }
-                else if( clickableTerritory.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
-                    System.out.println("aa");
-                    territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
-                }
-
-                territoryText.translateXProperty();
-                territoryText.translateYProperty();
-
-                break;
-            }
-        }
-        return territoryClicked;
-    }
-
-    public void initiateRiskGame() {
-        riskGame = new RiskGame(players, territoriesAsClass, this);
-        riskGame.play();
-    }
 
     public void setTerritoryMode(RiskGame.GameMode mode) {
-        for( ClickableTerritory clickableTerritory: territoryList) {
+        this.mode = mode;
+/*        for( ClickableTerritory clickableTerritory: territoryList) {
             clickableTerritory.setMode(mode);
-        }
+        }*/
     }
 
     public void setTerritoryClicked( boolean clicked) {
@@ -194,10 +194,8 @@ public class RiskView extends StackPane {
         }
     }
 
-    public void setTerritoryColor( String color) {
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            clickableTerritory.setColor(color);
-        }
+    public void setTerritoryColor( String color, int territoryId) {
+        territoryList.get(territoryId).setColor(color);
     }
 
     public void addTroopCountSelector( int troopCount) {
@@ -261,16 +259,13 @@ public class RiskView extends StackPane {
 
     private void makeClickableMap() {
         for (int i = 0; i < territories.length; i++) {
-            Territory territory = new Territory(territories[i]);
 
             ClickableTerritory clickableTerritory = new ClickableTerritory(territories[i],
-                    DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER,
-                    territory);
+                    DIRECTORY_NAME + territories[i] + FILE_NAME_HELPER, i);
             bindMapToPaneSize(clickableTerritory);
 
             territoryList.add(clickableTerritory);
 
-            territoriesAsClass[i] = territory;
 
             this.getChildren().add(clickableTerritory);
         }
@@ -325,6 +320,67 @@ public class RiskView extends StackPane {
             (territoryList.get(i)).addEventListeners();
     }
 
+    public void territoryAllocation() {
+        for (int i = 0; i < territoryList.size(); i++) {
+            ClickableTerritory clickableTerritory = territoryList.get(i);
+            final int territoryId = i;
+/*            clickableTerritory.setOnMousePressed((new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent event) {*/
+                    clickableTerritory.setDisable(true);
+                    riskGame.startTerAlloc(territoryId);
+
+                    Text territoryText = new Text("5");
+                    territoryText.setFont(Font.font("Snap ITC", 20));
+                    territoryText.setFill(Color.rgb(255, 255, 255));
+                    territoryText.setStroke(Color.ORANGERED);
+
+                    int[] imgLocations = clickableTerritory.getTerritoryXY();
+
+                    textForEachTer.put( clickableTerritory, territoryText);
+
+                    RiskView.this.getChildren().add(territoryText);
+
+                    //below are some special cases where the territory center is not the same as the center of the png image
+                    //associated with it
+                    //the explanations for the functions inside them will be given after the if statements
+                    if( clickableTerritory.getTerritoryName().equals( "Japan")) {
+                        territoryText.setTranslateX(1165 * width / 1280 - width / 2);
+                        territoryText.setTranslateY(380 * height / 1024 - height / 2);
+                    }
+                    else if( clickableTerritory.getTerritoryName().equals( "Kamchatka")) {
+                        territoryText.setTranslateX(1170 * width / 1280 - width / 2);
+                        territoryText.setTranslateY(200 * height / 1024 - height / 2);
+                    }
+                    else if( clickableTerritory.getTerritoryName().equals( "Eastern Australia")) {
+                        territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
+                    }
+
+                    else {
+                        //code below changes the location of the texts
+                        //their original locations in the (1280, 1024) (width, height) space are held inside the imgLocations array
+                        //so I adjust these x and y locations to fit within whatever width and height settings we have for the game
+                        //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
+                        territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2);
+                        territoryText.setTranslateY(imgLocations[1] * height / 1024 - height / 2);
+                    }
+
+                    territoryText.translateXProperty();
+                    territoryText.translateYProperty();
+
+                    if(RiskView.this.mode == RiskGame.GameMode.AttackMode ) {
+                        attackPhase();
+                    }
+
+/*                    clickableTerritory.removeEventHandler(MouseEvent.ANY, this);
+                }
+            }));*/
+
+        }
+
+    }
+
+
+
     public void addPlayerNameBars() {
         FlowPane nameBarPane = new FlowPane();
         nameBarPane.setHgap(10);
@@ -346,5 +402,56 @@ public class RiskView extends StackPane {
         }
         nameBarPane.setAlignment(Pos.BOTTOM_RIGHT);
         this.getChildren().add(nameBarPane);
+    }
+
+    public void startAttack(ClickableTerritory source, ClickableTerritory target) {
+
+
+        TextField textField = new TextField();
+        textField.setMaxSize(width / 8, 40);
+        textField.setFont(Font.font("Snap ITC", 30));
+        Button attackButton = new Button("Attack!");
+        Button cancelAttackButton = new Button("Cancel");
+        HBox buttonBox = new HBox(5);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(attackButton, cancelAttackButton);
+        VBox vbox = new VBox(5);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.getChildren().addAll(textField, buttonBox);
+        this.getChildren().add(vbox);
+
+        attackButton.setOnMouseClicked(e -> {
+            if (!textField.getText().isEmpty()) {
+                int troopCount = Integer.parseInt(textField.getText());
+
+                if(!riskGame.startAttack(source.getTerritoryId(), target.getTerritoryId(), troopCount)) {
+                    return;
+                }
+
+                Text targetTerritoryText = textForEachTer.get(target);
+                int targetTroopCount = Integer.parseInt(targetTerritoryText.getText());
+
+                Text sourceTerritoryText = textForEachTer.get(source);
+                this.getChildren().remove(sourceTerritoryText);
+
+                int sourceTroopCount = Integer.parseInt(sourceTerritoryText.getText());
+                sourceTerritoryText.setText("" + (sourceTroopCount - troopCount));
+                this.getChildren().add(sourceTerritoryText);
+
+
+                this.getChildren().remove(targetTerritoryText);
+                targetTerritoryText.setText("" + (targetTroopCount - troopCount));
+
+                this.getChildren().add(targetTerritoryText);
+            }
+            this.getChildren().remove(vbox);
+        });
+
+
+        cancelAttackButton.setOnMouseClicked(e -> {
+            this.getChildren().remove(vbox);
+
+        });
+
     }
 }

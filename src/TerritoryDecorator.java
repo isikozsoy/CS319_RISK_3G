@@ -7,25 +7,11 @@ public abstract class TerritoryDecorator extends Territory {
 
     //constructor
     public TerritoryDecorator(Territory territory) {
+        super(territory.id);
         this.territory = territory;
     }
 
     //methods
-    public String getName() {
-        return territory.getName();
-    }
-
-    public void setName(String name) {
-        territory.setName(name);
-    }
-
-    public int getOwnerId() {
-        return territory.getOwnerId();
-    }
-
-    public void setOwnerId(int ownerId) {
-        territory.setOwnerId(ownerId);
-    }
 
     public Player getOwner() { return territory.owner; }
 
