@@ -653,7 +653,7 @@ public class RiskView extends StackPane {
             nameButton.setOnMouseClicked(e -> {
                 //this long if statement checks if the player clicked is NOT the same player, who clicked the button
                 // and the phases of the game
-                if(riskGame.getCurPlayerId() != player.getId() &&
+                if(riskGame.getPlayers().size() > 2 && riskGame.getCurPlayerId() != player.getId() &&
                         (mode == RiskGame.GameMode.TerAllocationMode
                                 || mode == RiskGame.GameMode.SoldierAllocationInit
                                 || mode == RiskGame.GameMode.SoldierAllocationMode
