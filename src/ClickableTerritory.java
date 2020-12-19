@@ -143,7 +143,6 @@ public class ClickableTerritory extends ImageView {
 
             default: {
                 setOnMousePressed( e -> {
-                    System.out.println(clicked);
                     if(clicked) {
                         setEffect(colorAdjust);
                         clicked = false;
@@ -201,7 +200,7 @@ public class ClickableTerritory extends ImageView {
                 this.setEffect(colorAdjust);
                 break;
             }
-            case SoldierAllocationMode: {
+            default: {
                 colorAdjust.setBrightness(1);
             }
         }
