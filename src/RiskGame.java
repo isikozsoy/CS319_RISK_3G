@@ -103,7 +103,8 @@ public class RiskGame {
 
     public void setButtons() {
         riskView.getPlaceButton().setOnMouseClicked(e -> {
-            Territory sourceTerritory = sourceTer;
+            Territory sourceTerritory = new Territory();
+            sourceTerritory = sourceTer;
             if(mode == GameMode.SoldierAllocationInit
                     || mode == GameMode.SoldierAllocationMode) {
                 //sets selected troop integer, and places it in the territory specified itself
@@ -260,6 +261,7 @@ public class RiskGame {
             curPlayer = players.get(curPlayerId);
             if (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
                 sourceTer = riskView.getClickedTerritory(mode);
+                System.out.println(sourceTer);
                 if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()) {
                     riskView.addTroopCountSelector(curPlayer.getTroopCount());
                     setButtons();

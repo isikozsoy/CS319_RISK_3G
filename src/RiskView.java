@@ -43,6 +43,7 @@ public class RiskView extends StackPane {
     private Button buildAirportButton;
     private Button cardsButton;
     private Text countSelectionText;
+    private Text modeText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<String, Territory> nameAndTerritory;
@@ -87,13 +88,16 @@ public class RiskView extends StackPane {
             setTerritoryNeighbors(territory);
         }
 
-        addPlayButton();
+        //addPlayButton();
 
         initiateRiskGame();
     }
 
-    public void updateTerritoryText( ClickableTerritory clickableTerritory) {
-
+    private void setModeText() {
+        modeText = new Text();
+        modeText.setFont(Font.loadFont("Snap ITC", 30));
+        setAlignment(modeText, Pos.TOP_RIGHT);
+        this.getChildren().add(modeText);
     }
 
     private void setCardExchangePane() {
@@ -670,7 +674,6 @@ public class RiskView extends StackPane {
                 territory.addNeighbor(nameAndTerritory.get("Northwest Territory"));
                 territory.addNeighbor(nameAndTerritory.get("Alberta"));
                 territory.addNeighbor(nameAndTerritory.get("Kamchatka"));
-                break;
             }
             case "Northwest Territory": {
                 territory.addNeighbor(nameAndTerritory.get("Alaska"));
