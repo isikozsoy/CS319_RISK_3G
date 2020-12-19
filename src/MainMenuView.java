@@ -1,8 +1,16 @@
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.scene.*;
 import javafx.scene.control.Button;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+
+import java.awt.*;
 
 public class MainMenuView extends BeforeGameView {
     final private int   locXForMenu       = 290;
@@ -22,6 +30,7 @@ public class MainMenuView extends BeforeGameView {
     Dimension screenSize;
     private int width;
     private int height;
+    private VBox credits;
 
     MainMenuView( Stage stage, int width, int height) {
         System.out.println("Here");
@@ -95,6 +104,51 @@ public class MainMenuView extends BeforeGameView {
 
     private MainMenuButton creditsButton() {
         MainMenuButton creditsButton = new MainMenuButton(locCredits[0], locCredits[1], 4);
+
+        Label alp = new Label("Alp Üneri");
+        Label burak = new Label("Burak Yetiştiren");
+        Label isik = new Label("Işık Özsoy");
+        Label defne = new Label("Defne Betül Çiftçi");
+        Label hakan = new Label("Hakan Kara");
+        Label creditsText = new Label("Credits:");
+
+        Button back = new Button("Back");
+
+        alp.setFont(Font.font("Snap ITC", 30));
+        burak.setFont(Font.font("Snap ITC", 30));
+        isik.setFont(Font.font("Snap ITC", 30));
+        defne.setFont(Font.font("Snap ITC", 30));
+        hakan.setFont(Font.font("Snap ITC", 30));
+        creditsText.setFont(Font.font("Snap ITC", FontWeight.EXTRA_BOLD, FontPosture.ITALIC, 30));
+        creditsText.setUnderline(true);
+
+        String styleBackground = "-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff";
+
+        back.setStyle(styleBackground);
+        back.setFont(Font.font("Snap ITC", 30));
+        back.setMaxSize(300,75);
+
+        javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
+        backImg.setFitHeight(50);
+        backImg.setFitWidth(50);
+        back.setGraphic(backImg);
+
+        creditsButton.setOnMouseClicked(e->{
+            credits = new VBox();
+            credits.getChildren().addAll( creditsText, alp, burak, isik, defne, hakan, back);
+
+            credits.setAlignment(Pos.CENTER);
+            credits.setStyle(styleBackground);
+
+            credits.setMaxSize(300,300);
+            this.getChildren().add(credits);
+
+        });
+
+        back.setOnMouseClicked(e->{
+            this.getChildren().removeAll(credits);
+        });
 
         return creditsButton;
     }
