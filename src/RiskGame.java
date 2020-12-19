@@ -103,7 +103,7 @@ public class RiskGame {
     }
 
     public void setButtons() {
-        riskView.getPlaceButton().setOnMouseClicked(e -> {
+        riskView.getTroopCountSelectorPane().getPlaceButton().setOnMouseClicked(e -> {
             Territory sourceTerritory = new Territory();
             sourceTerritory = sourceTer;
             if(mode == GameMode.SoldierAllocationInit
@@ -160,7 +160,7 @@ public class RiskGame {
             }
         });
 
-        riskView.getBackButton().setOnMouseClicked(event -> {
+        riskView.getTroopCountSelectorPane().getBackButton().setOnMouseClicked(event -> {
             if( mode == GameMode.FortifyModeCont) {
                 riskView.removeTroopCountSelector();
                 sourceTer = null;
@@ -177,19 +177,35 @@ public class RiskGame {
             }
         });
 
-        riskView.getBuildAirportButton().setOnMouseClicked(e -> {
+        riskView.getTroopCountSelectorPane().getBuildAirportButton().setOnMouseClicked(e -> {
             Territory sourceTerritory;
             sourceTerritory = sourceTer;
-            if (sourceTerritory.getTroopCount() > AIRPORT_COST) {
-                sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
+            if (!sourceTerritory.hasAirport()) {
+                if (sourceTerritory.getTroopCount() > AIRPORT_COST) {
+                    sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() - AIRPORT_COST);
+                    riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
+                    riskView.removeTroopCountSelector();
+                    sourceTerritory.setHasAirport(true);
+                    sourceTerritory = new AirportDecorator(sourceTer);
+                    territories[sourceTer.getId()] = sourceTerritory;
+                    //reset source territory for a new allocation
+                    sourceTer = null;
+                    soldierAllocBeforeClicking = false;
+                    riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
+                    riskView.removeTroopCountSelector();
+                }
+            }
+            else {
+                sourceTerritory.setTroopCount(sourceTerritory.getTroopCount() + 2);
                 riskView.updateText(sourceTerritory, sourceTerritory.getTroopCount());
                 riskView.removeTroopCountSelector();
-                sourceTer.setHasAirport(true);
-                sourceTerritory = new AirportDecorator(sourceTer);
+                sourceTerritory = sourceTer.getTerritory();
+                sourceTerritory.setHasAirport(false);
                 territories[sourceTer.getId()] = sourceTerritory;
                 //reset source territory for a new allocation
                 sourceTer = null;
                 soldierAllocBeforeClicking = false;
+                riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Build Airport");
                 riskView.removeTroopCountSelector();
             }
         });
