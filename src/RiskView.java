@@ -649,6 +649,7 @@ public class RiskView extends StackPane {
                 // and the phases of the game
                 if(riskGame.getCurPlayerId() != player.getId() &&
                         (mode == RiskGame.GameMode.TerAllocationMode
+                                || mode == RiskGame.GameMode.SoldierAllocationInit
                                 || mode == RiskGame.GameMode.SoldierAllocationMode
                                 || mode == RiskGame.GameMode.AttackMode || mode == RiskGame.GameMode.FortifyMode))
                     //alliance pane is added
