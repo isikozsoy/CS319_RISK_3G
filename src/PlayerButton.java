@@ -139,6 +139,7 @@ public class PlayerButton extends StackPane {
         });
 
         if(!gameButtonAdded && playerList.size() >= 2) {
+            ((AddPlayersView)mainPane).removeGameButton();
             ((AddPlayersView)mainPane).addGameButton();
             gameButtonAdded = true;
         }

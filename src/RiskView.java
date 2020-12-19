@@ -77,7 +77,8 @@ public class RiskView extends StackPane {
         Button mainMenuButton = backToMenu(stage);
         HBox mainMenuContainer = new HBox();
         mainMenuContainer.getChildren().add(mainMenuButton);
-        mainMenuContainer.setAlignment(Pos.TOP_RIGHT);
+        mainMenuContainer.setMaxHeight(0);
+        mainMenuContainer.setMaxWidth(1000);
 
 
         setRockPaperScissorPane();
@@ -97,7 +98,9 @@ public class RiskView extends StackPane {
         }
 
         //addPlayButton();
+        setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
         this.getChildren().add(mainMenuContainer);
+
         initiateRiskGame();
     }
 
