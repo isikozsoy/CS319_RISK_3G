@@ -450,7 +450,6 @@ public class RiskGame {
     }
 
     public void startAttack() {
-
         if(mode != GameMode.AttackMode) {
             return;
         }
@@ -458,7 +457,7 @@ public class RiskGame {
         if( !troopCountSelectorInView)
         {
             troopCountSelectorInView = true;
-            riskView.addTroopCountSelector(curPlayer.getTroopCount(), mode);
+            riskView.addTroopCountSelector(curPlayer.getTroopCount() - 1, mode);
             //troopCountSelectorInView = false;
         }
 

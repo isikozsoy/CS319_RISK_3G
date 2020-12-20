@@ -489,6 +489,7 @@ public class RiskView extends StackPane {
     }
 
     public int getSelectedTroop() {
+        System.out.println();
         selectedTroop = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
         return selectedTroop;
     }
