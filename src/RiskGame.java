@@ -470,7 +470,7 @@ public class RiskGame {
     }
 
     public void startAttack() {
-        if(mode != GameMode.AttackMode || sourceTer.getTroopCount() < 2) {
+        if(mode != GameMode.AttackMode) {
             return;
         }
 
