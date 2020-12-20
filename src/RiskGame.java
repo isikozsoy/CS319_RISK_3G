@@ -192,6 +192,7 @@ public class RiskGame {
             }
             case EndOfTurn: {
                 nextTurn();
+                curPlayer.updateTroopCount();
                 nextMode();
                 break;
             }
@@ -306,6 +307,7 @@ public class RiskGame {
                     if (playerCounterForEachTurn == playerCount && !gameStarted) {
                         curPlayerId = 0;
                         curPlayer = players.get(curPlayerId); //the actual gameplay will start from the first player
+                        curPlayer.updateTroopCount();
                         gameStarted = true;
                     }
 
@@ -415,8 +417,7 @@ public class RiskGame {
     }
 
     public void startInitialization() {
-        //startTerAlloc();
-        startAutoTerAlloc();
+        startTerAlloc();
     }
 
     public void startAutoTerAlloc() {
@@ -542,10 +543,6 @@ public class RiskGame {
 
     public void startSoldierAlloc() {
         if( mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
-            if (gameStarted) {
-                curPlayer.updateTroopCount();
-            }
-
             if (!soldierAllocBeforeClicking) {
                 soldierAllocBeforeClicking = true;
                 int noOfTroops = soldierAllocBeforeClicking(); //this method returns the number of troops of the current player
