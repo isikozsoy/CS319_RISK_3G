@@ -307,11 +307,6 @@ public class RiskView extends StackPane {
         currPlayerBar.setFont(Font.font("SNAP ITC", 30));
     }
 
-    public void updateTerTroopCount(ClickableTerritory clickableTerritory, int count) {
-        Label terText = textForEachTer.get(clickableTerritory);
-        terText.setText(String.valueOf(Integer.valueOf(terText.getText()) + count));
-    }
-
     public void setTerritoryTexts() {
         for( int i = 0; i < territoryList.size(); i++) {
             Label territoryText = new Label("1");
@@ -434,8 +429,8 @@ public class RiskView extends StackPane {
 
     public void addTroopCountSelector( int troopCount, RiskGame.GameMode mode) {
         troopCountSelectorPane.addTroopCountSelectorPane(mode);
-        this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
+        this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
             int selectedTroopCount = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
             String nextCount = "";
@@ -476,14 +471,6 @@ public class RiskView extends StackPane {
         return attackButton;
     }
 
-
-    /*public Button getPlaceButton() {
-        return placeButton;
-    }
-    public Button getBuildAirportButton() {
-        return buildAirportButton;
-    }*/
-
     public Button getCardsButton() {
         return cardsButton;
     }
@@ -493,10 +480,6 @@ public class RiskView extends StackPane {
         return selectedTroop;
     }
 
-    public void setSelectedTroop( int selectedTroop) {
-        this.selectedTroop = selectedTroop;
-    }
-
     public void removeTroopCountSelector() {
         troopCountSelectorPane.removeButtons();
         this.getChildren().remove(troopCountSelectorPane);
@@ -504,32 +487,6 @@ public class RiskView extends StackPane {
 
     private void setTroopCountSelector() {
         troopCountSelectorPane = new TroopCountSelectorPane();
-        /*troopCountSelectionPane = new VBox();
-        lessButton = new Button();
-        moreButton = new Button();
-        Text textBack = new Text("Back");
-        textBack.setFont(Font.font("Snap ITC", 30));
-        backButton = new Button("Back");
-        Text textPlace = new Text("Place");
-        textPlace.setFont(Font.font("Snap ITC", 30));
-        placeButton = new Button("Place");
-        //Text textBuildAirport = new Text("Build Airport");
-        //textBuildAirport.setFont(Font.font("Snap ITC", 30));
-        buildAirportButton = new Button("Build Airport");
-        countSelectionText = new Text("1");
-        countSelectionText.setFont(Font.font("Snap ITC", 50));
-        lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
-        moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
-        HBox hbox1 = new HBox();
-        HBox hbox2 = new HBox();
-        //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
-        hbox1.getChildren().addAll( lessButton, countSelectionText, moreButton);
-        hbox1.setAlignment(Pos.CENTER);
-        hbox2.getChildren().addAll(backButton, placeButton, buildAirportButton);
-        hbox2.setAlignment(Pos.CENTER);
-        //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
-        troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox1, hbox2);
-        troopCountSelectionPane.setAlignment(Pos.CENTER);*/
     }
 
     private void addBackground() {
