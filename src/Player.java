@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Player {
-    final Random random=new Random();
     private String color;
 
     // Properties
