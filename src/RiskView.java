@@ -543,7 +543,6 @@ public class RiskView extends StackPane {
     /*public Button getPlaceButton() {
         return placeButton;
     }
-
     public Button getBuildAirportButton() {
         return buildAirportButton;
     }*/
@@ -570,33 +569,26 @@ public class RiskView extends StackPane {
         /*troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
-
         Text textBack = new Text("Back");
         textBack.setFont(Font.font("Snap ITC", 30));
         backButton = new Button("Back");
-
         Text textPlace = new Text("Place");
         textPlace.setFont(Font.font("Snap ITC", 30));
         placeButton = new Button("Place");
-
         //Text textBuildAirport = new Text("Build Airport");
         //textBuildAirport.setFont(Font.font("Snap ITC", 30));
         buildAirportButton = new Button("Build Airport");
         countSelectionText = new Text("1");
         countSelectionText.setFont(Font.font("Snap ITC", 50));
-
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
         moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
         HBox hbox1 = new HBox();
         HBox hbox2 = new HBox();
-
         //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
         hbox1.getChildren().addAll( lessButton, countSelectionText, moreButton);
         hbox1.setAlignment(Pos.CENTER);
-
         hbox2.getChildren().addAll(backButton, placeButton, buildAirportButton);
         hbox2.setAlignment(Pos.CENTER);
-
         //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox1, hbox2);
         troopCountSelectionPane.setAlignment(Pos.CENTER);*/

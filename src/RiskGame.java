@@ -32,7 +32,7 @@ public class RiskGame {
     enum GameMode {
         TerAllocationMode, SoldierAllocationInit, SoldierAllocationMode, AttackMode, FortifyMode, EndOfTurn
     }
-    private GameMode mode;
+    private GameMode mode = GameMode.TerAllocationMode;
 
     public RiskGame(ArrayList<Player> players, Territory[] territories, List<ClickableTerritory> clickableTerritories, RiskView riskView) {
         for (Player p : players)
@@ -494,6 +494,25 @@ public class RiskGame {
         curPlayerId = (curPlayerId + 1) % playerCount;
         curPlayer = players.get(curPlayerId);
         setTroopCountInView();
+    }
+
+    public GameMode getMode()
+    {
+        return mode;
+    }
+
+    public void handleNextPhaseButton()
+    {
+        riskView.getNextPhaseButton().setOnMouseClicked(e->{
+            if(mode == GameMode.AttackMode)
+            {
+                mode = GameMode.FortifyMode;
+            }
+            else if(mode == GameMode.FortifyMode)
+            {
+                mode = GameMode.AttackMode;
+            }
+        });
     }
 
     public void sendAllianceRequest(Player target) //to send an alliance req. with
