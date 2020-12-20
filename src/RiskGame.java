@@ -190,7 +190,7 @@ public class RiskGame {
                 sourceTer.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
 
-                riskView.updateText(sourceTer, sourceTer.getTroopCount(), false);
+                riskView.updateText(sourceTer, sourceTer.getTroopCount());
 
                 riskView.removeTroopCountSelector();
                 troopCountSelectorInView = false;
