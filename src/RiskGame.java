@@ -214,6 +214,13 @@ public class RiskGame {
                 }
                 riskView.updateTroopsCount(curPlayer);
             }
+            else if(mode == GameMode.AttackMode) {
+
+                int selectedTroop = riskView.getSelectedTroop();
+                sourceTer.setTroopCount(sourceTer.getTroopCount() - selectedTroop);
+                riskView.setOnKeyPressed(new RPSGame(selectedTroop));
+                riskView.displayRPSView();
+            }
             else if( mode == GameMode.FortifyMode) {
                 //troopToTransfer will also be got from the troop count selection screen
                 int troopToTransfer = riskView.getSelectedTroop();
@@ -236,12 +243,6 @@ public class RiskGame {
         });
 
         riskView.getTroopCountSelectorPane().getBackButton().setOnMouseClicked(event -> {
-            if( mode == GameMode.FortifyMode) {
-                riskView.removeTroopCountSelector();
-                troopCountSelectorInView = false;
-                sourceTer = null;
-                targetTerritory = null;
-            }
             if(mode == GameMode.SoldierAllocationInit
                     || mode == GameMode.SoldierAllocationMode) {
                 //goes back to the original Soldier Allocation function to take a territory as input again
@@ -250,6 +251,16 @@ public class RiskGame {
                 soldierAllocBeforeClicking = false;
                 sourceTer = null;
                 //mode does not change here
+            }
+            else if( mode == GameMode.FortifyMode) {
+                riskView.removeTroopCountSelector();
+                troopCountSelectorInView = false;
+                sourceTer = null;
+                targetTerritory = null;
+            }
+            else if( mode == GameMode.AttackMode) {
+                riskView.removeTroopCountSelector();
+                //targetTerritory = null;
             }
         });
 
@@ -465,8 +476,8 @@ public class RiskGame {
         if( !troopCountSelectorInView)
         {
             troopCountSelectorInView = true;
-            riskView.addTroopCountSelector(curPlayer.getTroopCount() - 1, mode);
-            //troopCountSelectorInView = false;
+            riskView.addTroopCountSelector(sourceTer.getTroopCount() - 1, mode);
+            troopCountSelectorInView = false;
         }
 
         /*TextField textField = new TextField();
