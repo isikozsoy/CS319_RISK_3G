@@ -82,7 +82,7 @@ public class RiskGame {
 
     public void play() {
         curPlayer = players.get(curPlayerId);
-
+        riskView.updateCurPhase();
         riskView.setOnMouseClicked(e -> {
             executeFunctions();
         });
@@ -93,22 +93,22 @@ public class RiskGame {
         switch (mode) {
             case TerAllocationMode: {
                 startInitialization();
+                riskView.updateCurPhase();
                 break;
             }
             case SoldierAllocationInit: {
                 startSoldierAlloc();
+                riskView.updateCurPhase();
                 break;
             }
             case SoldierAllocationMode: {
                 startSoldierAlloc();
+                riskView.updateCurPhase();
                 break;
             }
-/*            case AttackMode: {
-                startAttack();
-                break;
-            }*/
             case FortifyMode: {
                 startFortify();
+                riskView.updateCurPhase();
                 break;
             }
             case EndOfTurn: {

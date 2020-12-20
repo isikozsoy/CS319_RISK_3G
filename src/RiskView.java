@@ -45,6 +45,7 @@ public class RiskView extends StackPane {
     private HashMap<String, Territory> nameAndTerritory;
     private HashMap<Territory, Label> textForEachTer;
     private TroopCountSelectorPane troopCountSelectorPane;
+    private Label currentPhaseBar;
 
     private int[][] x_y_forEachTerritory = new int[42][2];
 
@@ -95,7 +96,7 @@ public class RiskView extends StackPane {
 
         setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
         this.getChildren().add(mainMenuContainer);
-
+        setCurPhaseBar();
         initiateRiskGame();
     }
 
@@ -130,6 +131,18 @@ public class RiskView extends StackPane {
         cardExchangePane = new CardExchangePane();
     }
 
+    // Method that creates the label which will shows the current phase of the game.
+    private void setCurPhaseBar() {
+        currentPhaseBar = new Label();
+        currentPhaseBar.setAlignment(Pos.CENTER);
+        currentPhaseBar.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        currentPhaseBar.setFont(Font.font("Snap ITC", 27));
+        currentPhaseBar.setMaxSize(500,75);
+        this.getChildren().add(currentPhaseBar);
+        this.setAlignment(currentPhaseBar, Pos.TOP_RIGHT);
+    }
+
     private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
     private void addNextPhaseButton() {
@@ -148,6 +161,32 @@ public class RiskView extends StackPane {
 
         nextPhaseButton.translateXProperty();
         nextPhaseButton.translateYProperty();
+    }
+
+    // Updates the currentPhaseBar according to the mode of the game
+    public void updateCurPhase() {
+        switch (mode) {
+            case TerAllocationMode: {
+                currentPhaseBar.setText("Territory Allocation");
+                break;
+            }
+            case SoldierAllocationInit: {
+                currentPhaseBar.setText("Soldier Allocation");
+                break;
+            }
+            case SoldierAllocationMode: {
+                currentPhaseBar.setText("Soldier Allocation");
+                break;
+            }
+            case AttackMode: {
+                currentPhaseBar.setText("Attack Allocation");
+                break;
+            }
+            case FortifyMode: {
+                currentPhaseBar.setText("Fortify Allocation");
+                break;
+            }
+        }
     }
 
     public void updateText(Territory territory, int newNum) {
