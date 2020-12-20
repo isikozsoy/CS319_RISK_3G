@@ -45,6 +45,14 @@ public class ClickableTerritory extends ImageView {
         }
     }
 
+    public int getTerritoryId() {
+        return associatedTerritory.getId();
+    }
+
+    public void setAssociatedTerritory(Territory associatedTerritory) {
+        this.associatedTerritory = associatedTerritory;
+    }
+
     public void setColor(String color) {
         this.color = color;
         colorAdjust.setHue(colorsAndHues.get(color));

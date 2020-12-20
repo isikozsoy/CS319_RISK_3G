@@ -93,7 +93,7 @@ public class Territory {
                 continue;
             }
             if (owner.isAlly(neighbor.owner)) {
-                attackableTerritories.addAll(neighbor.searchForAttackable());
+                attackableTerritories.addAll(getAttackableOfAlly(neighbor));
             } else {
                 attackableTerritories.add(neighbor);
             }
@@ -101,6 +101,21 @@ public class Territory {
 
         return attackableTerritories;
     }
+
+    private HashSet<Territory> getAttackableOfAlly(Territory allyTerritory) {
+        HashSet<Territory> attackableTerritories = new HashSet<>();
+
+        for (Territory allyNeighbor : allyTerritory.neighbors) {
+            if (!(allyTerritory.getOwner().getId() == allyNeighbor.owner.getId()
+                    || allyNeighbor.owner.getId() == owner.getId())) {
+                attackableTerritories.add(allyNeighbor);
+            }
+        }
+
+        return attackableTerritories;
+    }
+
+
 
     public HashSet<Territory> searchForFortifyable( HashSet<Territory> alreadySearched) {
         HashSet<Territory> fortifyableTerritories = new HashSet<>();

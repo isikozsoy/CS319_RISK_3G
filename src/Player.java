@@ -59,6 +59,11 @@ public class Player {
         }
     }
 
+    public void makePlayerNonExistent() {
+        color = "gray";
+        id = -1;
+    }
+
     // Getters & Setters
     public String getColor() {
         return color;
@@ -164,6 +169,10 @@ public class Player {
             cards[2]++;
         else
             cards[3]++;
+    }
+
+    public void setId( int id) {
+        this.id = id;
     }
 
     // Checks whether the given player is an ally or not using the given player object.

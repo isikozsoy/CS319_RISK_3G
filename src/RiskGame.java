@@ -88,7 +88,6 @@ public class RiskGame {
     }
 
     public void executeFunctions() {
-        System.out.println(sourceTer);
         riskView.updateCurPhase();
         switch (mode) {
             case TerAllocationMode: {
@@ -120,16 +119,9 @@ public class RiskGame {
             clickableTerritory.setOnMouseClicked(e -> {
 
                 if(mode == GameMode.AttackMode) {
-/*                    System.out.println(clickableTerritory.getAssociatedTerritory().getName());
-                    System.out.println(clickableTerritory.getAssociatedTerritory().getOwnerId() );
-                    System.out.println(clickableTerritory.getAssociatedTerritory().getOwnerId() );*/
 
                     if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId) {
                         //Source territory is clicked.
-
-                        if (sourceTer != null) {
-                            clickableTerritories.get(sourceTer.getId()).setColor(players.get(curPlayerId).getColor());
-                        }
 
                         if(attackableTerritories != null) {
                             for (Territory attackableTerritory: attackableTerritories) {
@@ -139,8 +131,7 @@ public class RiskGame {
                             }
                         }
 
-                        clickableTerritory.setColor("aqua");
-                        sourceTer = clickableTerritory.getAssociatedTerritory();
+                        sourceTer = territories[clickableTerritory.getTerritoryId()];
                         attackableTerritories = sourceTer.searchForAttackable();
 
                         for (Territory attackableTerritory: attackableTerritories) {
@@ -149,7 +140,7 @@ public class RiskGame {
                             clickAbleAttackableTerritory.setColor("x");
                         }
 
-                    } else if (sourceTer != null && attackableTerritories.contains(clickableTerritory.getAssociatedTerritory())) {
+                    } else if (sourceTer != null && attackableTerritories.contains(territories[clickableTerritory.getTerritoryId()])) {
                         targetTerritory = clickableTerritory.getAssociatedTerritory();
                         for (Territory attackableTerritory: attackableTerritories) {
                             if(attackableTerritory == targetTerritory) {
@@ -275,6 +266,7 @@ public class RiskGame {
                     sourceTer.setHasAirport(true);
                     Territory sourceTerritory = new AirportDecorator(sourceTer);
                     territories[sourceTer.getId()] = sourceTerritory;
+                    //clickableTerritories.get(sourceTer.getId()).setAssociatedTerritory(sourceTerritory);
                     //reset source territory for a new allocation
                     sourceTer = null;
                     soldierAllocBeforeClicking = false;
@@ -292,6 +284,7 @@ public class RiskGame {
                 Territory sourceTerritory = sourceTer.getTerritory();
                 sourceTerritory.setHasAirport(false);
                 territories[sourceTer.getId()] = sourceTerritory;
+                //clickableTerritories.get(sourceTer.getId()).setAssociatedTerritory(sourceTerritory);
 
                 //reset source territory for a new allocation
                 sourceTer = null;
@@ -305,8 +298,8 @@ public class RiskGame {
     }
 
     public void startInitialization() {
-        startTerAlloc();
-        //startAutoTerAlloc();
+        //startTerAlloc();
+        startAutoTerAlloc();
     }
 
     public void startAutoTerAlloc() {
@@ -320,7 +313,7 @@ public class RiskGame {
                 clickedTerritories.add(territory);
                 riskView.addTextForTerritory(territory);
                 territory.setOwner(curPlayer);
-                territory.addTroop(5);
+                territory.addTroop(1);
 
                 curPlayer.decreaseTroop(1);
                 curPlayer.setTerCount(curPlayer.getTerCount() + 1);
@@ -336,8 +329,23 @@ public class RiskGame {
                     riskView.setTerritoryClicked(false);
                     riskView.setTerritoryMode(mode);
                     curPlayerId = 0;
+                    riskView.updatePlayerBar(players.get(curPlayerId));
                     setTroopCountInView();
+                    //riskView.addNextPhaseButton();
+                    riskView.getNextPhaseButton().setOnMouseClicked(event -> {
+                        if (mode == GameMode.AttackMode || mode == GameMode.FortifyMode) {
+                            riskView.goToNextPhase();
+                            if(mode == GameMode.FortifyMode) {
+                                riskView.removeNextPhaseButton();
+                            }
+                        }
+                        nextMode();
+                        setTroopCountInView();
+                        executeFunctions();
+                    });
                     nextMode();
+                    riskView.updateCurPhase();
+                    break;
                 }
 
             }
@@ -380,11 +388,11 @@ public class RiskGame {
                 setTroopCountInView();
                 //riskView.addNextPhaseButton();
                 riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-                    if ( mode == GameMode.FortifyMode) {
-                        riskView.removeNextPhaseButton();
-                    }
-                    else {
-                        riskView.updateCurPhase();
+                    if (mode == GameMode.AttackMode || mode == GameMode.FortifyMode) {
+                        riskView.goToNextPhase();
+                        if(mode == GameMode.FortifyMode) {
+                            riskView.removeNextPhaseButton();
+                        }
                     }
                     nextMode();
                     setTroopCountInView();
@@ -517,7 +525,6 @@ public class RiskGame {
                 } else if (fortifyableFromSource.contains(targetTerritory)) {
                     if(!troopCountSelectorInView) {
                         riskView.addTroopCountSelector(sourceTer.getTroopCount(), mode);
-                        System.out.println("HELOOOO");
                     }
 
                     troopCountSelectorInView = true;
@@ -551,6 +558,13 @@ public class RiskGame {
                 break;
             }
             case AttackMode: {
+                if (attackableTerritories != null) {
+                    for (Territory attackableTerritory : attackableTerritories) {
+                        ClickableTerritory clickAbleAttackableTerritory =
+                                clickableTerritories.get(attackableTerritory.getId());
+                        clickAbleAttackableTerritory.setColor(attackableTerritory.getOwner().getColor());
+                    }
+                }
                 mode = GameMode.FortifyMode;
                 break;
             }
@@ -580,6 +594,10 @@ public class RiskGame {
     public void nextTurn() {
         curPlayerId = (curPlayerId + 1) % playerCount;
         curPlayer = players.get(curPlayerId);
+        while( curPlayer.getId() == -1) {
+            curPlayerId = (curPlayerId + 1) % playerCount;
+            curPlayer = players.get(curPlayerId);
+        }
         setTroopCountInView();
     }
 
@@ -720,14 +738,17 @@ public class RiskGame {
             ClickableTerritory clickableSource = clickableTerritories.get(sourceTer.getId());
             ClickableTerritory clickableTarget = clickableTerritories.get(targetTerritory.getId());
 
+            Player otherPlayer = null;
+
             if(noOfP2Soldiers == 0) {
                 //The target has been occupied.
                 targetTerritory.setTroopCount(noOfP1Soldiers);
+                otherPlayer = targetTerritory.getOwner();
+                otherPlayer.setTerCount(targetTerritory.getOwner().getTerCount() - 1);
                 targetTerritory.setOwner(players.get(curPlayerId));
+                curPlayer.setTerCount( curPlayer.getTerCount() + 1);
                 attackableTerritories.remove(targetTerritory);
 
-/*                System.out.println("applyGameResut():" + targetTerritory.getName());
-                System.out.println("applyGameResut():" + targetTerritory.getOwnerId());*/
                 players.get(curPlayerId).setCardDeserved(true);
             }
             else {
@@ -742,9 +763,34 @@ public class RiskGame {
 
             riskView.removeRPSView();
 
+            //check for endgame and player removal
+            if( curPlayer.getTerCount() == 42) {
+                endGame();
+            }
+            else if( otherPlayer != null && otherPlayer.getTerCount() == 0) { //the other player will be removed from the game
+                removePlayer(otherPlayer);
+            }
+
             sourceTer = null;
             targetTerritory = null;
             riskView.removeEventHandler(KeyEvent.ANY, this);
         }
+    }
+
+    public void removePlayer( Player player) {
+        riskView.changeNameButtonColor(player);
+        player.makePlayerNonExistent();
+    }
+
+    public void endGame() {
+        //reset everything
+        players = null;
+        clickableTerritories = null;
+        clickedTerritories = null;
+        territories = null;
+        attackableTerritories = null;
+
+        //add an endgame panel
+        riskView.addEndGamePane( curPlayer);
     }
 }
