@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -47,7 +48,7 @@ public class RiskView extends StackPane {
     private ArrayList<Player> players;
     private int width;
     private int height;
-    private GridPane rockPaperScissorPane;
+    private RPSView rpsView;
     private Stage stage;
     private VBox troopCountSelectionPane;
     private Button lessButton;
@@ -64,9 +65,10 @@ public class RiskView extends StackPane {
 
     private Button currPlayerBar;
 
-    private boolean attackFlag;
     private ClickableTerritory source;
+    private ClickableTerritory target;
     private RiskGame.GameMode mode;
+
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         this.riskGame = new RiskGame(playerList, this);
@@ -79,20 +81,21 @@ public class RiskView extends StackPane {
         this.stage = stage;
         mode = RiskGame.GameMode.TroopAllocationMode;
 
-        setRockPaperScissorPane();
         setTroopCountSelector();
         addBackground();
         addPlayerNameBars();
         setTroopsLeft();
         makeClickableMap();
         addNextPhaseButton();
-        addPlayButton();
 
         territoryAllocation();
 
-
+        rpsView = new RPSView();
     }
 
+    public RPSView getRpsView() {
+        return rpsView;
+    }
 
     public void attackPhase() {
         for (int i = 0; i < territoryList.size(); i++) {
@@ -120,7 +123,8 @@ public class RiskView extends StackPane {
                         riskGame.loadAttackableTer(source.getTerritoryId());
 
                     } else if (source != null && riskGame.isAttackable(clickableTerritory.getTerritoryId())) {
-                        startAttack(source, clickableTerritory);
+                        target = clickableTerritory;
+                        startAttack();
                     }
                 }
 
@@ -228,25 +232,7 @@ public class RiskView extends StackPane {
         troopCountSelectionPane.setAlignment(Pos.CENTER);
     }
 
-    private void setRockPaperScissorPane() {
-        rockPaperScissorPane = new GridPane();
 
-        rockPaperScissorPane.add(new ImageView(new Image("icons/rock_rps.png")), 0, 0);
-        rockPaperScissorPane.add(new ImageView(new Image("icons/paper_rps.png")), 1, 0);
-        rockPaperScissorPane.add(new ImageView(new Image("icons/scissors_rps.png")), 2, 0);
-
-        Text textA = new Text("A");
-        textA.setFont(Font.font("Snap ITC", 30));
-        Text textS = new Text("S");
-        textS.setFont(Font.font("Snap ITC", 30));
-        Text textD = new Text("D");
-        textD.setFont(Font.font("Snap ITC", 30));
-        rockPaperScissorPane.add(textA, 0, 1);
-        rockPaperScissorPane.add(textS, 1, 1);
-        rockPaperScissorPane.add(textD, 2, 1);
-
-        rockPaperScissorPane.setAlignment(Pos.CENTER);
-    }
 
     private void addBackground() {
         ImageView bgImage = new ImageView(new Image(DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
@@ -273,16 +259,13 @@ public class RiskView extends StackPane {
         imageView.fitHeightProperty().bind(this.heightProperty());
     }
 
-    private void addPlayButton() {
-        playButton = new Button("play");
-        playButton.setLayoutX(500);
-        playButton.setLayoutY(20);
-        addRPSView();
-        this.getChildren().add(playButton);
-        setAlignment(playButton, Pos.TOP_RIGHT);
+
+    public void displayRPSView() {
+        this.getChildren().add(rpsView);
     }
 
     private void addRPSView() {
+
         playButton.setOnMousePressed(e -> {
             this.getChildren().remove(playButton);
             playButton = new Button("play");
@@ -291,7 +274,9 @@ public class RiskView extends StackPane {
             setAlignment(playButton, Pos.TOP_RIGHT);
 
             disableAllClickableTer();
-            this.getChildren().add(rockPaperScissorPane);
+            this.getChildren().add(rpsView);
+
+
             this.getChildren().add(playButton);
 
             removeRPSView();
@@ -299,12 +284,13 @@ public class RiskView extends StackPane {
         });
     }
 
-    private void removeRPSView() {
-        playButton.setOnMousePressed(e -> {
-            this.getChildren().remove(rockPaperScissorPane);
+    public void removeRPSView() {
+        this.getChildren().remove(rpsView);
+/*        playButton.setOnMousePressed(e -> {
+            this.getChildren().remove(rpsView);
             enableAllClickableTer();
             addRPSView();
-        });
+        });*/
     }
 
     public void disableAllClickableTer() {
@@ -334,6 +320,8 @@ public class RiskView extends StackPane {
             int[] imgLocations = clickableTerritory.getTerritoryXY();
 
             textForEachTer.put(clickableTerritory, territoryText);
+
+            clickableTerritory.setTerritoryText(territoryText);
 
             RiskView.this.getChildren().add(territoryText);
 
@@ -372,6 +360,13 @@ public class RiskView extends StackPane {
 
     }
 
+    public ClickableTerritory getSource() {
+        return source;
+    }
+
+    public ClickableTerritory getTarget() {
+        return target;
+    }
 
     public void addPlayerNameBars() {
         FlowPane nameBarPane = new FlowPane();
@@ -396,17 +391,19 @@ public class RiskView extends StackPane {
         this.getChildren().add(nameBarPane);
     }
 
-    public void startAttack(ClickableTerritory source, ClickableTerritory target) {
-
+    public void startAttack() {
 
         TextField textField = new TextField();
         textField.setMaxSize(width / 8, 40);
         textField.setFont(Font.font("Snap ITC", 30));
+
         Button attackButton = new Button("Attack!");
         Button cancelAttackButton = new Button("Cancel");
         HBox buttonBox = new HBox(5);
+
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().addAll(attackButton, cancelAttackButton);
+
         VBox vbox = new VBox(5);
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().addAll(textField, buttonBox);
@@ -416,31 +413,7 @@ public class RiskView extends StackPane {
             if (!textField.getText().isEmpty()) {
                 int troopCount = Integer.parseInt(textField.getText());
 
-                int[] newTroopCounts = new int[2];
-
-                int result = riskGame.startAttack(source.getTerritoryId(), target.getTerritoryId(), troopCount,
-                        newTroopCounts);
-
-                //Game not played.
-                if (result == -1) {
-                    return;
-                }
-
-                Text targetTerritoryText = textForEachTer.get(target);
-                Text sourceTerritoryText = textForEachTer.get(source);
-
-                this.getChildren().remove(sourceTerritoryText);
-                sourceTerritoryText.setText("" + newTroopCounts[0]);
-                this.getChildren().add(sourceTerritoryText);
-
-                this.getChildren().remove(targetTerritoryText);
-                targetTerritoryText.setText("" + newTroopCounts[1]);
-                this.getChildren().add(targetTerritoryText);
-
-                //The owner of the source won.
-                if (result == 0) {
-                    target.setColor(players.get(riskGame.getCurPlayerId()).getColor());
-                }
+                riskGame.startAttack(troopCount);
             }
             this.getChildren().remove(vbox);
         });
@@ -448,8 +421,6 @@ public class RiskView extends StackPane {
 
         cancelAttackButton.setOnMouseClicked(e -> {
             this.getChildren().remove(vbox);
-
         });
-
     }
 }

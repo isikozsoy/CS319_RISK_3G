@@ -1,3 +1,7 @@
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,6 +21,9 @@ public class RiskGame {
     private int tempTerCount = TER_COUNT;
     private HashSet<Territory> attackableTer;
     RockPaperScissorsGame rpsGame;
+    private Territory target;
+    private Territory source;
+
     // RPS
     // Continent List
     enum GameMode {
@@ -306,43 +313,25 @@ public class RiskGame {
     }
 
 
-    public int startAttack(int sourceId, int targetId, int troopCount, int[] newTroopCounts) {
+    public void startAttack(int troopCount) {
 
         if (mode != GameMode.AttackMode || troopCount < 1) {
-            return -1;
+            return;
         }
 
-        Territory source = territories[sourceId];
+        target = territories[riskView.getTarget().getTerritoryId()];
+        source = territories[riskView.getSource().getTerritoryId()];
         int sourceTroopCount = source.getTroopCount();
 
-        if(sourceTroopCount <= troopCount)
-            return -1;
-
-        int result;
-
-        Territory target = territories[targetId];
+        if(sourceTroopCount <= troopCount) {
+            return;
+        }
 
         source.setTroopCount(sourceTroopCount - troopCount);
 
-        int targetTroopCount = territories[targetId].getTroopCount();
+        riskView.setOnKeyPressed(new RPSGame(troopCount));
 
-        int[] remainingTroops = rpsGame.play('A', '1', troopCount, targetTroopCount);
-
-        if(remainingTroops[1] == 0) {
-            target.setTroopCount(remainingTroops[0]);
-            target.setOwner(players.get(curPlayerId));
-            attackableTer.remove(target);
-            result = 0;
-        }
-        else {
-            target.setTroopCount(remainingTroops[1]);
-            result = 1;
-        }
-
-        newTroopCounts[0] = source.getTroopCount();
-        newTroopCounts[1] = target.getTroopCount();
-
-        return result;
+        riskView.displayRPSView();
     }
 
     public void startFortify(Player player) {
@@ -367,5 +356,124 @@ public class RiskGame {
         //////////////////////////////////
         ///         TO DO              ///
         //////////////////////////////////
+    }
+
+    class RPSGame implements EventHandler<KeyEvent> {
+
+        private char p1Choice;
+        private char p2Choice;
+        private boolean p1Chose;
+        private boolean p2Chose;
+        private int noOfP1Soldiers;
+        private int noOfP2Soldiers;
+        private boolean gameOver;
+        private RPSView rpsView;
+
+        public RPSGame(int noOfP1Soldiers){
+            this.noOfP1Soldiers = noOfP1Soldiers;
+            this.noOfP2Soldiers = target.getTroopCount();
+            this.rpsView = riskView.getRpsView();
+            rpsView.updateTroopCounts(noOfP1Soldiers, noOfP2Soldiers);
+        }
+
+        @Override
+        public void handle(KeyEvent keyEvent) {
+            if(gameOver || keyEvent.getText().length() < 1) {
+                return;
+            }
+            char choice = keyEvent.getText().charAt(0);
+            if(!p1Chose && (choice == 'a' || choice == 's' || choice == 'd')) {
+                p1Choice = choice;
+                p1Chose = true;
+            }
+            else if(!p2Chose && (choice == '1' || choice == '2' || choice == '3')) {
+                p2Choice = choice;
+                p2Chose = true;
+            }
+
+            if(p1Chose && p2Chose) {
+                reset();
+                playRPS();
+            }
+        }
+
+        public void playRPS(){
+
+            int winner = compare();
+
+            //Align will be fixed.
+            //rpsView.updateWinner(winner);
+
+            if(winner == 0 && noOfP1Soldiers == 1 && noOfP2Soldiers == 1) {
+                reset();
+                return;
+            }
+
+            if (winner != 1) {
+                noOfP1Soldiers--;
+            }
+
+            if (winner != 2) {
+                noOfP2Soldiers--;
+            }
+
+            rpsView.updateTroopCounts(noOfP1Soldiers, noOfP2Soldiers);
+
+            if(noOfP1Soldiers > 0 && noOfP2Soldiers > 0) {
+                reset();
+                return;
+            }
+
+            System.out.println("The game is over!");
+
+            gameOver = true;
+            applyGameResult();
+        }
+
+        public int compare()
+        {
+            // 'a' or '1' = Rock
+            // 's' or '2' = Paper
+            // 'd' or '3' = Scissors
+
+            if( (p1Choice == 'a' && p2Choice == '3')
+                    || (p1Choice == 's' && p2Choice == '1')
+                    ||(p1Choice == 'd' && p2Choice == '2'))
+                return 1; // Player 1 wins
+            if((p1Choice == 'd' && p2Choice == '1')
+                    || (p1Choice == 'a' && p2Choice == '2')
+                    ||(p1Choice == 's' && p2Choice == '3'))
+                return 2; // Player 2 wins
+            return 0; // Draw
+        }
+
+        public void reset() {
+            p1Chose = false;
+            p2Chose = false;
+        }
+
+        public void applyGameResult() {
+
+            if(noOfP2Soldiers == 0) {
+                //The target has been occupied.
+                target.setTroopCount(noOfP1Soldiers);
+                target.setOwner(players.get(curPlayerId));
+                attackableTer.remove(target);
+                riskView.getTarget().setColor(players.get(curPlayerId).getColor());
+                players.get(curPlayerId).setCardDeserved(true);
+            }
+            else {
+                target.setTroopCount(noOfP2Soldiers);
+            }
+
+            Text targetTerritoryText = riskView.getTarget().getTerritoryText();
+            Text sourceTerritoryText = riskView.getSource().getTerritoryText();
+
+            sourceTerritoryText.setText("" + source.getTroopCount());
+            targetTerritoryText.setText("" + target.getTroopCount());
+
+            riskView.removeRPSView();
+            riskView.removeEventHandler(KeyEvent.ANY, this);
+        }
     }
 }
