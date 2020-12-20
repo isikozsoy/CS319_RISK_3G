@@ -326,8 +326,24 @@ public class RiskGame {
                     riskView.setTerritoryClicked(false);
                     riskView.setTerritoryMode(mode);
                     curPlayerId = 0;
+                    riskView.updatePlayerBar(players.get(curPlayerId));
                     setTroopCountInView();
+                    //riskView.addNextPhaseButton();
+                    riskView.getNextPhaseButton().setOnMouseClicked( event -> {
+                        if ( mode == GameMode.FortifyMode) {
+                            mode = GameMode.EndOfTurn;
+                            riskView.removeNextPhaseButton();
+                        }
+                        else {
+                            nextMode();
+                            riskView.updateCurPhase();
+                        }
+                        setTroopCountInView();
+                        executeFunctions();
+                    });
                     nextMode();
+                    riskView.updateCurPhase();
+                    break;
                 }
 
             }
