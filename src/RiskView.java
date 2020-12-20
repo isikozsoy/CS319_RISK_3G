@@ -81,7 +81,6 @@ public class RiskView extends StackPane {
         mainMenuContainer.setMaxWidth(1000);
         mainMenuContainer.getChildren().add(mainMenuButton);
         mainMenuContainer.setAlignment(Pos.TOP_RIGHT);
-        setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
 
         setRockPaperScissorPane();
         setTroopCountSelector();
@@ -100,6 +99,7 @@ public class RiskView extends StackPane {
         }
 
         //addPlayButton();
+        setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
         this.getChildren().add(mainMenuContainer);
         initiateRiskGame();
     }
@@ -445,6 +445,7 @@ public class RiskView extends StackPane {
             element.getAcceptButton().setOnMouseClicked( e -> {
                 riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
                 curPlayer.addAlly(element.getElementId());
+
                 element.removeRequest();
                 if(allianceRequestPane.decreaseRequestCount() == 0) {
                     this.getChildren().remove(allianceRequestPane);

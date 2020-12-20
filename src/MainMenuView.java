@@ -24,7 +24,7 @@ public class MainMenuView extends BeforeGameView {
     final private int   locYText          = 304;
 
     final private String LOGO_STYLE       = "-fx-background-color: linear-gradient(to right, yellow, tomato);" +
-                                            "-fx-opacity:0.6;";
+            "-fx-opacity:0.6;";
     final private String info             = "Annexation is a game that can be played with 2-6 players.\n" +
             "The objective of the game is to be the player that captures all\n" +
             "the territories on the board and achieve global domination.\n" +
@@ -88,8 +88,8 @@ public class MainMenuView extends BeforeGameView {
         MainMenuText annexationText = new MainMenuText( 432, locLogo[1] + 10, "ANNEXATION");
 
         /**
-        TODO:: BIND BUTTON SIZES TO PANE SIZE
-        **/
+         TODO:: BIND BUTTON SIZES TO PANE SIZE
+         **/
         Group g = new Group();
         g.getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText,
                 newGameButton, howToButton, settingsButton, creditsButton, exitButton);
@@ -260,10 +260,10 @@ public class MainMenuView extends BeforeGameView {
         return exitButton;
     }
 /**
-    private void bindButtonsToPane( MainMenuButton button) {
-        button.fitWidthProperty().bind( this.widthProperty());
-        button.fitHeightProperty().bind( this.heightProperty());
-        button.setPreserveRatio( true);
-    }
+ private void bindButtonsToPane( MainMenuButton button) {
+ button.fitWidthProperty().bind( this.widthProperty());
+ button.fitHeightProperty().bind( this.heightProperty());
+ button.setPreserveRatio( true);
+ }
  **/
 }
