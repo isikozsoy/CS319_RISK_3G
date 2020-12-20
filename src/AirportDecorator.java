@@ -1,12 +1,10 @@
 import java.util.HashSet;
 
-public class AirportDecorator extends Territory {
-
-    private Territory territory;
+public class AirportDecorator extends TerritoryDecorator {
 
     //constructor
     public AirportDecorator(Territory territory) {
-        super();
+        super(territory);
     }
 
     //method
@@ -23,14 +21,11 @@ public class AirportDecorator extends Territory {
         for (Territory neighbor : territory.neighbors) {
             attackableTerritories.addAll(neighbor.getNeighbors());
 
-            for (Territory neighborOfNeighbor : neighbor.neighbors) {
-                attackableTerritories.addAll(neighborOfNeighbor.getNeighbors());
-            }
         }
 
         //Remove the territories of the owner and their allies from the attackable ones.
-        attackableTerritories.removeIf(attackableTerritory -> attackableTerritory.getOwnerId() == getOwnerId()
-                || attackableTerritory.getOwner().isAlly(owner));
+        attackableTerritories.removeIf(attackableTerritory -> attackableTerritory.getOwnerId() == territory.getOwnerId()
+                || attackableTerritory.getOwner().isAlly(territory.owner));
 
         return attackableTerritories;
     }
