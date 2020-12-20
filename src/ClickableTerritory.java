@@ -1,6 +1,5 @@
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
-import javafx.scene.text.Text;
 
 import java.util.HashMap;
 

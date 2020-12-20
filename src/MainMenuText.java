@@ -1,6 +1,5 @@
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
-import java.io.*;
 
 public class MainMenuText extends Text {
     final private String TEXT_STYLE = "-fx-stroke: #f50000;" +

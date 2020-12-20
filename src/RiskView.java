@@ -1,9 +1,6 @@
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -11,10 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 public class RiskView extends StackPane {
     final String DIRECTORY_NAME = "/img/";

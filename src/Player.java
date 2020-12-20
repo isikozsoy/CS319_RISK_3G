@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class Player {
@@ -19,7 +17,6 @@ public class Player {
     private boolean[] allies;
     private HashMap<Integer, String> allianceReq;
     private int troopCount;
-    private int playerCount;
 
     // Constructor
     Player(String name, int id, String targetCont, String color) {
@@ -38,7 +35,6 @@ public class Player {
     }
 
     public void setPlayerCount(int playerCount) {
-        this.playerCount = playerCount;
         if (playerCount == 2) {
             troopCount = 40;
         }

@@ -1,11 +1,6 @@
 import javafx.application.Application;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-
-import java.nio.file.Paths;
 
 public class Main extends Application {
     final private int WIDTH = 1000;

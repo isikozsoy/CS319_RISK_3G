@@ -4,10 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.control.Button;
-
-import java.awt.*;
 
 public class CardExchangePane extends VBox {
     private javafx.scene.control.Label exchangeInfo;

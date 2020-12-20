@@ -69,7 +69,6 @@ public class Territory {
     //end getter setters
 
     public void addNeighbor(Territory neighbor) //adds given Territory parameter to the hashset using
-    // .add(Object object) method
     {
         neighbors.add(neighbor);
     }
