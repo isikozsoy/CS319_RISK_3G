@@ -340,6 +340,8 @@ public class RiskGame {
                     setButtons();
                     setTroopCountInView();
                 }
+                else
+                    sourceTer = null;
                 riskView.addTroopsLeft(curPlayer);
             }
         }
