@@ -103,6 +103,11 @@ public class RiskView extends StackPane {
         initiateRiskGame();
     }
 
+    public HashMap<String, Territory> getNameAndTerritory()
+    {
+        return nameAndTerritory;
+    }
+
     private Button backToMenu(Stage stage)
     {
         String styleBackground = "-fx-background-color: #ff8a14;" +

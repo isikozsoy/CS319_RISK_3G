@@ -33,7 +33,18 @@ public class RiskGame {
     private boolean soldierAllocBeforeClicking = false;
     private Territory targetTerritory;
     private HashSet<Territory> attackableTerritories;
-
+    private Continent northAmerica;
+    private Continent southAmerica;
+    private Continent europe;
+    private Continent africa;
+    private Continent asia;
+    private Continent australia;
+    private List<Territory> northAmericaList;
+    private List<Territory> southAmericaList;
+    private List<Territory> europeList;
+    private List<Territory> africaList;
+    private List<Territory> asiaList;
+    private List<Territory> australiaList;
 
     private char p1Choice, p2Choice;
 
@@ -69,6 +80,63 @@ public class RiskGame {
         setClickableTerritories();
 
         play();
+    }
+
+    public void initializeContinents()
+    {
+        northAmericaList = new ArrayList<>();
+        southAmericaList = new ArrayList<>();
+        europeList = new ArrayList<>();
+        africaList = new ArrayList<>();
+        asiaList = new ArrayList<>();
+        australiaList = new ArrayList<>();
+
+        northAmericaList.add(riskView.getNameAndTerritory().get("Alaska"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Northwest Territory"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Alberta"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Ontario"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Quebec"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Greenland"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("East America"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("West America"));
+        northAmericaList.add(riskView.getNameAndTerritory().get("Central America"));
+
+        southAmericaList.add(riskView.getNameAndTerritory().get("Brazil"));
+        southAmericaList.add(riskView.getNameAndTerritory().get("Peru"));
+        southAmericaList.add(riskView.getNameAndTerritory().get("Venezuela"));
+        southAmericaList.add(riskView.getNameAndTerritory().get("Argentina"));
+
+        africaList.add(riskView.getNameAndTerritory().get("Egypt"));
+        africaList.add(riskView.getNameAndTerritory().get("East Africa"));
+        africaList.add(riskView.getNameAndTerritory().get("Congo"));
+        africaList.add(riskView.getNameAndTerritory().get("North Africa"));
+        africaList.add(riskView.getNameAndTerritory().get("South Africa"));
+        africaList.add(riskView.getNameAndTerritory().get("Madagascar"));
+
+        asiaList.add(riskView.getNameAndTerritory().get("SE"));
+        asiaList.add(riskView.getNameAndTerritory().get("Afghanistan"));
+        asiaList.add(riskView.getNameAndTerritory().get("Ukraine"));
+        asiaList.add(riskView.getNameAndTerritory().get("Ural"));
+        asiaList.add(riskView.getNameAndTerritory().get("India"));
+        asiaList.add(riskView.getNameAndTerritory().get("Siam"));
+        asiaList.add(riskView.getNameAndTerritory().get("China"));
+        asiaList.add(riskView.getNameAndTerritory().get("Mongolia"));
+        asiaList.add(riskView.getNameAndTerritory().get("Kamchatka"));
+        asiaList.add(riskView.getNameAndTerritory().get("Yakutsk"));
+        asiaList.add(riskView.getNameAndTerritory().get("Irkutsk"));
+        asiaList.add(riskView.getNameAndTerritory().get("Siberia"));
+        asiaList.add(riskView.getNameAndTerritory().get("Japan"));
+        asiaList.add(riskView.getNameAndTerritory().get("Indonesia"));
+
+
+
+
+        /*northAmerica = new Continent("North America", 5, );
+        southAmerica = new
+        europe;
+        africa;
+        asia;
+        oceania;*/
     }
 
     public int getCurPlayerId() {
@@ -484,16 +552,16 @@ public class RiskGame {
 
         riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
 
-                int selectedTroop = riskView.getSelectedTroop();
+            int selectedTroop = riskView.getSelectedTroop();
 
-                int sourceTroopCount = sourceTer.getTroopCount();
+            int sourceTroopCount = sourceTer.getTroopCount();
 
-                if(sourceTroopCount <= selectedTroop || sourceTroopCount < 2) {
-                    return;
-                }
-                sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
-                riskView.setOnKeyPressed(new RPSGame(selectedTroop));
-                riskView.displayRPSView();
+            if(sourceTroopCount <= selectedTroop || sourceTroopCount < 2) {
+                return;
+            }
+            sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
+            riskView.setOnKeyPressed(new RPSGame(selectedTroop));
+            riskView.displayRPSView();
         });
 
     }
