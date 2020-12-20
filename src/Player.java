@@ -34,7 +34,6 @@ public class Player {
     }
 
     public void setPlayerCount(int playerCount) {
-        this.playerCount = playerCount;
         if (playerCount == 2) {
             troopCount = 40;
         }
