@@ -106,12 +106,14 @@ public class RiskView extends StackPane {
         back.setFont(Font.font("SNAP ITC", 15));
 
         back.setOnMouseClicked( e -> {
+            System.out.println("Clicked on New Game");
             //RiskView gameView = new RiskView();
             MainMenuView view = new MainMenuView( stage, width, height);
             Scene menuScene = new Scene( view, width, height);
 
             stage.setScene( menuScene);;
         });
+
         return back;
     }
 
@@ -923,6 +925,7 @@ public class RiskView extends StackPane {
                 break;
             }
             default: {
+                System.out.println(territory.getName() + " is not present.");
             }
         }
     }

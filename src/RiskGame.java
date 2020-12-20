@@ -28,9 +28,6 @@ public class RiskGame {
     private Territory targetTerritory;
     private HashSet<Territory> attackableTerritories;
 
-
-    private char p1Choice, p2Choice;
-
     private boolean troopCountSelectorInView = false;
     RockPaperScissorsGame rpsGame;
     // Continent List
@@ -51,10 +48,10 @@ public class RiskGame {
 
         curPlayerId = 0;
         playerCount = players.size();
-        cards = null;   // for now
+        cards = new Cards();
         isGameOver = false;
         mode = GameMode.TerAllocationMode;
-        // Continents
+
         rpsGame = new RockPaperScissorsGame();
 
         riskView.addTroopsLeft(players.get(0));
@@ -104,14 +101,48 @@ public class RiskGame {
         }
     }
 
+    public int checkForContinent( Player player) {
+        //checks for continents one by one
+        //below are temps
+        Continent a = new Continent("a", 5, new ArrayList<>());
+        Continent b;
+        List<Continent> continents = new ArrayList<>();
+        continents.add(a);
+        //continents.push(b);
+        String targetCont = player.getTargetCont();
+
+        for( int i = 0; i < continents.size(); i++) {
+            //checks for which continent this territory belongs to and eliminates the continent if the player doesn't have it
+            List<Territory> territoryList = continents.get(i).getTerritories();
+            boolean playerOwnsContinent = true;
+
+            for( int j = 0; j < territoryList.size(); j++) {
+                if( territoryList.get(i).getOwnerId() != getCurPlayerId()) {
+                    playerOwnsContinent = false;
+                    break;
+                }
+            }
+
+            if( playerOwnsContinent) {
+                player.setTroopCount( player.getTroopCount() + continents.get(i).getBonusTroopCount());
+                if( continents.get(i).getName().equals( player.getTargetCont())) {
+                    player.setTroopCount(player.getTroopCount() + 10);
+                }
+            }
+        }
+
+    }
+
     public void setClickableTerritories() {
         for( ClickableTerritory clickableTerritory: clickableTerritories) {
             clickableTerritory.setOnMouseClicked(e -> {
 
                 if(mode == GameMode.AttackMode) {
 
-                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId) {
+                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId &&
+                            clickableTerritory.getAssociatedTerritory().getTroopCount() > 1) {
                         //Source territory is clicked.
+
                         if(attackableTerritories != null) {
                             for (Territory attackableTerritory: attackableTerritories) {
                                 ClickableTerritory clickAbleAttackableTerritory =
