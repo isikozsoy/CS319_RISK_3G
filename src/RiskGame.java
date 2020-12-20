@@ -88,7 +88,7 @@ public class RiskGame {
     }
 
     public void executeFunctions() {
-        // System.out.println(mode);
+        System.out.println(sourceTer);
         riskView.updateCurPhase();
         switch (mode) {
             case TerAllocationMode: {
@@ -377,13 +377,12 @@ public class RiskGame {
                 //riskView.addNextPhaseButton();
                 riskView.getNextPhaseButton().setOnMouseClicked( event -> {
                     if ( mode == GameMode.FortifyMode) {
-                        mode = GameMode.EndOfTurn;
                         riskView.removeNextPhaseButton();
                     }
                     else {
-                        nextMode();
                         riskView.updateCurPhase();
                     }
+                    nextMode();
                     setTroopCountInView();
                     executeFunctions();
                 });
@@ -494,7 +493,6 @@ public class RiskGame {
     }
 
     public void startFortify() {
-        System.out.println("Before fortify");
         if( mode == GameMode.FortifyMode) {
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
@@ -559,7 +557,6 @@ public class RiskGame {
                 break;
             }
             case EndOfTurn: {
-                System.out.println(curPlayerId);
                 mode = GameMode.SoldierAllocationMode;
                 break;
             }
