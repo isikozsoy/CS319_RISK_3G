@@ -1,4 +1,6 @@
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -34,17 +36,10 @@ public class RiskView extends StackPane {
     private int height;
     private GridPane rockPaperScissorPane;
     private Stage stage;
-    //private VBox troopCountSelectionPane;
     private CardExchangePane cardExchangePane;
     private AllianceRequestPane allianceRequestPane;
     private AlliancePane alliancePane;
-    //private Button lessButton;
-    //private Button moreButton;
-    //private Button backButton;
-    //private Button placeButton;
-    //private Button buildAirportButton;
     private Button cardsButton;
-    //private Text countSelectionText;
     private Text modeText;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
@@ -199,6 +194,54 @@ public class RiskView extends StackPane {
     }
 
     public void addTroopsLeft(Player currPlayer) {
+        VBox alliesBox = new VBox();
+        Button back = new Button("Back");
+        back.setOnMouseClicked(e -> {
+            alliesBox.getChildren().clear();
+            this.getChildren().remove(alliesBox);
+        });
+        back.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        back.setFont(Font.font("Snap ITC", 30));
+        back.setMaxSize(300,75);
+        javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
+        backImg.setFitHeight(50);
+        backImg.setFitWidth(50);
+        back.setGraphic(backImg);
+
+        Label title = new Label("Allies:");
+        title.setMaxSize(300,75);
+        title.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        title.setFont(Font.font("Snap ITC", 30));
+        title.setAlignment(Pos.CENTER);
+        javafx.scene.image.ImageView allyImg = new ImageView(new Image("icons/ally_icon.png"));
+        allyImg.setFitHeight(50);
+        allyImg.setFitWidth(50);
+        title.setGraphic(allyImg);
+        currPlayerBar.setOnMouseClicked(e -> {
+            alliesBox.getChildren().add(title);
+            boolean hasAlly = false;
+            boolean[] alliesList = currPlayer.getAllies();
+            for (int i = 0; i < players.size(); i++) {
+                if(alliesList[i]) {
+                    hasAlly = true;
+                    Label ally = new Label(players.get(i).getName());
+                    ally.setStyle("-fx-background-color: #ff6666;" +
+                            "-fx-border-color: #00ccff");
+                    ally.setFont(Font.font("Snap ITC", 30));
+                    ally.setMaxSize(300,75);
+                    ally.setAlignment(Pos.CENTER);
+                    alliesBox.getChildren().add(ally);
+                    alliesBox.setAlignment(Pos.CENTER);
+                }
+            }
+            if (!hasAlly) {
+                title.setText("You do not have any ally.");
+            }
+            alliesBox.getChildren().add(back);
+            this.getChildren().add(alliesBox);
+        });
         currPlayerBar.setStyle("-fx-background-color:" + currPlayer.getColor() + ";" +
                 "-fx-text-fill:white;");
         currPlayerBar.setText(currPlayer.getName());
@@ -363,7 +406,7 @@ public class RiskView extends StackPane {
     }
 
     public void initiateRiskGame() {
-        riskGame = new RiskGame(players, territoriesAsClass, this);
+        riskGame = new RiskGame(players, territoriesAsClass, territoryList, this);
         riskGame.play();
     }
 
@@ -411,12 +454,8 @@ public class RiskView extends StackPane {
         List<AllianceRequestPane.AllianceRequest> list = allianceRequestPane.getRequestsElements();
         for (AllianceRequestPane.AllianceRequest element : list) {
             element.getAcceptButton().setOnMouseClicked( e -> {
-                System.out.println("ALLLLYYYYYY");
                 riskGame.getPlayers().get(element.getElementId()).addAlly(curPlayer.getId());
                 curPlayer.addAlly(element.getElementId());
-
-                System.out.println(curPlayer.isAlly(players.get(element.getElementId())));
-                System.out.println(players.get(element.getElementId()).isAlly(curPlayer));
 
                 element.removeRequest();
                 if(allianceRequestPane.decreaseRequestCount() == 0) {
@@ -436,8 +475,13 @@ public class RiskView extends StackPane {
         }
     }
 
+    //below is only for the first mode, which is the Territory Allocation Mode
+    //After that, it will not be used anymore
+    public void addTextForTerritory(Territory territoryClicked) {
+        this.getChildren().add(textForEachTer.get(territoryClicked));
+    }
+
     public void addTroopCountSelector( int troopCount) {
-        setTroopCountSelector();
         this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
@@ -489,12 +533,17 @@ public class RiskView extends StackPane {
         addTroopCountSelector( troopCount);
     }
 
-    /*public Button getBackButton() {
-        return backButton;
+    public Button getAndSetAttackButton() {
+        Button attackButton = new Button("Attack");
+        this.getChildren().add(attackButton);
+        return attackButton;
     }
-    public Button getPlaceButton() {
+
+
+    /*public Button getPlaceButton() {
         return placeButton;
     }
+
     public Button getBuildAirportButton() {
         return buildAirportButton;
     }*/
@@ -521,26 +570,33 @@ public class RiskView extends StackPane {
         /*troopCountSelectionPane = new VBox();
         lessButton = new Button();
         moreButton = new Button();
+
         Text textBack = new Text("Back");
         textBack.setFont(Font.font("Snap ITC", 30));
         backButton = new Button("Back");
+
         Text textPlace = new Text("Place");
         textPlace.setFont(Font.font("Snap ITC", 30));
         placeButton = new Button("Place");
+
         //Text textBuildAirport = new Text("Build Airport");
         //textBuildAirport.setFont(Font.font("Snap ITC", 30));
         buildAirportButton = new Button("Build Airport");
         countSelectionText = new Text("1");
         countSelectionText.setFont(Font.font("Snap ITC", 50));
+
         lessButton.setGraphic(new ImageView(new Image("icons/less_icon.png")));
         moreButton.setGraphic(new ImageView((new Image("icons/more_icon.png"))));
         HBox hbox1 = new HBox();
         HBox hbox2 = new HBox();
+
         //hbox.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")));
         hbox1.getChildren().addAll( lessButton, countSelectionText, moreButton);
         hbox1.setAlignment(Pos.CENTER);
+
         hbox2.getChildren().addAll(backButton, placeButton, buildAirportButton);
         hbox2.setAlignment(Pos.CENTER);
+
         //troopCountSelectionPane.getChildren().addAll(new Image("icons/troop_icon.png"), hbox);
         troopCountSelectionPane.getChildren().addAll(new ImageView(new Image("icons/troop_icon.png")), hbox1, hbox2);
         troopCountSelectionPane.setAlignment(Pos.CENTER);*/
@@ -703,7 +759,7 @@ public class RiskView extends StackPane {
             nameBarPane.getChildren().add(nameButton);
         }
         nameBarPane.setMaxHeight(0);
-        nameBarPane.setMaxWidth(1000);
+        nameBarPane.setMaxWidth(2000);
         this.getChildren().add(nameBarPane);
         setAlignment(nameBarPane, Pos.BOTTOM_CENTER);
     }
