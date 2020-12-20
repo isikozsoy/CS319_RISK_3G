@@ -28,6 +28,8 @@ public class RiskGame {
     private Territory targetTerritory;
     private HashSet<Territory> attackableTerritories;
 
+    private ArrayList<Continent> continents;
+
     private boolean troopCountSelectorInView = false;
     RockPaperScissorsGame rpsGame;
     // Continent List
@@ -54,12 +56,103 @@ public class RiskGame {
 
         rpsGame = new RockPaperScissorsGame();
 
+        setContinents();
         //riskView.setTerritoryColor(players.get(0).getColor());
         riskView.addTroopsLeft(players.get(0));
         setButtons();
         setClickableTerritories();
 
         play();
+    }
+
+    public void setContinents() {
+        continents = new ArrayList<>();
+
+        ArrayList<Territory> northAmericaList = new ArrayList<>();
+        ArrayList<Territory> southAmericaList = new ArrayList<>();
+        ArrayList<Territory> europeList = new ArrayList<>();
+        ArrayList<Territory> africaList = new ArrayList<>();
+        ArrayList<Territory> asiaList = new ArrayList<>();
+        ArrayList<Territory> australiaList = new ArrayList<>();
+
+        for( Territory territory: territories) {
+            switch (territory.getName()) {
+                case "Alaska":
+                case "Northwest Territory":
+                case "Alberta":
+                case "Ontario":
+                case "Quebec":
+                case "Greenland":
+                case "West America":
+                case "East America":
+                case "Central America": {
+                    northAmericaList.add(territory);
+                    break;
+                }
+                case "Venezuela":
+                case "Brazil":
+                case "Peru":
+                case "Argentina": {
+                    southAmericaList.add(territory);
+                    break;
+                }
+                case "North Africa":
+                case "South Africa":
+                case "East Africa":
+                case "Congo":
+                case "Egypt": {
+                    africaList.add(territory);
+                    break;
+                }
+                case "Middle East":
+                case "Afghanistan":
+                case "India":
+                case "Siam":
+                case "China":
+                case "Mongolia":
+                case "Irkutsk":
+                case "Ural":
+                case "Siberia":
+                case "Yakutsk":
+                case "Kamchatka": {
+                    asiaList.add(territory);
+                    break;
+                }
+                case "Ukraine":
+                case "Scandinavia":
+                case "NE":
+                case "SE":
+                case "WE":
+                case "Britain":
+                case "Iceland": {
+                    europeList.add(territory);
+                    break;
+                }
+                case "Indonesia":
+                case "New Guinea":
+                case "Western Australia":
+                case "Eastern Australia": {
+                    australiaList.add(territory);
+                    break;
+                }
+            }
+        }
+
+        System.out.printf("Continent territory count: %d \n", (northAmericaList.size() + southAmericaList.size() + europeList.size() + africaList.size() + asiaList.size() + australiaList.size()));
+
+        Continent northAmerica = new Continent("North America", 5, northAmericaList);
+        Continent southAmerica = new Continent("South America", 2, southAmericaList);
+        Continent europe = new Continent("Europe", 5, europeList);
+        Continent africa = new Continent("Africa", 3, africaList);
+        Continent asia = new Continent("Asia", 7, asiaList);
+        Continent australia = new Continent("Australia", 2, australiaList);
+
+        continents.add(northAmerica);
+        continents.add(southAmerica);
+        continents.add(africa);
+        continents.add(asia);
+        continents.add(australia);
+        continents.add(europe);
     }
 
     public int getCurPlayerId() {
@@ -105,15 +198,8 @@ public class RiskGame {
         }
     }
 
-    public int checkForContinent( Player player) {
+    public void checkForContinent( Player player) {
         //checks for continents one by one
-        //below are temps
-        Continent a = new Continent("a", 5, new ArrayList<>());
-        Continent b;
-        List<Continent> continents = new ArrayList<>();
-        continents.add(a);
-        //continents.push(b);
-        String targetCont = player.getTargetCont();
 
         for( int i = 0; i < continents.size(); i++) {
             //checks for which continent this territory belongs to and eliminates the continent if the player doesn't have it
@@ -134,7 +220,6 @@ public class RiskGame {
                 }
             }
         }
-
     }
 
     public void setClickableTerritories() {
@@ -182,8 +267,6 @@ public class RiskGame {
                     if( !(mode == GameMode.TerAllocationMode //so that when it is territory allocation phase, it will click on a territory only once and never again
                             && clickedTerritories.contains(clickableTerritory.getAssociatedTerritory())))
                         sourceTer = clickableTerritory.getAssociatedTerritory();
-
-                    if( mode == GameMode.FortifyMode) System.out.println(sourceTer);
                 }
                 else if( targetTerritory == null) {
                     targetTerritory = clickableTerritory.getAssociatedTerritory();
@@ -249,7 +332,6 @@ public class RiskGame {
                 //troopToTransfer will also be got from the troop count selection screen
                 int troopToTransfer = riskView.getSelectedTroop();
                 if (troopToTransfer != 0) {
-                    System.out.println(sourceTer);
                     //new troop counts will be set to each territory
                     sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
                     targetTerritory.setTroopCount(targetTerritory.getTroopCount() + troopToTransfer);
@@ -587,7 +669,7 @@ public class RiskGame {
                 break;
             }
             case FortifyMode: {
-                giveCardToCurPlayer(); //do this at the end of each turn
+                update(curPlayer); //do this at the end of each turn
                 mode = GameMode.EndOfTurn;
                 break;
             }
@@ -601,17 +683,15 @@ public class RiskGame {
 
     public void giveCardToCurPlayer() {
         if( curPlayer.isCardDeserved()) {
-            System.out.println("Inside card deserved");
             Card cardToGive = cards.drawCard();
             curPlayer.addCard( cardToGive);
             curPlayer.setCardDeserved(false);
         }
     }
 
-    public void update() {
-        //////////////////////////////////
-        ///         TO DO              ///
-        //////////////////////////////////
+    public void update( Player player) {
+        giveCardToCurPlayer();
+        checkForContinent(curPlayer);
     }
 
     public ArrayList<Player> getPlayers()
@@ -733,8 +813,6 @@ public class RiskGame {
                 reset();
                 return;
             }
-
-            System.out.println("The game is over!");
 
             gameOver = true;
             applyGameResult();
