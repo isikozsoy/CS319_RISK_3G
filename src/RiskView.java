@@ -870,7 +870,6 @@ public class RiskView extends StackPane {
                 territory.addNeighbor(nameAndTerritory.get("Middle East"));
                 territory.addNeighbor(nameAndTerritory.get("India"));
                 territory.addNeighbor(nameAndTerritory.get("China"));
-                territory.addNeighbor(nameAndTerritory.get("SE"));
                 territory.addNeighbor(nameAndTerritory.get("Ukraine"));
                 break;
             }

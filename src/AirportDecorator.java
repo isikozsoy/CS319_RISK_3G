@@ -21,17 +21,16 @@ public class AirportDecorator extends Territory {
         HashSet<Territory> attackableTerritories = territory.searchForAttackable();
 
         for (Territory neighbor : territory.neighbors) {
-            if (owner.getId() == neighbor.owner.getId()) {
-                continue;
-            }
-            attackableTerritories.addAll(neighbor.searchForAttackable());
+            attackableTerritories.addAll(neighbor.getNeighbors());
+
             for (Territory neighborOfNeighbor : neighbor.neighbors) {
-                if (owner.getId() == neighbor.owner.getId()) {
-                    continue;
-                }
-                attackableTerritories.addAll(neighborOfNeighbor.searchForAttackable());
+                attackableTerritories.addAll(neighborOfNeighbor.getNeighbors());
             }
         }
+
+        //Remove the territories of the owner and their allies from the attackable ones.
+        attackableTerritories.removeIf(attackableTerritory -> attackableTerritory.getOwnerId() == getOwnerId()
+                || attackableTerritory.getOwner().isAlly(owner));
 
         return attackableTerritories;
     }
