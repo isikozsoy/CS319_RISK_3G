@@ -171,6 +171,9 @@ public class PlayerButton extends StackPane {
             playerList.get(buttonId).setName(newValue);
         });
 
+        CONTINENTS_OPTION_BOX.getSelectionModel().selectFirst();
+        CONTINENTS_OPTION_BOX.setStyle("-fx-font: 30px \"Serif\";");
+
         CONTINENTS_OPTION_BOX.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
             playerList.get(buttonId).setTargetCont((String) newValue);
         });
