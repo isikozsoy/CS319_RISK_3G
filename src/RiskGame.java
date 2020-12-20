@@ -88,7 +88,6 @@ public class RiskGame {
     }
 
     public void executeFunctions() {
-        System.out.println(sourceTer);
         riskView.updateCurPhase();
         switch (mode) {
             case TerAllocationMode: {
@@ -597,6 +596,10 @@ public class RiskGame {
     public void nextTurn() {
         curPlayerId = (curPlayerId + 1) % playerCount;
         curPlayer = players.get(curPlayerId);
+        while( curPlayer.getId() == -1) {
+            curPlayerId = (curPlayerId + 1) % playerCount;
+            curPlayer = players.get(curPlayerId);
+        }
         setTroopCountInView();
     }
 
@@ -737,10 +740,15 @@ public class RiskGame {
             ClickableTerritory clickableSource = clickableTerritories.get(sourceTer.getId());
             ClickableTerritory clickableTarget = clickableTerritories.get(targetTerritory.getId());
 
+            Player otherPlayer = null;
+
             if(noOfP2Soldiers == 0) {
                 //The target has been occupied.
                 targetTerritory.setTroopCount(noOfP1Soldiers);
+                otherPlayer = targetTerritory.getOwner();
+                otherPlayer.setTerCount(targetTerritory.getOwner().getTerCount() - 1);
                 targetTerritory.setOwner(players.get(curPlayerId));
+                curPlayer.setTerCount( curPlayer.getTerCount() + 1);
                 attackableTerritories.remove(targetTerritory);
 
                 players.get(curPlayerId).setCardDeserved(true);
@@ -757,9 +765,34 @@ public class RiskGame {
 
             riskView.removeRPSView();
 
+            //check for endgame and player removal
+            if( curPlayer.getTerCount() == 42) {
+                endGame();
+            }
+            else if( otherPlayer != null && otherPlayer.getTerCount() == 0) { //the other player will be removed from the game
+                removePlayer(otherPlayer);
+            }
+
             sourceTer = null;
             targetTerritory = null;
             riskView.removeEventHandler(KeyEvent.ANY, this);
         }
+    }
+
+    public void removePlayer( Player player) {
+        riskView.changeNameButtonColor(player);
+        player.makePlayerNonExistent();
+    }
+
+    public void endGame() {
+        //reset everything
+        players = null;
+        clickableTerritories = null;
+        clickedTerritories = null;
+        territories = null;
+        attackableTerritories = null;
+
+        //add an endgame panel
+        riskView.addEndGamePane( curPlayer);
     }
 }
