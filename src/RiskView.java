@@ -519,14 +519,6 @@ public class RiskView extends StackPane {
         return attackButton;
     }
 
-
-    /*public Button getPlaceButton() {
-        return placeButton;
-    }
-    public Button getBuildAirportButton() {
-        return buildAirportButton;
-    }*/
-
     public Button getCardsButton() {
         return cardsButton;
     }

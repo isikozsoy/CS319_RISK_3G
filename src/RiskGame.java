@@ -1,15 +1,10 @@
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 public class RiskGame {
     private final int TER_COUNT = 42;
@@ -33,9 +28,6 @@ public class RiskGame {
     private boolean soldierAllocBeforeClicking = false;
     private Territory targetTerritory;
     private HashSet<Territory> attackableTerritories;
-
-
-    private char p1Choice, p2Choice;
 
     private boolean troopCountSelectorInView = false;
     RockPaperScissorsGame rpsGame;
@@ -112,6 +104,38 @@ public class RiskGame {
                 break;
             }
         }
+    }
+
+    public int checkForContinent( Player player) {
+        //checks for continents one by one
+        //below are temps
+        Continent a = new Continent("a", 5, new ArrayList<>());
+        Continent b;
+        List<Continent> continents = new ArrayList<>();
+        continents.add(a);
+        //continents.push(b);
+        String targetCont = player.getTargetCont();
+
+        for( int i = 0; i < continents.size(); i++) {
+            //checks for which continent this territory belongs to and eliminates the continent if the player doesn't have it
+            List<Territory> territoryList = continents.get(i).getTerritories();
+            boolean playerOwnsContinent = true;
+
+            for( int j = 0; j < territoryList.size(); j++) {
+                if( territoryList.get(i).getOwnerId() != getCurPlayerId()) {
+                    playerOwnsContinent = false;
+                    break;
+                }
+            }
+
+            if( playerOwnsContinent) {
+                player.setTroopCount( player.getTroopCount() + continents.get(i).getBonusTroopCount());
+                if( continents.get(i).getName().equals( player.getTargetCont())) {
+                    player.setTroopCount(player.getTroopCount() + 10);
+                }
+            }
+        }
+
     }
 
     public void setClickableTerritories() {
@@ -479,22 +503,6 @@ public class RiskGame {
             riskView.addTroopCountSelector(sourceTer.getTroopCount() - 1, mode);
             troopCountSelectorInView = false;
         }
-
-        /*TextField textField = new TextField();
-        textField.setMaxSize(riskView.getWidth() / 8, 40);
-        textField.setFont(Font.font("Snap ITC", 30));
-
-        Button attackButton = new Button("Attack!");
-        Button cancelAttackButton = new Button("Cancel");
-        HBox buttonBox = new HBox(5);*/
-
-        /*buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(attackButton, cancelAttackButton);*/
-
-        /*VBox vbox = new VBox(5);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(textField, buttonBox);
-        riskView.getChildren().add(vbox);*/
 
         riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
                 //riskView.removeTroopCountSelector();

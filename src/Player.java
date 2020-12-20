@@ -201,7 +201,8 @@ public class Player {
 
     // Calculates the troop count that player earns.
     public void updateTroopCount() {
-        troopCount = (terCount / 3) + (contCount * 3);
+        if( terCount < 9) troopCount = 3;
+        else              troopCount = (terCount / 3) + (contCount * 3);
         if(isTargetTaken)
             troopCount += 5;
     }
@@ -209,6 +210,7 @@ public class Player {
     public void decreaseTroop( int usedTroopCount) {
         troopCount -= usedTroopCount;
     }
+
 
 
     public void useCards(int[] cards) {
