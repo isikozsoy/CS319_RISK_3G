@@ -120,7 +120,8 @@ public class RiskGame {
 
                 if(mode == GameMode.AttackMode) {
 
-                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId) {
+                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId &&
+                            clickableTerritory.getAssociatedTerritory().getTroopCount() > 1) {
                         //Source territory is clicked.
 
                         if(attackableTerritories != null) {
@@ -469,7 +470,7 @@ public class RiskGame {
     }
 
     public void startAttack() {
-        if(mode != GameMode.AttackMode) {
+        if(mode != GameMode.AttackMode || sourceTer.getTroopCount() < 2) {
             return;
         }
 
@@ -480,30 +481,14 @@ public class RiskGame {
             troopCountSelectorInView = false;
         }
 
-        /*TextField textField = new TextField();
-        textField.setMaxSize(riskView.getWidth() / 8, 40);
-        textField.setFont(Font.font("Snap ITC", 30));
-
-        Button attackButton = new Button("Attack!");
-        Button cancelAttackButton = new Button("Cancel");
-        HBox buttonBox = new HBox(5);*/
-
-        /*buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(attackButton, cancelAttackButton);*/
-
-        /*VBox vbox = new VBox(5);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(textField, buttonBox);
-        riskView.getChildren().add(vbox);*/
 
         riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
-                //riskView.removeTroopCountSelector();
 
                 int selectedTroop = riskView.getSelectedTroop();
 
                 int sourceTroopCount = sourceTer.getTroopCount();
 
-                if(sourceTroopCount <= selectedTroop) {
+                if(sourceTroopCount <= selectedTroop || sourceTroopCount < 2) {
                     return;
                 }
                 sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
