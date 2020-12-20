@@ -88,7 +88,7 @@ public class RiskGame {
     }
 
     public void executeFunctions() {
-        // System.out.println(mode);
+        System.out.println(sourceTer);
         riskView.updateCurPhase();
         switch (mode) {
             case TerAllocationMode: {
@@ -175,6 +175,10 @@ public class RiskGame {
                     || mode == GameMode.SoldierAllocationMode) {
                 //sets selected troop integer, and places it in the territory specified itself
                 int selectedTroop = riskView.getSelectedTroop();
+                if(sourceTer.getTroopCount() == 0) {
+                    sourceTer.setOwner(curPlayer);
+                    (clickableTerritories.get(sourceTer.getId())).setColor(curPlayer.getColor());
+                }
                 sourceTer.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
 
@@ -387,13 +391,12 @@ public class RiskGame {
                 //riskView.addNextPhaseButton();
                 riskView.getNextPhaseButton().setOnMouseClicked( event -> {
                     if ( mode == GameMode.FortifyMode) {
-                        mode = GameMode.EndOfTurn;
                         riskView.removeNextPhaseButton();
                     }
                     else {
-                        nextMode();
                         riskView.updateCurPhase();
                     }
+                    nextMode();
                     setTroopCountInView();
                     executeFunctions();
                 });
@@ -438,7 +441,7 @@ public class RiskGame {
 
             curPlayer = players.get(curPlayerId);
             if (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
-                if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()
+                if (sourceTer != null && (sourceTer.getOwnerId() == curPlayer.getId() || sourceTer.getTroopCount() == 0)
                         && !troopCountSelectorInView) { //So that duplicates do not occur
                     troopCountSelectorInView = true;
                     riskView.addTroopCountSelector(curPlayer.getTroopCount(), mode);
@@ -504,19 +507,13 @@ public class RiskGame {
     }
 
     public void startFortify() {
-        System.out.println("Before fortify");
         if( mode == GameMode.FortifyMode) {
-            System.out.println("Fortifyfortify");
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
+            if( sourceTer != null && sourceTer.getTroopCount() <= 0) sourceTer = null;
 
-            if( sourceTer != null) System.out.println(sourceTer);
-            if( targetTerritory != null) System.out.println(targetTerritory);
-
-            if( sourceTer != null && targetTerritory != null && sourceTer.getOwnerId() == curPlayer.getId()) {
-                System.out.println("After sourceTer != null");
+            if( sourceTer != null && targetTerritory != null && sourceTer.getTroopCount() > 0 && sourceTer.getOwnerId() == curPlayer.getId()) {
                 fortifyableFromSource = sourceTer.searchForFortifyable( new HashSet<>());
-                System.out.println("After fortifyable");
                 //check for the second territory clicked
                 //if it is the first one, territory will be unclicked
                 //if it is another territory that is not null, troop count screen will show up
@@ -579,7 +576,6 @@ public class RiskGame {
                 break;
             }
             case EndOfTurn: {
-                System.out.println(curPlayerId);
                 mode = GameMode.SoldierAllocationMode;
                 break;
             }

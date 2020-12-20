@@ -249,17 +249,17 @@ public class RiskView extends StackPane {
         back.setStyle("-fx-background-color: #ff6666;" +
                 "-fx-border-color: #00ccff");
         back.setFont(Font.font("Snap ITC", 30));
-        back.setMaxSize(300,75);
+        back.setMaxSize(500,75);
         javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
         backImg.setFitHeight(50);
         backImg.setFitWidth(50);
         back.setGraphic(backImg);
 
         Label title = new Label("Allies:");
-        title.setMaxSize(300,75);
+        title.setMaxSize(500,75);
         title.setStyle("-fx-background-color: #ff6666;" +
                 "-fx-border-color: #00ccff");
-        title.setFont(Font.font("Snap ITC", 30));
+        title.setFont(Font.font("Snap ITC", 25));
         title.setAlignment(Pos.CENTER);
         javafx.scene.image.ImageView allyImg = new ImageView(new Image("icons/ally_icon.png"));
         allyImg.setFitHeight(50);
@@ -276,7 +276,7 @@ public class RiskView extends StackPane {
                     ally.setStyle("-fx-background-color: #ff6666;" +
                             "-fx-border-color: #00ccff");
                     ally.setFont(Font.font("Snap ITC", 30));
-                    ally.setMaxSize(300,75);
+                    ally.setMaxSize(500,75);
                     ally.setAlignment(Pos.CENTER);
                     alliesBox.getChildren().add(ally);
                     alliesBox.setAlignment(Pos.CENTER);
