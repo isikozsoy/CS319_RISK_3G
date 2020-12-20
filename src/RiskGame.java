@@ -418,6 +418,7 @@ public class RiskGame {
 
     public void startInitialization() {
         startTerAlloc();
+        //startAutoTerAlloc();
     }
 
     public void startAutoTerAlloc() {
