@@ -136,6 +136,19 @@ public class RiskView extends StackPane {
 
     private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
+    public void goToNextPhase() {
+        switch (mode) {
+            case AttackMode: {
+                currentPhaseBar.setText("Fortify Phase");
+                break;
+            }
+            case FortifyMode: {
+                currentPhaseBar.setText("Soldier Allocation");
+                break;
+            }
+        }
+    }
+
     public void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
         //set its graphic as the one in the icons directory

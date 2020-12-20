@@ -334,10 +334,11 @@ public class RiskGame {
                     setTroopCountInView();
                     //riskView.addNextPhaseButton();
                     riskView.getNextPhaseButton().setOnMouseClicked(event -> {
-                        if (mode == GameMode.FortifyMode) {
-                            riskView.removeNextPhaseButton();
-                        } else {
-                            riskView.updateCurPhase();
+                        if (mode == GameMode.AttackMode || mode == GameMode.FortifyMode) {
+                            riskView.goToNextPhase();
+                            if(mode == GameMode.FortifyMode) {
+                                riskView.removeNextPhaseButton();
+                            }
                         }
                         nextMode();
                         setTroopCountInView();
@@ -388,11 +389,11 @@ public class RiskGame {
                 setTroopCountInView();
                 //riskView.addNextPhaseButton();
                 riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-                    if ( mode == GameMode.FortifyMode) {
-                        riskView.removeNextPhaseButton();
-                    }
-                    else {
-                        riskView.updateCurPhase();
+                    if (mode == GameMode.AttackMode || mode == GameMode.FortifyMode) {
+                        riskView.goToNextPhase();
+                        if(mode == GameMode.FortifyMode) {
+                            riskView.removeNextPhaseButton();
+                        }
                     }
                     nextMode();
                     setTroopCountInView();
@@ -560,10 +561,12 @@ public class RiskGame {
                 break;
             }
             case AttackMode: {
-                for (Territory attackableTerritory: attackableTerritories) {
-                    ClickableTerritory clickAbleAttackableTerritory =
-                            clickableTerritories.get(attackableTerritory.getId());
-                    clickAbleAttackableTerritory.setColor(attackableTerritory.getOwner().getColor());
+                if (attackableTerritories != null) {
+                    for (Territory attackableTerritory : attackableTerritories) {
+                        ClickableTerritory clickAbleAttackableTerritory =
+                                clickableTerritories.get(attackableTerritory.getId());
+                        clickAbleAttackableTerritory.setColor(attackableTerritory.getOwner().getColor());
+                    }
                 }
                 mode = GameMode.FortifyMode;
                 break;
