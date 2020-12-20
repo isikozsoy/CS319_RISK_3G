@@ -496,17 +496,12 @@ public class RiskGame {
     public void startFortify() {
         System.out.println("Before fortify");
         if( mode == GameMode.FortifyMode) {
-            System.out.println("Fortifyfortify");
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
+            if( sourceTer != null && sourceTer.getTroopCount() <= 0) sourceTer = null;
 
-            if( sourceTer != null) System.out.println(sourceTer);
-            if( targetTerritory != null) System.out.println(targetTerritory);
-
-            if( sourceTer != null && targetTerritory != null && sourceTer.getOwnerId() == curPlayer.getId()) {
-                System.out.println("After sourceTer != null");
+            if( sourceTer != null && targetTerritory != null && sourceTer.getTroopCount() > 0 && sourceTer.getOwnerId() == curPlayer.getId()) {
                 fortifyableFromSource = sourceTer.searchForFortifyable( new HashSet<>());
-                System.out.println("After fortifyable");
                 //check for the second territory clicked
                 //if it is the first one, territory will be unclicked
                 //if it is another territory that is not null, troop count screen will show up
