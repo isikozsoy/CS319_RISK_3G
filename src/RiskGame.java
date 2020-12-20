@@ -4,7 +4,6 @@ import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
 
 public class RiskGame {
     private final int TER_COUNT = 42;
@@ -144,7 +143,8 @@ public class RiskGame {
 
                 if(mode == GameMode.AttackMode) {
 
-                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId) {
+                    if (clickableTerritory.getAssociatedTerritory().getOwnerId() == curPlayerId &&
+                            clickableTerritory.getAssociatedTerritory().getTroopCount() > 1) {
                         //Source territory is clicked.
 
                         if(attackableTerritories != null) {
@@ -505,13 +505,12 @@ public class RiskGame {
         }
 
         riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
-                //riskView.removeTroopCountSelector();
 
                 int selectedTroop = riskView.getSelectedTroop();
 
                 int sourceTroopCount = sourceTer.getTroopCount();
 
-                if(sourceTroopCount <= selectedTroop) {
+                if(sourceTroopCount <= selectedTroop || sourceTroopCount < 2) {
                     return;
                 }
                 sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
