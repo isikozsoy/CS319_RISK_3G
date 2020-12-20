@@ -207,12 +207,6 @@ public class Player {
         troopCount -= usedTroopCount;
     }
 
-
-    public void useCards(int[] cards) {
-        for (int i = 0; i < 4; i++)
-            this.cards[i] -= cards[i];
-    }
-
     @Override
     public String toString() {
         return "Player{" +

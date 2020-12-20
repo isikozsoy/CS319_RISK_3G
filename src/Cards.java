@@ -10,25 +10,25 @@ public class Cards {
         cards = new ArrayList<Card>();
 
         //add appropriate number of infantry cards
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 70; i++) {
             Card infantry = new Card(cardType.INFANTRY);
             cards.add(infantry);
         }
 
         //add appropriate number of cavalry cards
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 60; i++) {
             Card cavalry = new Card(cardType.CAVALRY);
             cards.add(cavalry);
         }
 
         //add appropriate number of cannon cards
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 50; i++) {
             Card cannon = new Card(cardType.CANNON);
             cards.add(cannon);
         }
 
         //add appropriate number of joker cards
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 40; i++) {
             Card joker = new Card(cardType.JOKER);
             cards.add(joker);
         }

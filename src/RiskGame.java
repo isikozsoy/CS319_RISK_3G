@@ -459,9 +459,7 @@ public class RiskGame {
 
         riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
                 int selectedTroop = riskView.getSelectedTroop();
-
                 int sourceTroopCount = sourceTer.getTroopCount();
-
                 if(sourceTroopCount <= selectedTroop) {
                     return;
                 }
