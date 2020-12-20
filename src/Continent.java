@@ -6,13 +6,16 @@ public class Continent {
     private ArrayList<Territory> territories;
     private int bonusTroopCount;
 
-
     //constructor
     Continent(String name, int bonusTroopCount, ArrayList<Territory> territories)
     {
         this.name = name;
         this.bonusTroopCount = bonusTroopCount;
         this.territories = territories;
+    }
+
+    public boolean contains( Territory territory) {
+        return territories.contains(territory);
     }
 
     public String getName() {
