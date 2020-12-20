@@ -215,7 +215,7 @@ public class RiskGame {
                     sourceTer = null;
                     soldierAllocBeforeClicking = false;
 
-                    riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
+                    //riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
 
                     riskView.removeTroopCountSelector();
                     troopCountSelectorInView = false;
@@ -232,7 +232,7 @@ public class RiskGame {
                 //reset source territory for a new allocation
                 sourceTer = null;
                 soldierAllocBeforeClicking = false;
-                riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Build Airport");
+                //riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Build Airport");
                 riskView.removeTroopCountSelector();
 
                 troopCountSelectorInView = false;
@@ -328,6 +328,10 @@ public class RiskGame {
                         && !troopCountSelectorInView) { //So that duplicates do not occur
                     troopCountSelectorInView = true;
                     riskView.addTroopCountSelector(curPlayer.getTroopCount());
+                    if(sourceTer.hasAirport())
+                        riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
+                    else
+                        riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Build Airport");
                     setButtons();
                     setTroopCountInView();
                 }
