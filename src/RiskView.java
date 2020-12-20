@@ -152,8 +152,10 @@ public class RiskView extends StackPane {
 
         nextPhaseButton.translateXProperty();
         nextPhaseButton.translateYProperty();
+    }
 
-
+    public void removeNextPhaseButton() {
+        this.getChildren().remove(nextPhaseButton);
     }
 
     // Updates the currentPhaseBar according to the mode of the game
@@ -525,7 +527,8 @@ public class RiskView extends StackPane {
         this.getChildren().add(textForEachTer.get(territoryClicked));
     }
 
-    public void addTroopCountSelector( int troopCount) {
+    public void addTroopCountSelector( int troopCount, RiskGame.GameMode mode) {
+        troopCountSelectorPane.addTroopCountSelectorPane(mode);
         this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
@@ -560,21 +563,6 @@ public class RiskView extends StackPane {
             troopCountSelectorPane.getTroopCountLabel().setText(nextCount);
         });
 
-        /**
-         backButton.setOnMouseClicked(e -> {
-         backButtonIsClicked = true;
-         removeTroopCountSelector();
-         });
-         placeButton.setOnMouseClicked(e -> {
-         selectedTroop = Integer.valueOf(countSelectionText.getText());
-         });
-         **/
-    }
-
-    public void setMaxCountSelection( int troopCount) {
-        troopCountSelectorPane.getTroopCountLabel().setText(Integer.toString(troopCount));
-        this.getChildren().remove(troopCountSelectorPane);
-        addTroopCountSelector( troopCount);
     }
 
     public Button getAndSetAttackButton() {
@@ -606,6 +594,7 @@ public class RiskView extends StackPane {
     }
 
     public void removeTroopCountSelector() {
+        troopCountSelectorPane.removeButtons();
         this.getChildren().remove(troopCountSelectorPane);
     }
 
