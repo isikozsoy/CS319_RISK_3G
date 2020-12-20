@@ -88,8 +88,6 @@ public class RiskView extends StackPane {
         makeClickableMap();
         setTerritoryTexts();
         addPlayerNameBars();
-
-        addNextPhaseButton();
         for( Territory territory: nameAndTerritory.values()) {
             setTerritoryNeighbors(territory);
         }
@@ -120,13 +118,6 @@ public class RiskView extends StackPane {
         return back;
     }
 
-    private void setModeText() {
-        modeText = new Text();
-        modeText.setFont(Font.loadFont("Snap ITC", 30));
-        setAlignment(modeText, Pos.TOP_RIGHT);
-        this.getChildren().add(modeText);
-    }
-
     private void setCardExchangePane() {
         cardExchangePane = new CardExchangePane();
     }
@@ -145,7 +136,7 @@ public class RiskView extends StackPane {
 
     private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
-    private void addNextPhaseButton() {
+    public void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
         //set its graphic as the one in the icons directory
         Image nextPhaseImage = new Image("icons/next_phase_icon.png");
@@ -161,6 +152,8 @@ public class RiskView extends StackPane {
 
         nextPhaseButton.translateXProperty();
         nextPhaseButton.translateYProperty();
+
+
     }
 
     // Updates the currentPhaseBar according to the mode of the game
@@ -179,11 +172,11 @@ public class RiskView extends StackPane {
                 break;
             }
             case AttackMode: {
-                currentPhaseBar.setText("Attack Allocation");
+                currentPhaseBar.setText("Attack Phase");
                 break;
             }
             case FortifyMode: {
-                currentPhaseBar.setText("Fortify Allocation");
+                currentPhaseBar.setText("Fortify Phase");
                 break;
             }
         }
