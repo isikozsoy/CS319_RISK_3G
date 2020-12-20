@@ -519,7 +519,6 @@ public class RiskGame {
                 } else if (fortifyableFromSource.contains(targetTerritory)) {
                     if(!troopCountSelectorInView) {
                         riskView.addTroopCountSelector(sourceTer.getTroopCount(), mode);
-                        System.out.println("HELOOOO");
                     }
 
                     troopCountSelectorInView = true;
