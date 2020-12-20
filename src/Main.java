@@ -20,7 +20,7 @@ public class Main extends Application {
             MainMenuView menuView = new MainMenuView( stage, WIDTH, HEIGHT);
             mainScene = new Scene(menuView, WIDTH, HEIGHT);
             stage.setScene( mainScene);
-
+            stage.setTitle("Annexation");
             stage.show();
         }
         catch( Exception e) {
