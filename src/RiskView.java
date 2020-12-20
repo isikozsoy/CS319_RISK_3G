@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
 public class RiskView extends StackPane {
     final String DIRECTORY_NAME = "/img/";
     final String FILE_NAME_HELPER = "_bw.png";
@@ -29,41 +28,41 @@ public class RiskView extends StackPane {
             "Afghanistan", "Ural", "Middle East"
     };
     final String BACKGROUND_IMG_PATH = "background_image_bw.png";
-
-    private List<ClickableTerritory> territoryList;
-    private ArrayList<ClickableTerritory> territoriesAlreadyClicked = new ArrayList<>();
-    private Button playButton;
-    private ArrayList<Player> players;
+    private Stage stage;
     private int width;
     private int height;
-    private Stage stage;
+    private int selectedTroop = 0;
+
+    private int[][] x_y_forEachTerritory = new int[42][2];
+    private Territory[] territoriesAsClass;
+    private List<ClickableTerritory> territoryList;
+    private ArrayList<Player> players;
+
+
     private CardExchangePane cardExchangePane;
     private AllianceRequestPane allianceRequestPane;
     private AlliancePane alliancePane;
-    private Button cardsButton;
-    private List<Button> nameButtons;
-    private boolean backButtonIsClicked = false;
-    private int selectedTroop = 0;
-    private HashMap<String, Territory> nameAndTerritory;
-    private HashMap<Territory, Label> textForEachTer;
     private TroopCountSelectorPane troopCountSelectorPane;
-    private Label currentPhaseBar;
-    private FlowPane nameBarPane;
 
-    private StackPane endGamePane;
-
-    private int[][] x_y_forEachTerritory = new int[42][2];
-
+    private List<Button> nameButtons;
+    private Button currPlayerBar;
+    private Button cardsButton;
     private Button nextPhaseButton;
-
+    private Label currentPhaseBar;
     private Text troopsLeftText;
 
+    private boolean backButtonIsClicked = false;
+
+    private HashMap<String, Territory> nameAndTerritory;
+    private HashMap<Territory, Label> textForEachTer;
+
+
+    private FlowPane nameBarPane;
+    private StackPane endGamePane;
+
+
     private RiskGame riskGame;
-    private Territory[] territoriesAsClass;
-
-    private Button currPlayerBar;
     private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
-
     private RPSView rpsView;
 
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
@@ -103,8 +102,8 @@ public class RiskView extends StackPane {
         initiateRiskGame();
     }
 
-    private Button backToMenu(Stage stage)
-    {
+    // Private method that creates button that opens menu
+    private Button backToMenu(Stage stage) {
         String styleBackground = "-fx-background-color: #ff8a14;" +
                 "-fx-border-color: #00ccff;" + "-fx-text-fill: white";
         Button back = new Button("Return to Main Menu");
@@ -112,19 +111,56 @@ public class RiskView extends StackPane {
         back.setFont(Font.font("SNAP ITC", 15));
 
         back.setOnMouseClicked( e -> {
-            System.out.println("Clicked on New Game");
             //RiskView gameView = new RiskView();
             MainMenuView view = new MainMenuView( stage, width, height);
             Scene menuScene = new Scene( view, width, height);
 
             stage.setScene( menuScene);;
         });
-
         return back;
     }
 
+    // Initializes cardExchangePane
     private void setCardExchangePane() {
         cardExchangePane = new CardExchangePane();
+    }
+
+    // Method that creates the label which will shows the current phase of the game.
+    private void setCurPhaseBar() {
+        currentPhaseBar = new Label();
+        currentPhaseBar.setAlignment(Pos.CENTER);
+        currentPhaseBar.setStyle("-fx-background-color: #ff6666;" +
+                "-fx-border-color: #00ccff");
+        currentPhaseBar.setFont(Font.font("Snap ITC", 27));
+        currentPhaseBar.setMaxSize(500,75);
+        this.getChildren().add(currentPhaseBar);
+        this.setAlignment(currentPhaseBar, Pos.TOP_RIGHT);
+    }
+
+    // Initializes allianceRequestPane that includes the coming requests
+    private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
+
+    // Initializes the pane that includes troop count of the curren player
+    private void setTroopsLeft() {
+        FlowPane flowPane = new FlowPane();
+        troopsLeftText = new Text();
+        currPlayerBar = new Button(); //change it based on the current player
+        currPlayerBar.setPrefSize(200, 100);
+
+        flowPane.getChildren().add(currPlayerBar);
+        flowPane.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
+        flowPane.getChildren().add(troopsLeftText);
+
+        troopsLeftText.setFont(Font.font("SNAP ITC", 30));
+
+        setAlignment(flowPane, Pos.TOP_LEFT);
+        setAlignment(troopsLeftText, Pos.CENTER);
+        this.getChildren().add(flowPane);
+    }
+
+    // Initializes cardExchangePane according to the given player
+    public void setCardExchangeInfo(Player player) {
+        cardExchangePane.setPlayerCards(player);
     }
 
     public void addEndGamePane( Player player) {
@@ -141,30 +177,14 @@ public class RiskView extends StackPane {
         vBox.getChildren().addAll(endGameText, playerWonText, returnButton);
 
         endGamePane.setAlignment(vBox, Pos.CENTER);
-
         endGamePane.getChildren().add( vBox);
 
         returnButton.setOnMouseClicked(e -> {
             Scene newScene = new Scene( new MainMenuView(stage, width, height), width, height);
             stage.setScene(newScene);
         });
-
         this.getChildren().add(endGamePane);
     }
-
-    // Method that creates the label which will shows the current phase of the game.
-    private void setCurPhaseBar() {
-        currentPhaseBar = new Label();
-        currentPhaseBar.setAlignment(Pos.CENTER);
-        currentPhaseBar.setStyle("-fx-background-color: #ff6666;" +
-                "-fx-border-color: #00ccff");
-        currentPhaseBar.setFont(Font.font("Snap ITC", 27));
-        currentPhaseBar.setMaxSize(500,75);
-        this.getChildren().add(currentPhaseBar);
-        this.setAlignment(currentPhaseBar, Pos.TOP_RIGHT);
-    }
-
-    private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
 
     public void goToNextPhase() {
         switch (mode) {
@@ -208,10 +228,7 @@ public class RiskView extends StackPane {
                 currentPhaseBar.setText("Territory Allocation");
                 break;
             }
-            case SoldierAllocationInit: {
-                currentPhaseBar.setText("Soldier Allocation");
-                break;
-            }
+            case SoldierAllocationInit:
             case SoldierAllocationMode: {
                 currentPhaseBar.setText("Soldier Allocation");
                 break;
@@ -249,37 +266,18 @@ public class RiskView extends StackPane {
 
     }
 
+    // Returns RPSView
     public RPSView getRpsView() {
         return rpsView;
     }
 
+    // Adds RPSView into main pane
     public void displayRPSView() {
         this.getChildren().add(rpsView);
     }
 
     public Button getNextPhaseButton() {
         return nextPhaseButton;
-    }
-
-    private void setTroopsLeft() {
-        FlowPane flowPane = new FlowPane();
-        troopsLeftText = new Text();
-        currPlayerBar = new Button(); //change it based on the current player
-        currPlayerBar.setPrefSize(200, 100);
-
-        flowPane.getChildren().add(currPlayerBar);
-        flowPane.getChildren().add(new ImageView(new Image("icons/troop_icon.png")));
-        flowPane.getChildren().add(troopsLeftText);
-
-        troopsLeftText.setFont(Font.font("SNAP ITC", 30));
-
-        setAlignment(flowPane, Pos.TOP_LEFT);
-        setAlignment(troopsLeftText, Pos.CENTER);
-        this.getChildren().add(flowPane);
-    }
-
-    public void setCardExchangeInfo(Player player) {
-        cardExchangePane.setPlayerCards(player);
     }
 
     public void addTroopsLeft(Player currPlayer) {
@@ -339,10 +337,12 @@ public class RiskView extends StackPane {
         troopsLeftText.setText(Integer.toString(currPlayer.getTroopCount()));
     }
 
+    // Updates troop count of the current soldier
     public void updateTroopsCount(Player curPlayer) {
         troopsLeftText.setText(Integer.toString(curPlayer.getTroopCount()));
     }
 
+    // Updates current player bar according to the current player
     public  void updatePlayerBar (Player curPlayer) {
         currPlayerBar.setStyle("-fx-background-color:" + curPlayer.getColor() + ";" +
                 "-fx-text-fill:white;");
@@ -357,8 +357,7 @@ public class RiskView extends StackPane {
 /*            String styleBackground = "-fx-background-color: #ff8a14;" +
                     "-fx-border-color: #00ccff;" + "-fx-text-fill: white";*/
             territoryText.setStyle("-fx-stroke: firebrick;"+ "-fx-text-fill: white;" + "-fx-stroke-width: 2px;");
-            //territoryText.setFill(Color.rgb(255, 255, 255));
-            //territoryText.setStroke(Color.ORANGERED);
+
             x_y_forEachTerritory[i] = territoryList.get(i).getTerritoryXY();
 
             //code below changes the location of the texts
@@ -390,10 +389,6 @@ public class RiskView extends StackPane {
         }
     }
 
-    public boolean backButtonIsClicked() {
-        return backButtonIsClicked;
-    }
-
     public void initiateRiskGame() {
         riskGame = new RiskGame(players, territoriesAsClass, territoryList, this);
         riskGame.play();
@@ -416,12 +411,7 @@ public class RiskView extends StackPane {
         }
     }
 
-    public void setTerritoryColor( String color) {
-        for( ClickableTerritory clickableTerritory: territoryList) {
-            clickableTerritory.setColor(color);
-        }
-    }
-
+    // Adds card exchange pane into the main pane
     public void addCardExchangePane() {
         this.getChildren().add(cardExchangePane);
         cardExchangePane.setAlignment(Pos.CENTER);
@@ -433,6 +423,7 @@ public class RiskView extends StackPane {
         });
     }
 
+    // Sets alliance request info of the current player
     public void setAllianceRequestInfo(Player player) {
         allianceRequestPane.setAllianceRequests(player);
     }
@@ -470,6 +461,7 @@ public class RiskView extends StackPane {
         this.getChildren().add(textForEachTer.get(territoryClicked));
     }
 
+    // Adds troop count selector pane to the main pane according to th game mode
     public void addTroopCountSelector( int troopCount, RiskGame.GameMode mode) {
         troopCountSelectorPane.addTroopCountSelectorPane(mode);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
@@ -508,18 +500,11 @@ public class RiskView extends StackPane {
 
     }
 
-    public Button getAndSetAttackButton() {
-        Button attackButton = new Button("Attack");
-        this.getChildren().add(attackButton);
-        return attackButton;
-    }
-
     public Button getCardsButton() {
         return cardsButton;
     }
 
     public int getSelectedTroop() {
-        System.out.println();
         if(troopCountSelectorPane.getTroopCountLabel().getText() != "")
             selectedTroop = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
         return selectedTroop;
@@ -563,19 +548,8 @@ public class RiskView extends StackPane {
         imageView.fitHeightProperty().bind( this.heightProperty());
     }
 
-
     public void removeRPSView() {
         this.getChildren().remove(rpsView);
-    }
-
-    public void disableAllClickableTer() {
-        for (int i = 0; i < territories.length; i++)
-            (territoryList.get(i)).removeEventListeners();
-    }
-
-    public void enableAllClickableTer() {
-        for (int i = 0; i < territories.length; i++)
-            (territoryList.get(i)).addEventListeners();
     }
 
     public void addAlliancePane(boolean isAlly,  Player target) { //method to add the alliance pane
@@ -954,7 +928,6 @@ public class RiskView extends StackPane {
                 break;
             }
             default: {
-                System.out.println(territory.getName() + " is not present.");
             }
         }
     }

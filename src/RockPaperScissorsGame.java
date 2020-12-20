@@ -1,5 +1,4 @@
 public class RockPaperScissorsGame {
-
     public int[] play(char p1Choice, char p2Choice, int noOfP1Soldiers, int noOfP2Soldiers) {
 
         do {
@@ -32,7 +31,6 @@ public class RockPaperScissorsGame {
         // 'S' or 's' or '2' = Paper
         // 'D' or 'd' or '3' = Scissors
         Character.toUpperCase(p1Choice);
-
         if( (p1Choice == 'A' && p2Choice == '3')
                 || (p1Choice == 'S' && p2Choice == '1')
                 ||(p1Choice == 'D' && p2Choice == '2'))

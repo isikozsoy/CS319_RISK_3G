@@ -56,7 +56,6 @@ public class MainMenuView extends BeforeGameView {
     private VBox credits;
 
     MainMenuView( Stage stage, int width, int height) {
-        System.out.println("Here");
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         buttonsPane( stage);
         this.width = width;
@@ -101,8 +100,6 @@ public class MainMenuView extends BeforeGameView {
         MainMenuButton newGameButton = new MainMenuButton(locNewGameButton[0], locNewGameButton[1], 1);
 
         newGameButton.setOnMouseClicked( e -> {
-            System.out.println("Clicked on New Game");
-            //RiskView gameView = new RiskView();
             AddPlayersView addPlayersView = new AddPlayersView( stage, width, height);
             Scene addPlayerScene = new Scene( addPlayersView, width, height);
 

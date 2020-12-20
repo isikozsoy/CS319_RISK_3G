@@ -104,11 +104,8 @@ public class TroopCountSelectorPane extends VBox {
         switches.getChildren().addAll(lessButton, troopCountLabel, moreButton);
         switches.setAlignment(Pos.CENTER);
 
-        //add to buttons pane
-
-        buttons.setAlignment(Pos.CENTER);
-
         //add panes to main pane
+        buttons.setAlignment(Pos.CENTER);
         this.getChildren().addAll(soldierImg, switches, getNumButton);
         this.setAlignment(Pos.CENTER);
     }

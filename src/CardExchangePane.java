@@ -40,62 +40,67 @@ public class CardExchangePane extends VBox {
         cannonCount = new Label("-");
         jokerCount =  new Label("-");
 
+        // Sets the fonts of the Labels
         exchangeInfo.setFont(javafx.scene.text.Font.font("Snap ITC", 15));
         infantryCount.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
         cavalryCount.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
         cannonCount.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
         jokerCount.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
 
+        // Exchange infantry label is designed
         ImageView infantrySingle = new ImageView(new Image("icons/infantry_single_icon.png"));
         infantrySingle.setFitHeight(50);
         infantrySingle.setFitWidth(50);
         infantryCount.setGraphic(infantrySingle);
 
+        // Exchange cavalry label is designed
         ImageView cavalrySingle = new ImageView(new Image("icons/cavalry_single_icon.png"));
         cavalrySingle.setFitHeight(50);
         cavalrySingle.setFitWidth(50);
         cavalryCount.setGraphic(cavalrySingle);
 
+        // Exchange cannon label is designed
         ImageView cannonSingle = new ImageView(new Image("icons/cannon_single_icon.png"));
         cannonSingle.setFitHeight(50);
         cannonSingle.setFitWidth(50);
         cannonCount.setGraphic(cannonSingle);
 
+        // Exchange one of each card label is designed
         ImageView joker = new ImageView(new Image("icons/combine_icon.png"));
         joker.setFitHeight(50);
         joker.setFitWidth(125);
         jokerCount.setGraphic(joker);
 
 
-        //buttons
+        // buttons
         option1Button = new Button();
         option2Button = new Button();
         option3Button = new Button();
         option4Button = new Button();
         backButton = new Button("Back");
 
-        //set size for buttons
+        // set size for buttons
         option1Button.setPrefSize(200, 75);
         option2Button.setPrefSize(200, 75);
         option3Button.setPrefSize(200, 75);
         option4Button.setPrefSize(200, 75);
         backButton.setPrefSize(200, 75);
 
-        //set fonts of the buttons
+        // set fonts of the buttons
         option1Button.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
         option2Button.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
         option3Button.setFont(Font.font("Snap ITC", 30));
         option4Button.setFont(Font.font("Snap ITC", 30));
         backButton.setFont(Font.font("Snap ITC", 30));
 
-        //setting background for the buttons
+        // setting background for the buttons
         option1Button.setStyle(styleBackground);
         option2Button.setStyle(styleBackground);
         option3Button.setStyle(styleBackground);
         option4Button.setStyle(styleBackground);
         backButton.setStyle(styleBackground);
 
-        //adding images for the buttons
+        // adding images for the buttons
         ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
         backImg.setFitHeight(50);
         backImg.setFitWidth(50);
@@ -138,10 +143,12 @@ public class CardExchangePane extends VBox {
         this.getChildren().addAll(texts, buttons);
     }
 
+    // Returns back button
     public Button getBackButton() {
         return backButton;
     }
 
+    // Returns current player
     public Player getCurPlayer() {
         return curPlayer;
     }
@@ -153,6 +160,7 @@ public class CardExchangePane extends VBox {
         jokerCount.setText(": " + player.getCards()[3]);
     }
 
+    // Sets number of cards of the players
     public void setPlayerCards(Player player) {
         curPlayer = player;
         exchangeInfo.setText("Choose one of the options below to gain soldier.");
