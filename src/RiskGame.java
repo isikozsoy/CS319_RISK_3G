@@ -183,6 +183,10 @@ public class RiskGame {
                     || mode == GameMode.SoldierAllocationMode) {
                 //sets selected troop integer, and places it in the territory specified itself
                 int selectedTroop = riskView.getSelectedTroop();
+                if(sourceTer.getTroopCount() == 0) {
+                    sourceTer.setOwner(curPlayer);
+                    (clickableTerritories.get(sourceTer.getId())).setColor(curPlayer.getColor());
+                }
                 sourceTer.addTroop(selectedTroop);
                 curPlayer.decreaseTroop(selectedTroop);
 
@@ -427,7 +431,7 @@ public class RiskGame {
 
             curPlayer = players.get(curPlayerId);
             if (mode == GameMode.SoldierAllocationMode || mode == GameMode.SoldierAllocationInit) {
-                if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()
+                if (sourceTer != null && (sourceTer.getOwnerId() == curPlayer.getId() || sourceTer.getTroopCount() == 0)
                         && !troopCountSelectorInView) { //So that duplicates do not occur
                     troopCountSelectorInView = true;
                     riskView.addTroopCountSelector(curPlayer.getTroopCount(), mode);
