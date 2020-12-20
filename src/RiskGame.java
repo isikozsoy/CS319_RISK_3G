@@ -57,10 +57,10 @@ public class RiskGame {
 
         curPlayerId = 0;
         playerCount = players.size();
-        cards = null;   // for now
+        cards = new Cards();
         isGameOver = false;
         mode = GameMode.TerAllocationMode;
-        // Continents
+
         rpsGame = new RockPaperScissorsGame();
 
         //riskView.setTerritoryColor(players.get(0).getColor());
@@ -565,6 +565,7 @@ public class RiskGame {
                 break;
             }
             case FortifyMode: {
+                giveCardToCurPlayer(); //do this at the end of each turn
                 mode = GameMode.EndOfTurn;
                 break;
             }
@@ -574,6 +575,15 @@ public class RiskGame {
             }
         }
         riskView.setTerritoryMode(mode);
+    }
+
+    public void giveCardToCurPlayer() {
+        if( curPlayer.isCardDeserved()) {
+            System.out.println("Inside card deserved");
+            Card cardToGive = cards.drawCard();
+            curPlayer.addCard( cardToGive);
+            curPlayer.setCardDeserved(false);
+        }
     }
 
     public void update() {
