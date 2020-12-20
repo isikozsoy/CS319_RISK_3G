@@ -455,43 +455,42 @@ public class RiskGame {
             return;
         }
 
-        TextField textField = new TextField();
+        if( !troopCountSelectorInView)
+        {
+            troopCountSelectorInView = true;
+            riskView.addTroopCountSelector(curPlayer.getTroopCount(), mode);
+            //troopCountSelectorInView = false;
+        }
+
+        /*TextField textField = new TextField();
         textField.setMaxSize(riskView.getWidth() / 8, 40);
         textField.setFont(Font.font("Snap ITC", 30));
 
         Button attackButton = new Button("Attack!");
         Button cancelAttackButton = new Button("Cancel");
-        HBox buttonBox = new HBox(5);
+        HBox buttonBox = new HBox(5);*/
 
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(attackButton, cancelAttackButton);
+        /*buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(attackButton, cancelAttackButton);*/
 
-        VBox vbox = new VBox(5);
+        /*VBox vbox = new VBox(5);
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().addAll(textField, buttonBox);
-        riskView.getChildren().add(vbox);
+        riskView.getChildren().add(vbox);*/
 
-        attackButton.setOnMouseClicked(e -> {
-            if (!textField.getText().isEmpty()) {
-                int selectedTroop = Integer.parseInt(textField.getText());
+        riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
+                //riskView.removeTroopCountSelector();
+
+                int selectedTroop = riskView.getSelectedTroop();
 
                 int sourceTroopCount = sourceTer.getTroopCount();
 
                 if(sourceTroopCount <= selectedTroop) {
                     return;
                 }
-
                 sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
-
                 riskView.setOnKeyPressed(new RPSGame(selectedTroop));
-
                 riskView.displayRPSView();
-            }
-            riskView.getChildren().remove(vbox);
-        });
-
-        cancelAttackButton.setOnMouseClicked(e -> {
-            riskView.getChildren().remove(vbox);
         });
 
     }
