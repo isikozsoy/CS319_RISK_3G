@@ -113,9 +113,12 @@ public class RiskGame {
                     if( !(mode == GameMode.TerAllocationMode //so that when it is territory allocation phase, it will click on a territory only once and never again
                             && clickedTerritories.contains(clickableTerritory.getAssociatedTerritory())))
                         sourceTer = clickableTerritory.getAssociatedTerritory();
+
+                    if( mode == GameMode.FortifyMode) System.out.println(sourceTer);
                 }
-                else if( targetTerritory == null)
+                else if( targetTerritory == null) {
                     targetTerritory = clickableTerritory.getAssociatedTerritory();
+                }
             });
         }
     }
@@ -139,9 +142,12 @@ public class RiskGame {
                 //sets the number to appear between more and less buttons
                 //riskView.setMaxCountSelection(curPlayer.getTroopCount());
                 if (curPlayer.getTroopCount() <= 0) {
+                    sourceTer = null;
+                    targetTerritory = null;
+
                     playerCounterForEachTurn++;
 
-                    if (playerCounterForEachTurn >= playerCount) {
+                    if (playerCounterForEachTurn == playerCount && !gameStarted) {
                         curPlayerId = 0;
                         curPlayer = players.get(curPlayerId); //the actual gameplay will start from the first player
                         gameStarted = true;
@@ -170,7 +176,6 @@ public class RiskGame {
                     riskView.updateText(sourceTer, sourceTer.getTroopCount());
                     riskView.updateText(targetTerritory, targetTerritory.getTroopCount());
 
-                    System.out.println("Should be here");
                     targetTerritory = null;
                     sourceTer = null;
                 }
@@ -403,10 +408,11 @@ public class RiskGame {
         if( mode == GameMode.FortifyMode) {
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
+
             if( sourceTer != null && targetTerritory != null && sourceTer.getOwnerId() == curPlayer.getId()) {
-
+                System.out.println("After sourceTer != null");
                 fortifyableFromSource = sourceTer.searchForFortifyable( new HashSet<>());
-
+                System.out.println("After fortifyable");
                 //check for the second territory clicked
                 //if it is the first one, territory will be unclicked
                 //if it is another territory that is not null, troop count screen will show up
@@ -427,6 +433,11 @@ public class RiskGame {
 
                     setButtons();
                 }
+            }
+
+            if( sourceTer.getOwnerId() != curPlayerId) {
+                sourceTer = null;
+                targetTerritory = null;
             }
         }
     }
@@ -454,7 +465,7 @@ public class RiskGame {
                 break;
             }
             case EndOfTurn: {
-                System.out.println("End of turns");
+                System.out.println(curPlayerId);
                 mode = GameMode.SoldierAllocationMode;
                 break;
             }
