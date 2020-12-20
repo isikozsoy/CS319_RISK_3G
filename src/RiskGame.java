@@ -332,15 +332,13 @@ public class RiskGame {
                     riskView.updatePlayerBar(players.get(curPlayerId));
                     setTroopCountInView();
                     //riskView.addNextPhaseButton();
-                    riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-                        if ( mode == GameMode.FortifyMode) {
-                            mode = GameMode.EndOfTurn;
+                    riskView.getNextPhaseButton().setOnMouseClicked(event -> {
+                        if (mode == GameMode.FortifyMode) {
                             riskView.removeNextPhaseButton();
-                        }
-                        else {
-                            nextMode();
+                        } else {
                             riskView.updateCurPhase();
                         }
+                        nextMode();
                         setTroopCountInView();
                         executeFunctions();
                     });
