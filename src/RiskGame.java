@@ -228,8 +228,8 @@ public class RiskGame {
                     sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
                     targetTerritory.setTroopCount(targetTerritory.getTroopCount() + troopToTransfer);
                     //update their texts in riskview
-                    riskView.updateText(sourceTer, sourceTer.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
-                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
+                    riskView.updateText(sourceTer, sourceTer.getTroopCount(), sourceTer.hasAirport());
+                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount(), targetTerritory.hasAirport());
 
                     targetTerritory = null;
                     sourceTer = null;
@@ -494,9 +494,14 @@ public class RiskGame {
     }
 
     public void startFortify() {
+        System.out.println("Before fortify");
         if( mode == GameMode.FortifyMode) {
+            System.out.println("Fortifyfortify");
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
+
+            if( sourceTer != null) System.out.println(sourceTer);
+            if( targetTerritory != null) System.out.println(targetTerritory);
 
             if( sourceTer != null && targetTerritory != null && sourceTer.getOwnerId() == curPlayer.getId()) {
                 System.out.println("After sourceTer != null");
@@ -526,10 +531,10 @@ public class RiskGame {
                 }
             }
 
-            //if( sourceTer.getOwnerId() != curPlayerId) {
+            if( sourceTer != null && sourceTer.getOwnerId() != curPlayerId) {
                 sourceTer = null;
                 targetTerritory = null;
-            //}
+            }
         }
     }
 
