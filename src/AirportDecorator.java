@@ -1,7 +1,7 @@
 import java.util.HashSet;
 
 public class AirportDecorator extends Territory {
-    private final boolean HAS_AIRPORT = true;
+
     private Territory territory;
 
     //constructor

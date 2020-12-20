@@ -31,6 +31,8 @@ public class ClickableTerritory extends ImageView {
         colorsAndHues.put("blue", -0.7);
         colorsAndHues.put("green", 0.7);
         colorsAndHues.put("yellow", 0.3);
+        colorsAndHues.put("x", 0.12);
+
 
         try {
             Image origImage = new Image(origPath);
@@ -41,6 +43,28 @@ public class ClickableTerritory extends ImageView {
         catch( Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+        colorAdjust.setHue(colorsAndHues.get(color));
+        colorAdjust.setSaturation(95);
+        colorAdjust.setBrightness(0.35);
+        this.setEffect(colorAdjust);
+    }
+
+    public void addEventListeners() {
+        setOnMouseEntered(e -> {
+            shadowAndColorBlend = new Blend();
+            shadowAndColorBlend.setMode(BlendMode.ADD);
+            //Setting both the shadow effects to the blend
+            shadowAndColorBlend.setBottomInput(colorAdjust);
+            shadowAndColorBlend.setBottomInput(new DropShadow());
+            setEffect(shadowAndColorBlend);
+        });
+        setOnMouseExited(e -> {
+            setEffect(colorAdjust);
+        });
     }
 
     public int[] getTerritoryXY() {
@@ -71,10 +95,6 @@ public class ClickableTerritory extends ImageView {
         return locArray;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public boolean getClicked() {
         return clicked;
     }
@@ -92,6 +112,7 @@ public class ClickableTerritory extends ImageView {
         return associatedTerritory;
     }
 
+/*
     public void addEventListeners() {
         switch( mode) {
             case TerAllocationMode: {
@@ -179,6 +200,8 @@ public class ClickableTerritory extends ImageView {
             }
         }
     }
+*/
+
 
     public void removeEventListeners() {
         setOnMousePressed( e -> {

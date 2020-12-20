@@ -34,7 +34,6 @@ public class RiskView extends StackPane {
     private ArrayList<Player> players;
     private int width;
     private int height;
-    private GridPane rockPaperScissorPane;
     private Stage stage;
     private CardExchangePane cardExchangePane;
     private AllianceRequestPane allianceRequestPane;
@@ -59,6 +58,8 @@ public class RiskView extends StackPane {
     private Button currPlayerBar;
     private RiskGame.GameMode mode = RiskGame.GameMode.TerAllocationMode;
 
+    private RPSView rpsView;
+
     public RiskView(Stage stage, ArrayList<Player> playerList, int width, int height) {
         players = playerList;
         territoryList = new ArrayList<>();
@@ -66,6 +67,7 @@ public class RiskView extends StackPane {
         nameAndTerritory = new HashMap<>();
         territoriesAsClass = new Territory[42];
         nextPhaseButton = new Button();
+        rpsView = new RPSView();
         this.width = width;
         this.height = height;
         this.stage = stage;
@@ -76,8 +78,6 @@ public class RiskView extends StackPane {
         mainMenuContainer.setMaxHeight(0);
         mainMenuContainer.setMaxWidth(1000);
 
-
-        setRockPaperScissorPane();
         setTroopCountSelector();
         setCardExchangePane();
         setAllianceRequestPane();
@@ -93,7 +93,6 @@ public class RiskView extends StackPane {
             setTerritoryNeighbors(territory);
         }
 
-        //addPlayButton();
         setAlignment(mainMenuContainer, Pos.TOP_RIGHT);
         this.getChildren().add(mainMenuContainer);
 
@@ -151,6 +150,11 @@ public class RiskView extends StackPane {
         nextPhaseButton.translateYProperty();
     }
 
+    public void updateText(Territory territory, int newNum) {
+        Label territoryText = textForEachTer.get(territory);
+        territoryText.setText(Integer.toString(newNum));
+    }
+
     public void updateText( Territory territory, int newNum, boolean hasAirport) {
         Label territoryText = textForEachTer.get(territory);
         territoryText.setText(Integer.toString(newNum));
@@ -166,6 +170,14 @@ public class RiskView extends StackPane {
             territoryText.setGraphic(null);
         }
 
+    }
+
+    public RPSView getRpsView() {
+        return rpsView;
+    }
+
+    public void displayRPSView() {
+        this.getChildren().add(rpsView);
     }
 
     public Button getNextPhaseButton() {
@@ -602,26 +614,6 @@ public class RiskView extends StackPane {
         troopCountSelectionPane.setAlignment(Pos.CENTER);*/
     }
 
-    private void setRockPaperScissorPane() {
-        rockPaperScissorPane = new GridPane();
-
-        rockPaperScissorPane.add(new ImageView(new Image("icons/rock_rps.png")), 0, 0);
-        rockPaperScissorPane.add(new ImageView(new Image("icons/paper_rps.png")), 1, 0);
-        rockPaperScissorPane.add(new ImageView(new Image("icons/scissors_rps.png")), 2, 0);
-
-        Text textA = new Text("A");
-        textA.setFont(Font.font("Snap ITC", 30));
-        Text textS = new Text("S");
-        textS.setFont(Font.font("Snap ITC", 30));
-        Text textD = new Text("D");
-        textD.setFont(Font.font("Snap ITC", 30));
-        rockPaperScissorPane.add(textA, 0, 1);
-        rockPaperScissorPane.add(textS, 1, 1);
-        rockPaperScissorPane.add(textD, 2, 1);
-
-        rockPaperScissorPane.setAlignment(Pos.CENTER);
-    }
-
     private void addBackground() {
         ImageView bgImage = new ImageView( new Image( DIRECTORY_NAME + BACKGROUND_IMG_PATH, true));
         bindMapToPaneSize(bgImage);
@@ -651,38 +643,9 @@ public class RiskView extends StackPane {
         imageView.fitHeightProperty().bind( this.heightProperty());
     }
 
-    private void addPlayButton() {
-        playButton = new Button("play");
-        playButton.setLayoutX(500);
-        playButton.setLayoutY(20);
-        addRPSView();
-        this.getChildren().add(playButton);
-        setAlignment(playButton, Pos.TOP_RIGHT);
-    }
 
-    private void addRPSView() {
-        playButton.setOnMousePressed( e -> {
-            this.getChildren().remove(playButton);
-            playButton = new Button("play");
-            playButton.setLayoutX(500);
-            playButton.setLayoutY(20);
-            setAlignment(playButton, Pos.TOP_RIGHT);
-
-            disableAllClickableTer();
-            this.getChildren().add(rockPaperScissorPane);
-            this.getChildren().add(playButton);
-
-            removeRPSView();
-            //rpsGameRoot.execute(this);
-        });
-    }
-
-    private void removeRPSView() {
-        playButton.setOnMousePressed(e -> {
-            this.getChildren().remove(rockPaperScissorPane);
-            enableAllClickableTer();
-            addRPSView();
-        });
+    public void removeRPSView() {
+        this.getChildren().remove(rpsView);
     }
 
     public void disableAllClickableTer() {
@@ -863,7 +826,9 @@ public class RiskView extends StackPane {
                 territory.addNeighbor(nameAndTerritory.get("Congo"));
                 territory.addNeighbor(nameAndTerritory.get("Middle East"));
                 territory.addNeighbor(nameAndTerritory.get("North Africa"));
-                territory.addNeighbor(nameAndTerritory.get("East Africa"));
+                territory.addNeighbor(nameAndTerritory.get("South Africa"));
+                territory.addNeighbor(nameAndTerritory.get("Madagascar"));
+                territory.addNeighbor(nameAndTerritory.get("Egypt"));
                 break;
             }
             case "Congo": {
@@ -895,8 +860,9 @@ public class RiskView extends StackPane {
                 territory.addNeighbor(nameAndTerritory.get("NE"));
                 territory.addNeighbor(nameAndTerritory.get("Middle East"));
                 territory.addNeighbor(nameAndTerritory.get("Ukraine"));
-                territory.addNeighbor(nameAndTerritory.get("India"));
-                territory.addNeighbor(nameAndTerritory.get("Afghanistan"));
+                territory.addNeighbor(nameAndTerritory.get("WE"));
+                territory.addNeighbor(nameAndTerritory.get("North Africa"));
+                territory.addNeighbor(nameAndTerritory.get("Egypt"));
                 break;
             }
             case "Afghanistan": {

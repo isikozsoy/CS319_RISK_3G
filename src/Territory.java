@@ -4,19 +4,17 @@ import java.util.Objects;
 public class Territory {
     //properties
     private boolean hasAirport = false;
-    private String name;
-    private int id;
-    private int ownerId;
     private int troopCount;
+    protected int id;
+    protected String name;
     protected Player owner;
     protected HashSet<Territory> neighbors;
 
     private static int territoryCount = 0;
 
     //constructor
-    public Territory(String name, int i) {
+    public Territory(String name, int id) {
         this.name = name;
-        ownerId = -1;
         owner = null;
         troopCount = 0;
         neighbors = new HashSet<>();
@@ -40,11 +38,7 @@ public class Territory {
     }
 
     public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
+        return owner == null ? -1 : owner.getId();
     }
 
     public Player getOwner() { return owner; }
@@ -132,7 +126,7 @@ public class Territory {
     public String toString() {
         return "Territory{" +
                 "name='" + name + '\'' +
-                ", ownerId=" + ownerId +
+                ", ownerId=" + getOwnerId() +
                 '}';
     }
 
@@ -141,7 +135,7 @@ public class Territory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Territory territory = (Territory) o;
-        return ownerId == territory.ownerId &&
+        return getOwnerId() == territory.getOwnerId() &&
                 Objects.equals(name, territory.name);
     }
 
