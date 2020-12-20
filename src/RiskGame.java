@@ -589,10 +589,12 @@ public class RiskGame {
 
                 int sourceTroopCount = sourceTer.getTroopCount();
 
-                if(sourceTroopCount <= selectedTroop || sourceTroopCount < 2) {
+                if(sourceTroopCount <= selectedTroop) {
                     return;
                 }
                 sourceTer.setTroopCount(sourceTroopCount - selectedTroop);
+
+                riskView.removeTroopCountSelector();
                 riskView.setOnKeyPressed(new RPSGame(selectedTroop));
                 riskView.displayRPSView();
         });
