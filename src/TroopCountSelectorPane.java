@@ -12,7 +12,7 @@ public class TroopCountSelectorPane extends VBox {
     private Button lessButton;
     private Button moreButton;
     private Button backButton;
-    private Button placeButton;
+    private Button getNumButton;
     private Button buildAirportButton;
 
     private Label troopCountLabel;
@@ -40,23 +40,22 @@ public class TroopCountSelectorPane extends VBox {
         lessButton = new Button();
         moreButton = new Button();
         backButton = new Button("Back");
-        placeButton = new Button("Place");
+        getNumButton = new Button("Place");
         buildAirportButton = new Button("Build Airport");
 
         //buttons set size
         backButton.setPrefSize(400, 75);
-        placeButton.setPrefSize(400, 75);
+        getNumButton.setPrefSize(400, 75);
         buildAirportButton.setPrefSize(400, 75);
-
 
         //fonts for buttons
         backButton.setFont(Font.font("Snap ITC", 30));
-        placeButton.setFont(Font.font("Snap ITC", 30));
+        getNumButton.setFont(Font.font("Snap ITC", 30));
         buildAirportButton.setFont(Font.font("Snap ITC", 30));
 
         //set background for buttons
         backButton.setStyle(styleBackground);
-        placeButton.setStyle(styleBackground);
+        getNumButton.setStyle(styleBackground);
         buildAirportButton.setStyle(styleBackground);
 
         //graphics for buttons
@@ -85,7 +84,7 @@ public class TroopCountSelectorPane extends VBox {
         ImageView place = new ImageView(new Image("icons/troop_icon.png"));
         place.setFitWidth(50);
         place.setFitHeight(50);
-        placeButton.setGraphic(place);
+        getNumButton.setGraphic(place);
 
         //font for troop count
         troopCountLabel.setFont(javafx.scene.text.Font.font("Snap ITC", 30));
@@ -106,12 +105,36 @@ public class TroopCountSelectorPane extends VBox {
         switches.setAlignment(Pos.CENTER);
 
         //add to buttons pane
-        buttons.getChildren().addAll(placeButton, buildAirportButton, backButton);
+
         buttons.setAlignment(Pos.CENTER);
 
         //add panes to main pane
-        this.getChildren().addAll(soldierImg, switches, buttons);
+        this.getChildren().addAll(soldierImg, switches, getNumButton);
         this.setAlignment(Pos.CENTER);
+    }
+
+    public void addTroopCountSelectorPane(RiskGame.GameMode mode) {
+        switch (mode) {
+            case SoldierAllocationInit:
+            case SoldierAllocationMode: {
+                getNumButton.setText("Place");
+                buttons.getChildren().addAll(buildAirportButton, backButton);
+                this.getChildren().add(buttons);
+                break;
+            }
+            case AttackMode: {
+                getNumButton.setText("Attack");
+                buttons.getChildren().addAll(backButton);
+                this.getChildren().add(buttons);
+                break;
+            }
+            case FortifyMode: {
+                getNumButton.setText("Place");
+                buttons.getChildren().addAll(backButton);
+                this.getChildren().add(buttons);
+                break;
+            }
+        }
     }
 
     public Button getBackButton()
@@ -129,9 +152,9 @@ public class TroopCountSelectorPane extends VBox {
         return moreButton;
     }
 
-    public Button getPlaceButton()
+    public Button getNumButton()
     {
-        return placeButton;
+        return getNumButton;
     }
 
     public Button getBuildAirportButton()
@@ -144,4 +167,8 @@ public class TroopCountSelectorPane extends VBox {
         return troopCountLabel;
     }
 
+    public void removeButtons() {
+        buttons.getChildren().clear();
+        this.getChildren().remove(buttons);
+    }
 }

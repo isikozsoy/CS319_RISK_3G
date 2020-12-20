@@ -88,7 +88,8 @@ public class RiskGame {
     }
 
     public void executeFunctions() {
-        System.out.println(mode);
+        // System.out.println(mode);
+        riskView.updateCurPhase();
         switch (mode) {
             case TerAllocationMode: {
                 startInitialization();
@@ -177,7 +178,7 @@ public class RiskGame {
     }
 
     public void setButtons() {
-        riskView.getTroopCountSelectorPane().getPlaceButton().setOnMouseClicked(e -> {
+        riskView.getTroopCountSelectorPane().getNumButton().setOnMouseClicked(e -> {
             if(mode == GameMode.SoldierAllocationInit
                     || mode == GameMode.SoldierAllocationMode) {
                 //sets selected troop integer, and places it in the territory specified itself
@@ -213,6 +214,7 @@ public class RiskGame {
                     else {
                         nextMode();
                         executeFunctions();
+                        //riskView.addNextPhaseButton();
                     }
                 }
                 riskView.updateTroopsCount(curPlayer);
@@ -226,8 +228,8 @@ public class RiskGame {
                     sourceTer.setTroopCount(sourceTer.getTroopCount() - troopToTransfer);
                     targetTerritory.setTroopCount(targetTerritory.getTroopCount() + troopToTransfer);
                     //update their texts in riskview
-                    riskView.updateText(sourceTer, sourceTer.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
-                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount(), riskView.getClickedTerritory(mode).hasAirport());
+                    riskView.updateText(sourceTer, sourceTer.getTroopCount(), sourceTer.hasAirport());
+                    riskView.updateText(targetTerritory, targetTerritory.getTroopCount(), targetTerritory.hasAirport());
 
                     targetTerritory = null;
                     sourceTer = null;
@@ -372,12 +374,15 @@ public class RiskGame {
                 curPlayerId = 0;
                 riskView.updatePlayerBar(players.get(curPlayerId));
                 setTroopCountInView();
-                riskView.addNextPhaseButton();
+                //riskView.addNextPhaseButton();
                 riskView.getNextPhaseButton().setOnMouseClicked( event -> {
-                    if ( mode == GameMode.FortifyMode) mode = GameMode.EndOfTurn;
+                    if ( mode == GameMode.FortifyMode) {
+                        mode = GameMode.EndOfTurn;
+                        riskView.removeNextPhaseButton();
+                    }
                     else {
-                        riskView.updateCurPhase();
                         nextMode();
+                        riskView.updateCurPhase();
                     }
                     setTroopCountInView();
                     executeFunctions();
@@ -426,7 +431,7 @@ public class RiskGame {
                 if (sourceTer != null && sourceTer.getOwnerId() == curPlayer.getId()
                         && !troopCountSelectorInView) { //So that duplicates do not occur
                     troopCountSelectorInView = true;
-                    riskView.addTroopCountSelector(curPlayer.getTroopCount());
+                    riskView.addTroopCountSelector(curPlayer.getTroopCount(), mode);
                     if(sourceTer.hasAirport())
                         riskView.getTroopCountSelectorPane().getBuildAirportButton().setText("Remove Airport");
                     else
@@ -489,9 +494,14 @@ public class RiskGame {
     }
 
     public void startFortify() {
+        System.out.println("Before fortify");
         if( mode == GameMode.FortifyMode) {
+            System.out.println("Fortifyfortify");
             // returned from FortifyMode2
             //territory will both have to be non-null and match with the current player id
+
+            if( sourceTer != null) System.out.println(sourceTer);
+            if( targetTerritory != null) System.out.println(targetTerritory);
 
             if( sourceTer != null && targetTerritory != null && sourceTer.getOwnerId() == curPlayer.getId()) {
                 System.out.println("After sourceTer != null");
@@ -510,8 +520,10 @@ public class RiskGame {
                     sourceTer = null;
                     return;
                 } else if (fortifyableFromSource.contains(targetTerritory)) {
-                    if(!troopCountSelectorInView)
-                        riskView.addTroopCountSelector(sourceTer.getTroopCount());
+                    if(!troopCountSelectorInView) {
+                        riskView.addTroopCountSelector(sourceTer.getTroopCount(), mode);
+                        System.out.println("HELOOOO");
+                    }
 
                     troopCountSelectorInView = true;
 
@@ -519,7 +531,7 @@ public class RiskGame {
                 }
             }
 
-            if( sourceTer.getOwnerId() != curPlayerId) {
+            if( sourceTer != null && sourceTer.getOwnerId() != curPlayerId) {
                 sourceTer = null;
                 targetTerritory = null;
             }
@@ -540,6 +552,7 @@ public class RiskGame {
                 mode = GameMode.AttackMode;
                 sourceTer = null;
                 targetTerritory = null;
+                riskView.addNextPhaseButton();
                 break;
             }
             case AttackMode: {

@@ -152,8 +152,10 @@ public class RiskView extends StackPane {
 
         nextPhaseButton.translateXProperty();
         nextPhaseButton.translateYProperty();
+    }
 
-
+    public void removeNextPhaseButton() {
+        this.getChildren().remove(nextPhaseButton);
     }
 
     // Updates the currentPhaseBar according to the mode of the game
@@ -350,101 +352,6 @@ public class RiskView extends StackPane {
         }
     }
 
-    //below is only for the first mode, which is the Territory Allocation Mode
-    //After that, it will not be used anymore
-    public ClickableTerritory getClickableTerritory() {
-        ClickableTerritory clickableTerritory = null;
-        switch (mode) {
-            case TerAllocationMode: {
-                for( ClickableTerritory ct: territoryList) {
-                    if( ct.getClicked() && !territoriesAlreadyClicked.contains(ct)) {
-                        clickableTerritory = ct;
-                        territoriesAlreadyClicked.add(ct);
-
-                        Label territoryText = new Label("1");
-                        territoryText.setFont(Font.font("Snap ITC", 20));
-                        //territoryText.setFill(Color.rgb(255, 255, 255));
-                        //territoryText.setStroke(Color.ORANGERED);
-                        int[] imgLocations = ct.getTerritoryXY();
-
-                        textForEachTer.put( ct.getAssociatedTerritory(), territoryText);
-                        this.getChildren().add(territoryText);
-
-                        //code below changes the location of the texts
-                        //their original locations in the (1280, 1024) (width, height) space are held inside the imgLocations array
-                        //so I adjust these x and y locations to fit within whatever width and height settings we have for the game
-                        //since (0, 0) is (width / 2 , height / 2) in StackPane by default, I also subtract them when setting the location
-                        territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2);
-                        territoryText.setTranslateY(imgLocations[1] * height / 1024 - height / 2);
-
-                        //below are some special cases where the territory center is not the same as the center of the png image
-                        //associated with it
-                        //the explanations for the functions inside them will be given after the if statements
-                        if( ct.getAssociatedTerritory().getName().equals( "Japan")) {
-                            territoryText.setTranslateX(1165 * width / 1280 - width / 2);
-                            territoryText.setTranslateY(380 * height / 1024 - height / 2);
-                        }
-                        else if( ct.getAssociatedTerritory().getName().equals( "Kamchatka")) {
-                            territoryText.setTranslateX(1170 * width / 1280 - width / 2);
-                            territoryText.setTranslateY(200 * height / 1024 - height / 2);
-                        }
-                        else if( ct.getAssociatedTerritory().getName().equals( "Eastern Australia")) {
-                            System.out.println("aa");
-                            territoryText.setTranslateX(imgLocations[0] * width / 1280 - width / 2 + 20 * width / 1280);
-                        }
-
-                        territoryText.translateXProperty();
-                        territoryText.translateYProperty();
-
-                        break;
-                    }
-                }
-                return clickableTerritory;
-            }
-            default: {
-                for( ClickableTerritory ct: territoryList) {
-                    if( ct.getClicked()) {
-                        clickableTerritory = ct;
-                        ct.setClicked(false);
-                        break;
-                    }
-                }
-                return clickableTerritory;
-            }
-        }
-    }
-
-    //below is only for the first mode, which is the Territory Allocation Mode
-    //After that, it will not be used anymore
-    public Territory getClickedTerritory(RiskGame.GameMode mode) {
-        Territory territoryClicked = null;
-        switch (mode) {
-            case TerAllocationMode: {
-                for( ClickableTerritory clickableTerritory: territoryList) {
-                    if( clickableTerritory.getClicked() && !territoriesAlreadyClicked.contains(clickableTerritory)) {
-                        territoryClicked = clickableTerritory.getAssociatedTerritory();
-                        territoriesAlreadyClicked.add(clickableTerritory);
-
-                        this.getChildren().add(textForEachTer.get(territoryClicked));
-
-                        break;
-                    }
-                }
-                return territoryClicked;
-            }
-            default: {
-                for( ClickableTerritory clickableTerritory: territoryList) {
-                    if( clickableTerritory.getClicked()) {
-                        territoryClicked = clickableTerritory.getAssociatedTerritory();
-                        clickableTerritory.setClicked(false);
-                        break;
-                    }
-                }
-                return territoryClicked;
-            }
-        }
-    }
-
     public boolean backButtonIsClicked() {
         return backButtonIsClicked;
     }
@@ -525,7 +432,8 @@ public class RiskView extends StackPane {
         this.getChildren().add(textForEachTer.get(territoryClicked));
     }
 
-    public void addTroopCountSelector( int troopCount) {
+    public void addTroopCountSelector( int troopCount, RiskGame.GameMode mode) {
+        troopCountSelectorPane.addTroopCountSelectorPane(mode);
         this.getChildren().add(troopCountSelectorPane);
         troopCountSelectorPane.getTroopCountLabel().setText("   1  ");
         troopCountSelectorPane.getLessButton().setOnMouseClicked(e -> {
@@ -560,21 +468,6 @@ public class RiskView extends StackPane {
             troopCountSelectorPane.getTroopCountLabel().setText(nextCount);
         });
 
-        /**
-         backButton.setOnMouseClicked(e -> {
-         backButtonIsClicked = true;
-         removeTroopCountSelector();
-         });
-         placeButton.setOnMouseClicked(e -> {
-         selectedTroop = Integer.valueOf(countSelectionText.getText());
-         });
-         **/
-    }
-
-    public void setMaxCountSelection( int troopCount) {
-        troopCountSelectorPane.getTroopCountLabel().setText(Integer.toString(troopCount));
-        this.getChildren().remove(troopCountSelectorPane);
-        addTroopCountSelector( troopCount);
     }
 
     public Button getAndSetAttackButton() {
@@ -605,6 +498,7 @@ public class RiskView extends StackPane {
     }
 
     public void removeTroopCountSelector() {
+        troopCountSelectorPane.removeButtons();
         this.getChildren().remove(troopCountSelectorPane);
     }
 
