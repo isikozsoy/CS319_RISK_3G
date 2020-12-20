@@ -11,8 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class RiskView extends StackPane {
@@ -39,13 +41,16 @@ public class RiskView extends StackPane {
     private AllianceRequestPane allianceRequestPane;
     private AlliancePane alliancePane;
     private Button cardsButton;
-    private Text modeText;
+    private List<Button> nameButtons;
     private boolean backButtonIsClicked = false;
     private int selectedTroop = 0;
     private HashMap<String, Territory> nameAndTerritory;
     private HashMap<Territory, Label> textForEachTer;
     private TroopCountSelectorPane troopCountSelectorPane;
     private Label currentPhaseBar;
+    private FlowPane nameBarPane;
+
+    private StackPane endGamePane;
 
     private int[][] x_y_forEachTerritory = new int[42][2];
 
@@ -87,7 +92,7 @@ public class RiskView extends StackPane {
         setTroopsLeft();
         makeClickableMap();
         setTerritoryTexts();
-        addPlayerNameBars();
+        addPlayerNameBars( this.players);
         for( Territory territory: nameAndTerritory.values()) {
             setTerritoryNeighbors(territory);
         }
@@ -122,6 +127,31 @@ public class RiskView extends StackPane {
         cardExchangePane = new CardExchangePane();
     }
 
+    public void addEndGamePane( Player player) {
+        endGamePane = new StackPane();
+        endGamePane.setStyle("-fx-background-color:" + player.getColor() + ";-fx-opacity:0.5;");
+
+        VBox vBox = new VBox();
+        Text endGameText = new Text("Game Over!");
+        endGameText.setFont(Font.font("Snap ITC", 30));
+        Text playerWonText = new Text("Player " + player.getName() + " won!");
+        playerWonText.setFont(Font.font("Snap ITC", 30));
+        Button returnButton = new Button("Return to main menu");
+        returnButton.setFont(Font.font("Snap ITC", 30));
+        vBox.getChildren().addAll(endGameText, playerWonText, returnButton);
+
+        endGamePane.setAlignment(vBox, Pos.CENTER);
+
+        endGamePane.getChildren().add( vBox);
+
+        returnButton.setOnMouseClicked(e -> {
+            Scene newScene = new Scene( new MainMenuView(stage, width, height), width, height);
+            stage.setScene(newScene);
+        });
+
+        this.getChildren().add(endGamePane);
+    }
+
     // Method that creates the label which will shows the current phase of the game.
     private void setCurPhaseBar() {
         currentPhaseBar = new Label();
@@ -135,6 +165,19 @@ public class RiskView extends StackPane {
     }
 
     private void setAllianceRequestPane() { allianceRequestPane = new AllianceRequestPane(); }
+
+    public void goToNextPhase() {
+        switch (mode) {
+            case AttackMode: {
+                currentPhaseBar.setText("Fortify Phase");
+                break;
+            }
+            case FortifyMode: {
+                currentPhaseBar.setText("Soldier Allocation");
+                break;
+            }
+        }
+    }
 
     public void addNextPhaseButton() {
         this.getChildren().add(nextPhaseButton);
@@ -490,7 +533,8 @@ public class RiskView extends StackPane {
 
     public int getSelectedTroop() {
         System.out.println();
-        selectedTroop = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
+        if(troopCountSelectorPane.getTroopCountLabel().getText() != "")
+            selectedTroop = Integer.valueOf(troopCountSelectorPane.getTroopCountLabel().getText().trim());
         return selectedTroop;
     }
 
@@ -609,8 +653,10 @@ public class RiskView extends StackPane {
         });
     }
 
-    public void addPlayerNameBars() {
-        FlowPane nameBarPane = new FlowPane();
+    public void addPlayerNameBars( ArrayList<Player> players) {
+        nameBarPane = new FlowPane();
+        nameButtons = new ArrayList<>();
+
         nameBarPane.setHgap(10);
         nameBarPane.setVgap(10);
         cardsButton = new Button();
@@ -619,7 +665,9 @@ public class RiskView extends StackPane {
         cardsImg.setFitHeight(40);
         cardsButton.setGraphic(cardsImg);
         nameBarPane.getChildren().add(cardsButton);
+
         for( Player player: players) {
+
             Button nameButton = new Button();
             nameButton.setStyle("-fx-background-color: " + player.getColor() + ";" +
                     "-fx-text-fill: white;-fx-background-radius:20;");
@@ -632,6 +680,8 @@ public class RiskView extends StackPane {
 
             //IMPLEMENTED FOR ALLIANCE PANE
             nameButton.setOnMouseClicked(e -> {
+                if(player.getId() == -1) return; //do nothing if the player is removed
+
                 //this long if statement checks if the player clicked is NOT the same player, who clicked the button
                 if(riskGame.getPlayers().size() > 2 && riskGame.getCurPlayerId() != player.getId())
                     //alliance pane is added
@@ -639,11 +689,18 @@ public class RiskView extends StackPane {
             });
             /////////////////////////////////////////////////////////////////////////////
             nameBarPane.getChildren().add(nameButton);
+
+            nameButtons.add( nameButton);
         }
         nameBarPane.setMaxHeight(0);
         nameBarPane.setMaxWidth(2000);
         this.getChildren().add(nameBarPane);
         setAlignment(nameBarPane, Pos.BOTTOM_CENTER);
+    }
+
+    public void changeNameButtonColor( Player player) {
+        nameButtons.get(player.getId()).setStyle("-fx-background-color:gray;" +
+                "-fx-text-fill: white;-fx-background-radius:20;");
     }
 
     final public void setTerritoryNeighbors( Territory territory) {
