@@ -18,9 +18,8 @@ public class MainMenuView extends BeforeGameView {
     final private int   locYNewGame       = 290;
     final private int[] locNewGameButton  = {locXForMenu, locYNewGame};
     final private int[] locHowTo          = {locXForMenu, locYNewGame + locYIncrease};
-    final private int[] locSettings       = {locXForMenu, locYNewGame + 2 * locYIncrease};
-    final private int[] locCredits        = {locXForMenu, locYNewGame + 3 * locYIncrease};
-    final private int[] locExit           = {locXForMenu, locYNewGame + 4 * locYIncrease};
+    final private int[] locCredits        = {locXForMenu, locYNewGame + 2 * locYIncrease};
+    final private int[] locExit           = {locXForMenu, locYNewGame + 3 * locYIncrease};
     final private int   locYText          = 304;
 
     final private String LOGO_STYLE       = "-fx-background-color: linear-gradient(to right, yellow, tomato);" +
@@ -66,17 +65,22 @@ public class MainMenuView extends BeforeGameView {
         MainMenuButton newGameButton  = newGameButton(stage);
         MainMenuText   newGameText    = new MainMenuText(482, locYText, "NEW GAME");
 
+        newGameText.setMouseTransparent(true);
+
         MainMenuButton howToButton    = howToButton();
         MainMenuText   howToText      = new MainMenuText  (395, locYText + locYIncrease, "HOW TO PLAY");
 
-        MainMenuButton settingsButton = settingsButton();
-        MainMenuText   settingsText   = new MainMenuText  (474, locYText + locYIncrease * 2, "SETTINGS");
+        howToText.setMouseTransparent(true);
 
         MainMenuButton creditsButton  = creditsButton();
-        MainMenuText   creditsText    = new MainMenuText  ( 474, locYText + locYIncrease * 3, "CREDITS");
+        MainMenuText   creditsText    = new MainMenuText  ( 474, locYText + locYIncrease * 2, "CREDITS");
+
+        creditsText.setMouseTransparent(true);
 
         MainMenuButton exitButton     = exitButton( stage);
-        MainMenuText   exitText       = new MainMenuText  ( 548, locYText + locYIncrease * 4, "EXIT");
+        MainMenuText   exitText       = new MainMenuText  ( 548, locYText + locYIncrease * 3, "EXIT");
+
+        exitText.setMouseTransparent(true);
 
         Button annexationLogo         = new Button();
         annexationLogo.setLayoutX(locLogo[0]);
@@ -86,12 +90,9 @@ public class MainMenuView extends BeforeGameView {
         annexationLogo.setMinHeight(exitButton.getButtonHeight());
         MainMenuText annexationText = new MainMenuText( 432, locLogo[1] + 10, "ANNEXATION");
 
-        /**
-         TODO:: BIND BUTTON SIZES TO PANE SIZE
-         **/
         Group g = new Group();
-        g.getChildren().addAll(newGameText,   howToText,   settingsText,   creditsText,   exitText,
-                newGameButton, howToButton, settingsButton, creditsButton, exitButton);
+        g.getChildren().addAll(newGameButton, newGameText, howToButton, howToText, creditsButton, creditsText,
+                exitButton, exitText);
         g.getChildren().addAll( annexationLogo, annexationText);
         super.addGroup(g);
     }
@@ -104,7 +105,6 @@ public class MainMenuView extends BeforeGameView {
             Scene addPlayerScene = new Scene( addPlayersView, width, height);
 
             stage.setScene( addPlayerScene);
-            //stage.show();
         });
 
         return newGameButton;
@@ -144,61 +144,6 @@ public class MainMenuView extends BeforeGameView {
         return howToButton;
     }
 
-    private MainMenuButton settingsButton() {
-        MainMenuButton settingsButton = new MainMenuButton(locSettings[0], locSettings[1], 3);
-/**
-        VBox sizeButtons = new VBox();
-        Label currentSize = new Label("Default Size: 1000 x 750");
-        currentSize.setStyle("-fx-background-color: #ffc588;" +
-                "-fx-border-color: #0d5873");
-        currentSize.setFont(Font.font("Snap ITC", 20));
-        sizeButtons.getChildren().add(currentSize);
-        String[] sizes = {"1400 x 1050", "1280 x 800", "1680 x 1050", "1280 x 1024", "1600 x 1200", "1920 x 1200"};
-        for (int i = 0; i < sizes.length; i++) {
-            Button option = new Button(sizes[i]);
-            String info = sizes[i];
-            option.setStyle(styleBackground);
-            option.setFont(Font.font("Snap ITC", 30));
-            option.setMaxSize(300,75);
-            sizeButtons.getChildren().add(option);
-            option.setOnMouseClicked(e -> {
-                width = Integer.valueOf(info.substring(0, 4));
-                height = Integer.valueOf(info.substring(7));
-                currentSize.setText("Current Size: " + info);
-            });
-        }
-
-        Button fullScreen = new Button("FULL SCREEN");
-        fullScreen.setStyle(styleBackground);
-        fullScreen.setFont(Font.font("Snap ITC", 30));
-        fullScreen.setMaxSize(300,75);
-        fullScreen.setOnMouseClicked(e -> {
-
-        });
-
-        Button back = new Button("Back");
-        back.setStyle(styleBackground);
-        back.setFont(Font.font("Snap ITC", 30));
-        back.setMaxSize(300,75);
-
-        javafx.scene.image.ImageView backImg = new ImageView(new Image("icons/back_arrow_icon.png"));
-        backImg.setFitHeight(50);
-        backImg.setFitWidth(50);
-        back.setGraphic(backImg);
-        sizeButtons.getChildren().add(back);
-
-        settingsButton.setOnMouseClicked(e -> {
-            sizeButtons.setAlignment(Pos.CENTER);
-            this.getChildren().add(sizeButtons);
-        });
-
-        back.setOnMouseClicked(e->{
-            this.getChildren().remove(sizeButtons);
-        });
-*/
-        return settingsButton;
-    }
-
     private MainMenuButton creditsButton() {
         MainMenuButton creditsButton = new MainMenuButton(locCredits[0], locCredits[1], 4);
 
@@ -206,7 +151,7 @@ public class MainMenuView extends BeforeGameView {
         Label burak = new Label("Burak Yetiştiren");
         Label isik = new Label("Işık Özsoy");
         Label defne = new Label("Defne Betül Çiftçi");
-        Label hakan = new Label("Hakan Kara");
+        Label hakan = new Label("Mustafa Hakan Kara");
         Label creditsText = new Label("Credits:");
 
         Button back = new Button("Back");
@@ -256,11 +201,4 @@ public class MainMenuView extends BeforeGameView {
 
         return exitButton;
     }
-/**
- private void bindButtonsToPane( MainMenuButton button) {
- button.fitWidthProperty().bind( this.widthProperty());
- button.fitHeightProperty().bind( this.heightProperty());
- button.setPreserveRatio( true);
- }
- **/
 }

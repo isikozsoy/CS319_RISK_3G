@@ -240,6 +240,7 @@ public class RiskView extends StackPane {
     }
 
     public void updateText(Territory territory, int newNum) {
+        territory = territoryList.get(territory.getId()).getAssociatedTerritory();
         Label territoryText = textForEachTer.get(territory);
         territoryText.setText(Integer.toString(newNum));
     }
@@ -252,6 +253,7 @@ public class RiskView extends StackPane {
             ImageView airport = new ImageView(new Image("icons/plane_icon.png"));
             airport.setFitWidth(40);
             airport.setFitHeight(40);
+            airport.setMouseTransparent(true);
             territoryText.setGraphic(airport);
         }
         else
@@ -269,6 +271,10 @@ public class RiskView extends StackPane {
     // Adds RPSView into main pane
     public void displayRPSView() {
         this.getChildren().add(rpsView);
+    }
+
+    public void displayNextPhaseButton() {
+        this.getChildren().add(nextPhaseButton);
     }
 
     public Button getNextPhaseButton() {
@@ -379,6 +385,8 @@ public class RiskView extends StackPane {
 
             territoryText.translateXProperty();
             territoryText.translateYProperty();
+
+            territoryText.setMouseTransparent(true);
 
             textForEachTer.put( territoryList.get(i).getAssociatedTerritory(), territoryText);
         }

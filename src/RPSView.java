@@ -180,7 +180,6 @@ public class RPSView extends VBox {
         rpsContainer.setMaxSize(300,200);
         rpsContainer.setAlignment(Pos.CENTER);
 
-        resultContainer.setMaxSize(200, 60);
         resultContainer.setAlignment(Pos.CENTER);
         this.setMaxSize(300,600);
         this.setAlignment(Pos.CENTER);
